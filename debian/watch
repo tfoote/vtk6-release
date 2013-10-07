@@ -1,0 +1,4 @@
+version=3
+opts=uversionmangle=s/(\d)[\.\-]?((?:rc|RC|pre)(?:\.|-)?\d+(?:-\d+)?)$/$1~$2/ \
+http://www.vtk.org/files/release/(\d+(?:\.\d+)*)/vtk(?:-|\.|_|_v|)(\d\S*)\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)
+# Bart Martens <bartm@debian.org>  Sat, 18 May 2013 17:27:53 +0000
