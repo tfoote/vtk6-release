@@ -30,6 +30,7 @@ extra_flags +=  \
 	-DVTK_Group_Views=ON \
 	-DVTK_BUILD_ALL_MODULES=ON \
 	-DMPI_CXX_INCLUDE_PATH="/usr/include/mpi" \
+	-DVTK_INSTALL_LIBRARY_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(extra_flags)
@@ -38,3 +39,6 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf $(BUILDDIR)
 
+override_dh_link:
+	cd $(CURDIR)/debian ; rm -f python-vtk6.links ; ./generate_links.sh $(DEB_HOST_MULTIARCH)
+	dh_link
