@@ -102,6 +102,7 @@ Depends:
  mpi-default-dev,
  tcl8.5-dev,
  tk8.5-dev,
+ vtk6 (= ${binary:Version}),
  x11proto-core-dev,
  zlib1g-dev,
  ${misc:Depends}
@@ -214,6 +215,23 @@ Description: Tcl bindings for VTK
  This provides the shared libraries and executable that enable one to use
  VTK from Tcl/Tk scripts. You will need Tcl/Tk and vtk installed to use
  this.
+
+Package: vtk6
+Architecture: any
+Depends:
+ libvtk6 (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Suggests:
+ vtk6-doc,
+ vtk6-examples
+Section: interpreters
+Description: Binaries for VTK6
+ The Visualization Toolkit (VTK) is an object oriented, high level
+ library that allows one to easily write C++ programs, Tcl, Python and
+ Java scripts that do 3D visualization.
+ .
+ This provides binaries for VTK6
 
 Package: vtk6-doc
 Architecture: all
