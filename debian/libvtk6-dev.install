@@ -1,5 +1,3 @@
-usr/bin/vtkEncodeString-6.0
-usr/bin/vtkWrapHierarchy-6.0
 usr/include/vtk-6.0                    usr/include
 usr/lib/*/*.so
 usr/lib/cmake/vtk-6.0
