@@ -1,0 +1,9 @@
+Description: Fix compilation with libav 9
+Origin: upstream,
+ http://vtk.org/gitweb?p=VTK.git;a=commitdiff;h=bc976d74591a6f2c8a1e62f1c54691c281d21e00,
+ http://vtk.org/gitweb?p=VTK.git;a=commitdiff;h=52a07b454b93c14b7b0f51e9e71ae7b2b2d525fe,
+ http://vtk.org/gitweb?p=VTK.git;a=commitdiff;h=1967fef7709dccb5adaa6ac7f780a2e95f327c78,
+ http://vtk.org/gitweb?p=VTK.git;a=commitdiff;h=d48033e127b208228b46f820d454c5eca1c719e1
+Bug-Debian: http://bugs.debian.org/693639
+Last-Update: 2013-08-23
+

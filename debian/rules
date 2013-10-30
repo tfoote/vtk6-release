@@ -1,9 +1,27 @@
 #!/usr/bin/make -f
 BUILDDIR = $(CURDIR)/debian/build
+
+# export JAVA_HOME to help FindJava.cmake and FindJNI.cmake
+export JAVA_HOME=/usr/lib/jvm/default-java
+
 %:
 	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR) --with python2 --with javahelper --parallel
 
+# Module_vtkjsoncpp:BOOL=OFF as we use A. Gladky patch to use system jsoncpp 
+#
+# Module_vtkAcceleratorsPiston:BOOL=OFF as it requires CUDA
+#
+# Module_vtkIOGDAL:BOOL=OFF as it requires hdf5-serial-dev
+#   cgal should be redebian/build against libhdf5-mpi-dev is possible
+#
+# Module_vtkInfovisParallel:BOOL=OFF as it relies on boost 1.40 - need to be patched
+#
+# Module_vtkmrmpi:BOOL=OFF why??
+# Module_vtkIOODBC:BOOL=OFF why??
+# Module_vtkIOPostgreSQL:BOOL=OFF why??
+
 extra_flags +=  \
+ -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
 	-DBUILD_DOCUMENTATION=ON \
 	-DBUILD_EXAMPLES=ON \
 	-DBUILD_SHARED_LIBS=ON \
@@ -28,7 +46,7 @@ extra_flags +=  \
 	-DVTK_Group_Qt=ON \
 	-DVTK_Group_Tk=ON \
 	-DVTK_Group_Views=ON \
-	-DVTK_BUILD_ALL_MODULES=ON \
+	-DVTK_debian/build_ALL_MODULES=ON \
 	-DMPI_CXX_INCLUDE_PATH="/usr/include/mpi" \
 	-DVTK_INSTALL_LIBRARY_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
 
@@ -42,3 +60,12 @@ override_dh_auto_clean:
 override_dh_link:
 	cd $(CURDIR)/debian ; rm -f python-vtk6.links ; ./generate_links.sh $(DEB_HOST_MULTIARCH)
 	dh_link
+
+override_dh_auto_build:
+	dh_auto_build
+	
+	# Make doc (see wiki/VTK/debian/buildingDoxygen)
+	cd $(BUILDDIR) && make DoxygenDoc 
+	
+override_dh_shlibdeps:
+	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib

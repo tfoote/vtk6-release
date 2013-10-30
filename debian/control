@@ -40,19 +40,30 @@ Build-Depends:
  libxt-dev,
  mpi-default-dev,
  pkg-config,
- python-dev (>= 2.5.3),
- python-support (>= 0.5.3),
- tcl8.5-dev,
- tk8.5-dev,
+ python-all-dev (>= 2.7), python-all-dev (<< 2.8),
+ dh-python,
+ tcl8.6-dev,
+ tk8.6-dev,
  x11proto-core-dev,
  xvfb,
- zlib1g-dev
+ zlib1g-dev,
+ hdf5-tools,
+ libgl2ps-dev, libjsoncpp-dev,
+ python-mpi4py,
+ libboost-all-dev,
+ libxpm-dev,
+ libmrmpi-dev, python-matplotlib,
+ libgl1-mesa-dev | libgl-dev, libglu1-mesa-dev | libglu-dev,
+ xvfb, xauth,
+ r-base, r-base-core, r-base-dev,
+ chrpath 
 Build-Depends-Indep:
  doxygen-latex,
  ghostscript,
  gnuplot-nox,
  graphviz,
- libdigest-md5-perl
+ libdigest-md5-perl,
+ texlive-binaries, texlive-math-extra
 XS-Python-Version: current
 Uploaders:
  A. Maitland Bottoms <bottoms@debian.org>,

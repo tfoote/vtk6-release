@@ -1,0 +1,38 @@
+Description: Use packaged version of json instead of embedded one.
+Author: Anton Gladky <gladk@debian.org>
+Last-Update: 2013-06-13
+
+Index: vtk-6.0.0/IO/Geometry/module.cmake
+===================================================================
+--- vtk-6.0.0.orig/IO/Geometry/module.cmake	2013-10-16 14:47:46.000000000 +0200
++++ vtk-6.0.0/IO/Geometry/module.cmake	2013-10-16 14:47:46.000000000 +0200
+@@ -7,7 +7,6 @@
+     vtkCommonMisc
+     vtkIOCore
+     vtkzlib
+-    vtkjsoncpp
+   TEST_DEPENDS
+     vtkIOAMR
+     vtkIOLegacy
+Index: vtk-6.0.0/IO/Geometry/CMakeLists.txt
+===================================================================
+--- vtk-6.0.0.orig/IO/Geometry/CMakeLists.txt	2013-10-16 14:47:46.000000000 +0200
++++ vtk-6.0.0/IO/Geometry/CMakeLists.txt	2013-10-16 14:47:46.000000000 +0200
+@@ -41,3 +41,4 @@
+   )
+ 
+ vtk_module_library(vtkIOGeometry ${Module_SRCS})
++target_link_libraries(vtkIOGeometry jsoncpp)
+Index: vtk-6.0.0/IO/Geometry/vtkPlot3DMetaReader.cxx
+===================================================================
+--- vtk-6.0.0.orig/IO/Geometry/vtkPlot3DMetaReader.cxx	2013-10-16 14:47:46.000000000 +0200
++++ vtk-6.0.0/IO/Geometry/vtkPlot3DMetaReader.cxx	2013-10-16 14:47:46.000000000 +0200
+@@ -32,7 +32,7 @@
+ #if defined(WIN32) && defined(VTK_BUILD_SHARED_LIBS)
+ # define JSON_DLL
+ #endif
+-#include <json/json.h>
++#include <jsoncpp/json/json.h>
+ 
+ #define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
+ 

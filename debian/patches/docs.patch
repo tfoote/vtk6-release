@@ -1,0 +1,32 @@
+Index: vtk6/Utilities/Doxygen/doxyfile.in
+===================================================================
+--- vtk6.orig/Utilities/Doxygen/doxyfile.in	2013-11-04 11:39:57.054144719 +0100
++++ vtk6/Utilities/Doxygen/doxyfile.in	2013-11-04 11:42:40.814137832 +0100
+@@ -12,7 +12,7 @@
+ GENERATE_TODOLIST    = YES
+ GENERATE_BUGLIST     = YES
+ GENERATE_HTML        = YES
+-GENERATE_HTMLHELP    = YES
++GENERATE_HTMLHELP    = NO
+ GENERATE_LATEX       = NO
+ GENERATE_MAN         = NO
+ GENERATE_RTF         = NO
+@@ -92,14 +92,16 @@
+ SORT_MEMBER_DOCS     = NO
+ DISTRIBUTE_GROUP_DOC = YES
+ TAB_SIZE             = 3
+-DETAILS_AT_TOP       = YES
++#obsolete
++#DETAILS_AT_TOP       = YES
+ SHORT_NAMES          = @DOXYGEN_SHORT_NAMES@
+ # PAPER_TYPE           = letter
+ 
+ FILE_PATTERNS        = *.h
+ RECURSIVE            = YES
+ 
+-HTML_ALIGN_MEMBERS   = YES
++#obsolete
++"HTML_ALIGN_MEMBERS   = YES
+ 
+ ALPHABETICAL_INDEX   = YES
+ COLS_IN_ALPHA_INDEX  = 3
