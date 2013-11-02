@@ -1,1 +1,2 @@
 libvtk6-dev: shlib-without-versioned-soname
+libvtk6-dev: package-name-doesnt-match-sonames
