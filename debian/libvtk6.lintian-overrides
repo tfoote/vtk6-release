@@ -1,0 +1,5 @@
+libvtk6: package-name-doesnt-match-sonames
+# Proposed to upstream to add USE_SYSYEM-flag for those libraries
+libvtk6: embedded-library usr/lib/x86_64-linux-gnu/libvtkftgl-6.0.so.1: ftgl
+libvtk6: embedded-library usr/lib/x86_64-linux-gnu/libvtkjsoncpp-6.0.so.1: libjsoncpp
+libvtk6: embedded-library usr/lib/x86_64-linux-gnu/libvtksqlite-6.0.so.1: sqlite
