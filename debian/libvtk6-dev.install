@@ -8,6 +8,9 @@ debian/build/Utilities/Doxygen/doc/html usr/share/doc/libvtk6-dev
 # to get paraview debian/build properly on top of vtk
 debian/build/lib/cmake/vtk-6.0/Modules/*-Headers.cmake	usr/lib/cmake/vtk-6.0/Modules/
 CMake/vtkTesting*.cmake	usr/lib/vtk-6.0/
+CMake/vtkGroups.cmake usr/lib/vtk-6.0/
+CMake/TopologicalSort.cmake usr/lib/vtk-6.0/
+CMake/exportheader.cmake.in usr/lib/vtk-6.0/
 
 debian/build/ThirdParty/ftgl/vtkftglConfig.h usr/include/vtk-6.0/
 ThirdParty/ftgl/src/FTGL.h usr/include/vtk-6.0/
