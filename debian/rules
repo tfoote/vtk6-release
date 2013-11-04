@@ -46,7 +46,7 @@ extra_flags +=  \
 	-DVTK_Group_Qt=ON \
 	-DVTK_Group_Tk=ON \
 	-DVTK_Group_Views=ON \
-	-DVTK_debian/build_ALL_MODULES=ON \
+	-DVTK_BUILD_ALL_MODULES=ON \
 	-DMPI_CXX_INCLUDE_PATH="/usr/include/mpi" \
 	-DVTK_INSTALL_LIBRARY_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
 
