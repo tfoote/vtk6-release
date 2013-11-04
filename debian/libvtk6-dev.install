@@ -2,12 +2,6 @@ usr/include/vtk-6.0                    usr/include
 usr/lib/*/*.so
 usr/lib/cmake/vtk-6.0
 
-usr/bin/vtkProcessShader-6.0
-usr/bin/vtkParseOGLExt-6.0
-usr/bin/vtkEncodeString-6.0
-usr/bin/vtkHashSource-6.0
-usr/bin/vtkWrapHierarchy-6.0
-
 # add doxygen docs
 debian/build/Utilities/Doxygen/doc/html usr/share/doc/libvtk6-dev
 
