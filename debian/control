@@ -69,10 +69,10 @@ Uploaders:
  A. Maitland Bottoms <bottoms@debian.org>,
  Dominique Belhachemi <domibel@debian.org>,
  Mathieu Malaterre <malat@debian.org>
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://www.vtk.org/
-Vcs-Git: git://git.debian.org/git/collab-maint/vtk6.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/vtk6.git
+Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
 
 Package: libvtk6-dev
 Architecture: any
