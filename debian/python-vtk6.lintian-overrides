@@ -1,2 +1,3 @@
 # Upstream does not provide manpages
 python-vtk6: binary-without-manpage
+python-vtk6: binary-or-shlib-defines-rpath
