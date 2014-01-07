@@ -1,55 +1,648 @@
-This package was debianized by A. Maitland Bottoms <bottoms@debian.org> on
-Wed, 15 Mar 2000 10:52:54 -0500.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: http://www.vtk.org/
+Upstream-Name: Visualization Toolkit
 
-This package was also debianized by Prabhu Ramachandran
-<prabhu@aero.iitm.ernet.in> on Mon, 24 Apr 2000 02:16:12 +0530.
-
-The Debian packaging is distributed under the same conditions as the
-upstream.
-
-See the README.debian file for details on the modification of source
-done for the Debian distribution of VTK.
-
-Home page is at: http://www.vtk.org/
-It was downloaded from http://www.vtk.org/files/release/5.6/vtk-5.6.0.tar.gz
-(See also http://vtk.org/VTK/resources/software.html)
-
-Upstream Authors: Ken Martin, Will Schroeder, and Bill Lorensen.
-kitware@kitware.com
-
-Copyright:
-
-/*=========================================================================
-
-  Program:   Visualization Toolkit
-  Module:    $RCSfile: Copyright.txt,v $
-
-Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
+Files: *
+Copyright: 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
  * Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
-
+ .
  * Redistributions in binary form must reproduce the above copyright notice,
    this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
-
+ .
  * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names
    of any contributors may be used to endorse or promote products derived
    from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Files: ThirdParty/zlib/vtkzlib/*
+Copyright: 1995-2005 Jean-loup Gailly and Mark Adler
+License: BSD-like
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+  .
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+  .
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
-=========================================================================*/
+Files: ThirdParty/xdmf2/vtkxdmf2/libsrc/*
+Copyright: 2002 US Army Research Laboratory
+License: BSD-like
+ This software is distributed WITHOUT ANY WARRANTY; without
+ even the implied warranty of MERCHANTABILITY or FITNESS   
+ FOR A PARTICULAR PURPOSE.  See the above copyright notice 
+ for more information. 
+
+Files: ThirdParty/verdict/vtkverdict/*
+Copyright: 2006 Sandia Corporation
+License: BSD-like
+ This software is distributed WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the above copyright notice for more information.
+
+Files: ThirdParty/utf8/source/*
+Copyright: 2006 Nemanja Trifunovic
+License: BSD-like
+ Permission is hereby granted, free of charge, to any person or organization
+ obtaining a copy of the software and accompanying documentation covered by
+ this license (the "Software") to use, reproduce, display, distribute,
+ execute, and transmit the Software, and to prepare derivative works of the
+ Software, and to permit third-parties to whom the Software is furnished to
+ do so, all subject to the following:
+ .
+ The copyright notices in the Software and this entire statement, including
+ the above license grant, this restriction and the following disclaimer,
+ must be included in all copies of the Software, in whole or in part, and
+ all derivative works of the Software, unless such copies or derivative
+ works are solely in the form of machine-executable object code generated by
+ a source language processor.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+
+Files: ThirdParty/tiff/vtktiff/*
+Copyright: 1988-1997 Sam Leffler
+           1991-1997 Silicon Graphics, Inc.
+License: BSD-like
+ Permission to use, copy, modify, distribute, and sell this software and 
+ its documentation for any purpose is hereby granted without fee, provided
+ that (i) the above copyright notices and this permission notice appear in
+ all copies of the software and related documentation, and (ii) the names of
+ Sam Leffler and Silicon Graphics may not be used in any advertising or
+ publicity relating to the software without the specific, prior written
+ permission of Sam Leffler and Silicon Graphics.
+ . 
+ THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+ EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+ WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ . 
+ IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
+ ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+ OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+ LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ OF THIS SOFTWARE.
+
+Files: ThirdParty/sqlite/vtksqlite/*
+Copyright: D. Richard Hipp <drh@hwaci.com>
+License: public-domain
+
+Files: ThirdParty/png/vtkpng/*
+Copyright: 1998-2001 Glenn Randers-Pehrson
+           1996, 1997 Andreas Dilger
+           1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+License: BSD-like
+ The PNG Reference Library is supplied "AS IS".  The Contributing Authors
+ and Group 42, Inc. disclaim all warranties, expressed or implied,
+ including, without limitation, the warranties of merchantability and of
+ fitness for any purpose.  The Contributing Authors and Group 42, Inc.
+ assume no liability for direct, indirect, incidental, special, exemplary,
+ or consequential damages, which may result from the use of the PNG
+ Reference Library, even if advised of the possibility of such damage.
+ .
+ Permission is hereby granted to use, copy, modify, and distribute this
+ source code, or portions hereof, for any purpose, without fee, subject
+ to the following restrictions:
+ .
+ 1. The origin of this source code must not be misrepresented.
+ .
+ 2. Altered versions must be plainly marked as such and
+ must not be misrepresented as being the original source.
+ .
+ 3. This Copyright notice may not be removed or altered from
+     any source or altered source distribution.
+ .
+ The Contributing Authors and Group 42, Inc. specifically permit, without
+ fee, and encourage the use of this source code as a component to
+ supporting the PNG file format in commercial products.  If you use this
+ source code in a product, acknowledgment is not required but would be
+ appreciated.
+
+Files: ThirdParty/VPIC/*
+Copyright: 2007, Los Alamos National Security, LLC
+License: BSD-like
+ This software was produced under U.S. Government contract DE-AC52-06NA25396
+ for Los Alamos National Laboratory (LANL), which is operated by
+ Los Alamos National Security, LLC for the U.S. Department of Energy.
+ The U.S. Government has rights to use, reproduce, and distribute this software.
+ NEITHER THE GOVERNMENT NOR LOS ALAMOS NATIONAL SECURITY, LLC MAKES ANY WARRANTY,
+ EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.
+ If software is modified to produce derivative works, such modified software
+ should be clearly marked, so as not to confuse it with the version available
+ from LANL.
+ .
+ Additionally, redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the following conditions
+ are met:
+ -   Redistributions of source code must retain the above copyright notice,
+     this list of conditions and the following disclaimer.
+ -   Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+ -   Neither the name of Los Alamos National Security, LLC, Los Alamos National
+     Laboratory, LANL, the U.S. Government, nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY LOS ALAMOS NATIONAL SECURITY, LLC AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL SECURITY, LLC OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: ThirdParty/TclTk/*
+Copyright: 1990-1994 The Regents of the University of California.
+           1994-1997 Sun Microsystems, Inc.
+           1998 by Scriptics Corporation.
+License: BSD-like
+   This software is copyrighted by the Regents of the University of
+   California, Sun Microsystems, Inc., Scriptics Corporation,
+   and other parties.  The following terms apply to all files associated
+   with the software unless explicitly disclaimed in individual files.
+   .
+   The authors hereby grant permission to use, copy, modify, distribute,
+   and license this software and its documentation for any purpose, provided
+   that existing copyright notices are retained in all copies and that this
+   notice is included verbatim in any distributions. No written agreement,
+   license, or royalty fee is required for any of the authorized uses.
+   Modifications to this software may be copyrighted by their authors
+   and need not follow the licensing terms described here, provided that
+   the new terms are clearly indicated on the first page of each file where
+   they apply.
+   .
+   IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+   FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+   ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+   DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+   .
+   THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+   IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE
+   NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+   MODIFICATIONS.
+   .
+   GOVERNMENT USE: If you are acquiring this software on behalf of the
+   U.S. government, the Government shall have only "Restricted Rights"
+   in the software and related documentation as defined in the Federal 
+   Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+   are acquiring the software on behalf of the Department of Defense, the
+   software shall be classified as "Commercial Computer Software" and the
+   Government shall have only "Restricted Rights" as defined in Clause
+   252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the
+   authors grant the U.S. Government and others acting in its behalf
+   permission to use and distribute the software in accordance with the
+   terms specified in this license.
+   
+Files: ThirdParty/oggtheora/vtkoggtheora/*
+Copyright: 1994-2007 Xiph.Org Foundation
+License: BSD-like
+
+Files: ThirdParty/oggtheora/vtkoggtheora/*
+Copyright: 2010 University Corporation for Atmospheric Research/Unidata
+License: BSD-like
+
+Files: ThirdParty/mrmpi/*
+Copyright: (2009) Sandia Corporation
+License: BSD-like
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ * Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+ .
+ * Neither the name of Sandia Corporation nor the names of contributors
+  to this software may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: ThirdParty/libxml2/*
+Copyright: 1998-2003 Daniel Veillard
+License: BSD-like
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is fur-
+ nished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FIT-
+ NESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ DANIEL VEILLARD BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CON-
+ NECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of Daniel Veillard shall not
+ be used in advertising or otherwise to promote the sale, use or other deal-
+ ings in this Software without prior written authorization from him.
+
+Files: ThirdParty/libproj4/*
+Copyright: 2003, 2006   Gerald I. Evenden
+License: BSD-like
+ ** Permission is hereby granted, free of charge, to any person obtaining
+ ** a copy of this software and associated documentation files (the
+ ** "Software"), to deal in the Software without restriction, including
+ ** without limitation the rights to use, copy, modify, merge, publish,
+ ** distribute, sublicense, and/or sell copies of the Software, and to
+ ** permit persons to whom the Software is furnished to do so, subject to
+ ** the following conditions:
+ **
+ ** The above copyright notice and this permission notice shall be
+ ** included in all copies or substantial portions of the Software.
+ **
+ ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ ** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ ** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ ** CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ ** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ ** SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Files: ThirdParty/jsoncpp/*
+Copyright: 2007-2010 by Baptiste Lepilleur
+License: MIT or pulbic-domain
+ In jurisdictions which recognize Public Domain property, the user of this
+ software may choose to accept it either as 1) Public Domain, 2) under the
+ conditions of the MIT License (see below), or 3) under the terms of dual
+ Public Domain/MIT License conditions described here, as they choose.
+ .
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use, copy,
+ modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+Files: ThirdParty/jpeg/*
+Copyright: 1991-1998, Thomas G. Lane.
+License: BSD-like
+   Permission is hereby granted to use, copy, modify, and distribute this
+   software (or portions thereof) for any purpose, without fee, subject to these
+   conditions:
+   (1) If any part of the source code for this software is distributed, then this
+   README file must be included, with this copyright and no-warranty notice
+   unaltered; and any additions, deletions, or changes to the original files
+   must be clearly indicated in accompanying documentation.
+   (2) If only executable code is distributed, then the accompanying
+   documentation must state that "this software is based in part on the work of
+   the Independent JPEG Group".
+   (3) Permission for use of this software is granted only if the user accepts
+   full responsibility for any undesirable consequences; the authors accept
+   NO LIABILITY for damages of any kind.
+   .
+   These conditions apply to any software derived from or based on the IJG code,
+   not just to the unmodified library.  If you use our work, you ought to
+   acknowledge us.
+   .
+   Permission is NOT granted for the use of any IJG author's name or company name
+   in advertising or publicity relating to this software or products derived from
+   it.  This software may be referred to only as "the Independent JPEG Group's
+   software".
+   .
+   We specifically permit and encourage the use of this software as the basis of
+   commercial products, provided that all warranty or liability claims are
+   assumed by the product vendor.
+   
+Files: ThirdParty/hdf5/*
+Copyright: 1991-1998, Thomas G. Lane.
+License: 2006-2010 by The HDF Group.
+   Redistribution and use in source and binary forms, with or without 
+   modification, are permitted for any purpose (including commercial purposes) 
+   provided that the following conditions are met:
+   .
+   1. Redistributions of source code must retain the above copyright notice, 
+      this list of conditions, and the following disclaimer.
+   .
+   2. Redistributions in binary form must reproduce the above copyright notice, 
+      this list of conditions, and the following disclaimer in the documentation 
+      and/or materials provided with the distribution.
+   .
+   3. In addition, redistributions of modified forms of the source or binary 
+      code must carry prominent notices stating that the original code was 
+      changed and the date of the change.
+   .
+   4. All publications or advertising materials mentioning features or use of 
+      this software are asked, but not required, to acknowledge that it was 
+      developed by The HDF Group and by the National Center for Supercomputing 
+      Applications at the University of Illinois at Urbana-Champaign and 
+      credit the contributors.
+   .
+   5. Neither the name of The HDF Group, the name of the University, nor the 
+      name of any Contributor may be used to endorse or promote products derived 
+      from this software without specific prior written permission from 
+      The HDF Group, the University, or the Contributor, respectively.
+   .
+   DISCLAIMER: 
+   THIS SOFTWARE IS PROVIDED BY THE HDF GROUP AND THE CONTRIBUTORS 
+   "AS IS" WITH NO WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED.  In no 
+   event shall The HDF Group or the Contributors be liable for any damages 
+   suffered by the users arising out of the use of this software, even if 
+   advised of the possibility of such damage. 
+   
+Files: ThirdParty/gl2ps/*
+Copyright: 1999-2012 C. Geuzaine
+License: LGPL2+
+ On Debian systems, the full text of the GNU Library General Public 
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/LGPL-2'.
+   
+Files: ThirdParty/ftgl/*
+Copyright: 2001-2 Henry Maddocks
+License: BSD-like
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+   .
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+   .
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   
+
+Files: ThirdParty/freetype/*
+Copyright: 2006-2011 David Turner, Robert Wilhelm, and Werner Lemberg.
+License: BSD-like
+   0. Definitions
+ --------------
+ .
+  Throughout this license,  the terms `package', `FreeType Project',
+  and  `FreeType  archive' refer  to  the  set  of files  originally
+  distributed  by the  authors  (David Turner,  Robert Wilhelm,  and
+  Werner Lemberg) as the `FreeType Project', be they named as alpha,
+  beta or final release.
+ .
+  `You' refers to  the licensee, or person using  the project, where
+  `using' is a generic term including compiling the project's source
+  code as  well as linking it  to form a  `program' or `executable'.
+  This  program is  referred to  as  `a program  using the  FreeType
+  engine'.
+ .
+  This  license applies  to all  files distributed  in  the original
+  FreeType  Project,   including  all  source   code,  binaries  and
+  documentation,  unless  otherwise  stated   in  the  file  in  its
+  original, unmodified form as  distributed in the original archive.
+  If you are  unsure whether or not a particular  file is covered by
+  this license, you must contact us to verify this.
+ .
+  The FreeType  Project is copyright (C) 1996-2000  by David Turner,
+  Robert Wilhelm, and Werner Lemberg.  All rights reserved except as
+  specified below.
+ .
+ 1. No Warranty
+ --------------
+ .
+  THE FREETYPE PROJECT  IS PROVIDED `AS IS' WITHOUT  WARRANTY OF ANY
+  KIND, EITHER  EXPRESS OR IMPLIED,  INCLUDING, BUT NOT  LIMITED TO,
+  WARRANTIES  OF  MERCHANTABILITY   AND  FITNESS  FOR  A  PARTICULAR
+  PURPOSE.  IN NO EVENT WILL ANY OF THE AUTHORS OR COPYRIGHT HOLDERS
+  BE LIABLE  FOR ANY DAMAGES CAUSED  BY THE USE OR  THE INABILITY TO
+  USE, OF THE FREETYPE PROJECT.
+ .
+ 2. Redistribution
+ -----------------
+ .
+  This  license  grants  a  worldwide, royalty-free,  perpetual  and
+  irrevocable right  and license to use,  execute, perform, compile,
+  display,  copy,   create  derivative  works   of,  distribute  and
+  sublicense the  FreeType Project (in  both source and  object code
+  forms)  and  derivative works  thereof  for  any  purpose; and  to
+  authorize others  to exercise  some or all  of the  rights granted
+  herein, subject to the following conditions:
+ .
+    o Redistribution of  source code  must retain this  license file
+      (`FTL.TXT') unaltered; any  additions, deletions or changes to
+      the original  files must be clearly  indicated in accompanying
+      documentation.   The  copyright   notices  of  the  unaltered,
+      original  files must  be  preserved in  all  copies of  source
+      files.
+ .
+    o Redistribution in binary form must provide a  disclaimer  that
+      states  that  the software is based in part of the work of the
+      FreeType Team,  in  the  distribution  documentation.  We also
+      encourage you to put an URL to the FreeType web page  in  your
+      documentation, though this isn't mandatory.
+ .
+  These conditions  apply to any  software derived from or  based on
+  the FreeType Project,  not just the unmodified files.   If you use
+  our work, you  must acknowledge us.  However, no  fee need be paid
+  to us.
+ .
+ 3. Advertising
+ --------------
+ .
+  Neither the  FreeType authors and  contributors nor you  shall use
+  the name of the  other for commercial, advertising, or promotional
+  purposes without specific prior written permission.
+ .
+  We suggest,  but do not require, that  you use one or  more of the
+  following phrases to refer  to this software in your documentation
+  or advertising  materials: `FreeType Project',  `FreeType Engine',
+  `FreeType library', or `FreeType Distribution'.
+ .
+  As  you have  not signed  this license,  you are  not  required to
+  accept  it.   However,  as  the FreeType  Project  is  copyrighted
+  material, only  this license, or  another one contracted  with the
+  authors, grants you  the right to use, distribute,  and modify it.
+  Therefore,  by  using,  distributing,  or modifying  the  FreeType
+  Project, you indicate that you understand and accept all the terms
+  of this license.
+   
+Files: ThirdParty/expat/*
+Copyright: 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper
+License: BSD-like
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+   .
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+   .
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Files: ThirdParty/exodusII/*
+Copyright: 2005 Sandia Corporation.
+License: BSD-like
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are
+   met:
+   .
+       * Redistributions of source code must retain the above copyright
+         notice, this list of conditions and the following disclaimer.
+   .
+       * Redistributions in binary form must reproduce the above
+         copyright notice, this list of conditions and the following
+         disclaimer in the documentation and/or other materials provided
+         with the distribution.  
+   .
+       * Neither the name of Sandia Corporation nor the names of its
+         contributors may be used to endorse or promote products derived
+         from this software without specific prior written permission.
+   .
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: ThirdParty/Cosmo/*
+Copyright: 2007, Los Alamos National Security, LLC
+License: BSD-like
+   This software was produced under U.S. Government contract DE-AC52-06NA25396 
+   for Los Alamos National Laboratory (LANL), which is operated by 
+   Los Alamos National Security, LLC for the U.S. Department of Energy. 
+   The U.S. Government has rights to use, reproduce, and distribute this software. 
+   NEITHER THE GOVERNMENT NOR LOS ALAMOS NATIONAL SECURITY, LLC MAKES ANY WARRANTY,
+   EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  
+   If software is modified to produce derivative works, such modified software 
+   should be clearly marked, so as not to confuse it with the version available 
+   from LANL.
+   .
+   Additionally, redistribution and use in source and binary forms, with or 
+   without modification, are permitted provided that the following conditions 
+   are met:
+   -   Redistributions of source code must retain the above copyright notice, 
+       this list of conditions and the following disclaimer. 
+   -   Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution. 
+   -   Neither the name of Los Alamos National Security, LLC, Los Alamos National
+       Laboratory, LANL, the U.S. Government, nor the names of its contributors
+       may be used to endorse or promote products derived from this software 
+       without specific prior written permission. 
+   .
+   THIS SOFTWARE IS PROVIDED BY LOS ALAMOS NATIONAL SECURITY, LLC AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+   ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL SECURITY, LLC OR 
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
+   OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: ThirdParty/alglib/*
+Copyright: 2003-2007, Sergey Bochkanov (ALGLIB project).
+License: BSD-like
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are
+   met:
+    .
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+    .
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer listed
+     in this license in the documentation and/or other materials
+     provided with the distribution.
+    .
+   - Neither the name of the copyright holders nor the names of its
+     contributors may be used to endorse or promote products derived from
+     this software without specific prior written permission.
+    .
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   
