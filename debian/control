@@ -66,9 +66,7 @@ Build-Depends-Indep:
  texlive-binaries, texlive-math-extra
 XS-Python-Version: current
 Uploaders:
- A. Maitland Bottoms <bottoms@debian.org>,
- Dominique Belhachemi <domibel@debian.org>,
- Mathieu Malaterre <malat@debian.org>
+ Anton Gladky <gladk@debian.org>
 Standards-Version: 3.9.4
 Homepage: http://www.vtk.org/
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
