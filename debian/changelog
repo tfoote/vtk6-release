@@ -2,4 +2,4 @@ vtk6 (6.0.0-1) unstable; urgency=low
 
   * Initial packaging for vtk6. (Closes: #729086)
 
- -- Anton Gladky <gladk@debian.org>  Fri, 08 Nov 2013 22:39:30 +0100
+ -- Anton Gladky <gladk@debian.org>  Tue, 07 Jan 2014 21:26:32 +0100
