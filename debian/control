@@ -78,8 +78,6 @@ Architecture: any
 Depends:
  ${misc:Depends},
  ${shlibs:Depends}
-Conflicts:
- libvtk5
 Replaces:
  libvtk32,
  libvtk4,
