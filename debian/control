@@ -56,8 +56,7 @@ Build-Depends:
  libgl1-mesa-dev | libgl-dev, libglu1-mesa-dev | libglu-dev,
  xvfb, xauth,
  r-base, r-base-core, r-base-dev,
- chrpath 
-Build-Depends-Indep:
+ chrpath,
  doxygen-latex,
  ghostscript,
  gnuplot-nox,
