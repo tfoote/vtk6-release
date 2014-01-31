@@ -8,17 +8,6 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR) --with python2 --with javahelper --parallel
 
 # Module_vtkjsoncpp:BOOL=OFF as we use A. Gladky patch to use system jsoncpp 
-#
-# Module_vtkAcceleratorsPiston:BOOL=OFF as it requires CUDA
-#
-# Module_vtkIOGDAL:BOOL=OFF as it requires hdf5-serial-dev
-#   cgal should be redebian/build against libhdf5-mpi-dev is possible
-#
-# Module_vtkInfovisParallel:BOOL=OFF as it relies on boost 1.40 - need to be patched
-#
-# Module_vtkmrmpi:BOOL=OFF why??
-# Module_vtkIOODBC:BOOL=OFF why??
-# Module_vtkIOPostgreSQL:BOOL=OFF why??
 
 extra_flags +=  \
  -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
@@ -74,6 +63,7 @@ override_dh_auto_install:
 	# Correct headers for paraview
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
 	mv $(CURDIR)/debian/tmp/usr/bin/vtk $(CURDIR)/debian/tmp/usr/bin/vtk6
+	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	
 override_dh_shlibdeps:
 	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib
