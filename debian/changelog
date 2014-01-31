@@ -1,3 +1,13 @@
+vtk6 (6.0.0-2) unstable; urgency=medium
+
+  * [d293466] Move Build-Depends-Indep BD to Build-Depends.
+  * [2cc14aa] Replace bin/vtk by bin/vtk6. (Closes: #737190)
+  * [582a7f7] Rename vtk.jar on vtk6.jar. (Closes: #737189)
+  * [052a215] Use wrap-and-sort.
+  * [61d6f06] Remove conflict libvtk5 and libvtk6.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 31 Jan 2014 20:45:06 +0100
+
 vtk6 (6.0.0-1) unstable; urgency=low
 
   * Initial packaging for vtk6. (Closes: #729086)
