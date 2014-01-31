@@ -53,9 +53,9 @@ Files: ThirdParty/xdmf2/vtkxdmf2/libsrc/*
 Copyright: 2002 US Army Research Laboratory
 License: BSD-like
  This software is distributed WITHOUT ANY WARRANTY; without
- even the implied warranty of MERCHANTABILITY or FITNESS   
- FOR A PARTICULAR PURPOSE.  See the above copyright notice 
- for more information. 
+ even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the above copyright notice
+ for more information.
 
 Files: ThirdParty/verdict/vtkverdict/*
 Copyright: 2006 Sandia Corporation
@@ -93,23 +93,23 @@ Files: ThirdParty/tiff/vtktiff/*
 Copyright: 1988-1997 Sam Leffler
            1991-1997 Silicon Graphics, Inc.
 License: BSD-like
- Permission to use, copy, modify, distribute, and sell this software and 
+ Permission to use, copy, modify, distribute, and sell this software and
  its documentation for any purpose is hereby granted without fee, provided
  that (i) the above copyright notices and this permission notice appear in
  all copies of the software and related documentation, and (ii) the names of
  Sam Leffler and Silicon Graphics may not be used in any advertising or
  publicity relating to the software without the specific, prior written
  permission of Sam Leffler and Silicon Graphics.
- . 
- THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- . 
+ .
+ THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ .
  IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  OF THIS SOFTWARE.
 
 Files: ThirdParty/sqlite/vtksqlite/*
@@ -222,7 +222,7 @@ License: BSD-like
    .
    GOVERNMENT USE: If you are acquiring this software on behalf of the
    U.S. government, the Government shall have only "Restricted Rights"
-   in the software and related documentation as defined in the Federal 
+   in the software and related documentation as defined in the Federal
    Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
    are acquiring the software on behalf of the Department of Defense, the
    software shall be classified as "Commercial Computer Software" and the
@@ -231,7 +231,7 @@ License: BSD-like
    authors grant the U.S. Government and others acting in its behalf
    permission to use and distribute the software in accordance with the
    terms specified in this license.
-   
+
 Files: ThirdParty/oggtheora/vtkoggtheora/*
 Copyright: 2010 University Corporation for Atmospheric Research/Unidata
 License: BSD-like
@@ -393,50 +393,50 @@ License: BSD-like
    We specifically permit and encourage the use of this software as the basis of
    commercial products, provided that all warranty or liability claims are
    assumed by the product vendor.
-   
+
 Files: ThirdParty/hdf5/*
 Copyright: 1991-1998, Thomas G. Lane.
 License: 2006-2010 by The HDF Group.
-   Redistribution and use in source and binary forms, with or without 
-   modification, are permitted for any purpose (including commercial purposes) 
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted for any purpose (including commercial purposes)
    provided that the following conditions are met:
    .
-   1. Redistributions of source code must retain the above copyright notice, 
+   1. Redistributions of source code must retain the above copyright notice,
       this list of conditions, and the following disclaimer.
    .
-   2. Redistributions in binary form must reproduce the above copyright notice, 
-      this list of conditions, and the following disclaimer in the documentation 
+   2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions, and the following disclaimer in the documentation
       and/or materials provided with the distribution.
    .
-   3. In addition, redistributions of modified forms of the source or binary 
-      code must carry prominent notices stating that the original code was 
+   3. In addition, redistributions of modified forms of the source or binary
+      code must carry prominent notices stating that the original code was
       changed and the date of the change.
    .
-   4. All publications or advertising materials mentioning features or use of 
-      this software are asked, but not required, to acknowledge that it was 
-      developed by The HDF Group and by the National Center for Supercomputing 
-      Applications at the University of Illinois at Urbana-Champaign and 
+   4. All publications or advertising materials mentioning features or use of
+      this software are asked, but not required, to acknowledge that it was
+      developed by The HDF Group and by the National Center for Supercomputing
+      Applications at the University of Illinois at Urbana-Champaign and
       credit the contributors.
    .
-   5. Neither the name of The HDF Group, the name of the University, nor the 
-      name of any Contributor may be used to endorse or promote products derived 
-      from this software without specific prior written permission from 
+   5. Neither the name of The HDF Group, the name of the University, nor the
+      name of any Contributor may be used to endorse or promote products derived
+      from this software without specific prior written permission from
       The HDF Group, the University, or the Contributor, respectively.
    .
-   DISCLAIMER: 
-   THIS SOFTWARE IS PROVIDED BY THE HDF GROUP AND THE CONTRIBUTORS 
-   "AS IS" WITH NO WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED.  In no 
-   event shall The HDF Group or the Contributors be liable for any damages 
-   suffered by the users arising out of the use of this software, even if 
-   advised of the possibility of such damage. 
-   
+   DISCLAIMER:
+   THIS SOFTWARE IS PROVIDED BY THE HDF GROUP AND THE CONTRIBUTORS
+   "AS IS" WITH NO WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED.  In no
+   event shall The HDF Group or the Contributors be liable for any damages
+   suffered by the users arising out of the use of this software, even if
+   advised of the possibility of such damage.
+
 Files: ThirdParty/gl2ps/*
 Copyright: 1999-2012 C. Geuzaine
 License: LGPL2+
- On Debian systems, the full text of the GNU Library General Public 
+ On Debian systems, the full text of the GNU Library General Public
  License version 2 can be found in the file
  `/usr/share/common-licenses/LGPL-2'.
-   
+
 Files: ThirdParty/ftgl/*
 Copyright: 2001-2 Henry Maddocks
 License: BSD-like
@@ -458,7 +458,7 @@ License: BSD-like
    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-   
+
 
 Files: ThirdParty/freetype/*
 Copyright: 2006-2011 David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -547,7 +547,7 @@ License: BSD-like
   Therefore,  by  using,  distributing,  or modifying  the  FreeType
   Project, you indicate that you understand and accept all the terms
   of this license.
-   
+
 Files: ThirdParty/expat/*
 Copyright: 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper
 License: BSD-like
@@ -583,7 +583,7 @@ License: BSD-like
        * Redistributions in binary form must reproduce the above
          copyright notice, this list of conditions and the following
          disclaimer in the documentation and/or other materials provided
-         with the distribution.  
+         with the distribution.
    .
        * Neither the name of Sandia Corporation nor the names of its
          contributors may be used to endorse or promote products derived
@@ -604,39 +604,39 @@ License: BSD-like
 Files: ThirdParty/Cosmo/*
 Copyright: 2007, Los Alamos National Security, LLC
 License: BSD-like
-   This software was produced under U.S. Government contract DE-AC52-06NA25396 
-   for Los Alamos National Laboratory (LANL), which is operated by 
-   Los Alamos National Security, LLC for the U.S. Department of Energy. 
-   The U.S. Government has rights to use, reproduce, and distribute this software. 
+   This software was produced under U.S. Government contract DE-AC52-06NA25396
+   for Los Alamos National Laboratory (LANL), which is operated by
+   Los Alamos National Security, LLC for the U.S. Department of Energy.
+   The U.S. Government has rights to use, reproduce, and distribute this software.
    NEITHER THE GOVERNMENT NOR LOS ALAMOS NATIONAL SECURITY, LLC MAKES ANY WARRANTY,
-   EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  
-   If software is modified to produce derivative works, such modified software 
-   should be clearly marked, so as not to confuse it with the version available 
+   EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.
+   If software is modified to produce derivative works, such modified software
+   should be clearly marked, so as not to confuse it with the version available
    from LANL.
    .
-   Additionally, redistribution and use in source and binary forms, with or 
-   without modification, are permitted provided that the following conditions 
+   Additionally, redistribution and use in source and binary forms, with or
+   without modification, are permitted provided that the following conditions
    are met:
-   -   Redistributions of source code must retain the above copyright notice, 
-       this list of conditions and the following disclaimer. 
+   -   Redistributions of source code must retain the above copyright notice,
+       this list of conditions and the following disclaimer.
    -   Redistributions in binary form must reproduce the above copyright notice,
        this list of conditions and the following disclaimer in the documentation
-       and/or other materials provided with the distribution. 
+       and/or other materials provided with the distribution.
    -   Neither the name of Los Alamos National Security, LLC, Los Alamos National
        Laboratory, LANL, the U.S. Government, nor the names of its contributors
-       may be used to endorse or promote products derived from this software 
-       without specific prior written permission. 
+       may be used to endorse or promote products derived from this software
+       without specific prior written permission.
    .
    THIS SOFTWARE IS PROVIDED BY LOS ALAMOS NATIONAL SECURITY, LLC AND CONTRIBUTORS
-   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-   ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL SECURITY, LLC OR 
-   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
-   OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
-   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL SECURITY, LLC OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+   OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
    ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Files: ThirdParty/alglib/*
@@ -669,4 +669,3 @@ License: BSD-like
    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   

@@ -3,16 +3,24 @@ Section: graphics
 Priority: optional
 Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
 Build-Depends:
+ chrpath,
  cmake (>= 2.8.5),
  debhelper (>= 9),
  default-jdk,
+ dh-python,
+ doxygen-latex,
  dpkg-dev (>= 1.16.1~),
  ftgl-dev,
- javahelper, 
+ ghostscript,
+ gnuplot-nox,
+ graphviz,
+ hdf5-tools,
+ javahelper,
  libavcodec-dev,
  libavformat-dev,
  libavutil-dev,
  libboost-all-dev,
+ libdigest-md5-perl,
  libexpat-dev,
  libfreetype6-dev,
  libgdal-dev,
@@ -21,14 +29,16 @@ Build-Depends:
  libglu1-mesa-dev | libglu-dev,
  libhdf5-dev,
  libjpeg-dev,
+ libjsoncpp-dev,
+ libmrmpi-dev,
  libmysqlclient-dev,
  libnetcdf-dev,
- libosmesa6-dev,
  libogg-dev,
+ libosmesa6-dev,
  libpng-dev,
  libpq-dev,
- libqt4-opengl-dev,
  libqt4-dev,
+ libqt4-opengl-dev,
  libqtwebkit-dev,
  libsqlite3-dev,
  libswscale-dev,
@@ -40,29 +50,21 @@ Build-Depends:
  libxt-dev,
  mpi-default-dev,
  pkg-config,
- python-all-dev (>= 2.7), python-all-dev (<< 2.8),
- dh-python,
+ python-all-dev (<< 2.8),
+ python-all-dev (>= 2.7),
+ python-matplotlib,
+ python-mpi4py,
+ r-base,
+ r-base-core,
+ r-base-dev,
  tcl8.6-dev,
+ texlive-binaries,
+ texlive-math-extra,
  tk8.6-dev,
  x11proto-core-dev,
+ xauth,
  xvfb,
- zlib1g-dev,
- hdf5-tools,
- libgl2ps-dev, libjsoncpp-dev,
- python-mpi4py,
- libboost-all-dev,
- libxpm-dev,
- libmrmpi-dev, python-matplotlib,
- libgl1-mesa-dev | libgl-dev, libglu1-mesa-dev | libglu-dev,
- xvfb, xauth,
- r-base, r-base-core, r-base-dev,
- chrpath,
- doxygen-latex,
- ghostscript,
- gnuplot-nox,
- graphviz,
- libdigest-md5-perl,
- texlive-binaries, texlive-math-extra
+ zlib1g-dev
 XS-Python-Version: current
 Uploaders:
  Anton Gladky <gladk@debian.org>
@@ -70,6 +72,44 @@ Standards-Version: 3.9.5
 Homepage: http://www.vtk.org/
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
+
+Package: libvtk6
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Conflicts:
+ libvtk5
+Replaces:
+ libvtk32,
+ libvtk4,
+ libvtk4c2,
+ libvtk4c2a,
+ libvtk5,
+ libvtk5.8
+Suggests:
+ libvtk6-dev,
+ openmpi-bin | lam-runtime,
+ vtk6-doc,
+ vtk6-examples
+Section: libs
+Description: Visualization Toolkit - A high level 3D visualization library - runtime
+ The Visualization Toolkit (VTK) is an object oriented, high level
+ library that allows one to easily write C++ programs, Tcl, Python and
+ Java scripts that do 3D visualization.
+ .
+ VTK enables users to concentrate on their work by providing a large
+ number of excellent and feature packed high level functions that do
+ visualization.  The library needs OpenGL to render the graphics and
+ for Linux machines Mesa is necessary. The terms/copyright can be read
+ in /usr/share/doc/vtk/README and README.html.  VTK-Linux-HOWTO has
+ information about using vtk, getting documentataion or help and
+ instructions on building VTK.
+ .
+ This package provides the shared libraries needed to run C++ programs
+ that use VTK.
+ .
+ To compile C++ code that uses VTK you have to install libvtk5-dev.
 
 Package: libvtk6-dev
 Architecture: any
@@ -145,51 +185,13 @@ Description: Visualization Toolkit - A high level 3D visualization library - jav
  .
  This package provides the VTK Java language support.
 
-Package: libvtk6
-Architecture: any
-Depends:
- ${misc:Depends},
- ${shlibs:Depends}
-Conflicts:
- libvtk5
-Replaces:
- libvtk32,
- libvtk4,
- libvtk4c2,
- libvtk4c2a,
- libvtk5,
- libvtk5.8
-Suggests:
- libvtk6-dev,
- openmpi-bin | lam-runtime,
- vtk6-doc,
- vtk6-examples
-Section: libs
-Description: Visualization Toolkit - A high level 3D visualization library - runtime
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
- .
- VTK enables users to concentrate on their work by providing a large
- number of excellent and feature packed high level functions that do
- visualization.  The library needs OpenGL to render the graphics and
- for Linux machines Mesa is necessary. The terms/copyright can be read
- in /usr/share/doc/vtk/README and README.html.  VTK-Linux-HOWTO has
- information about using vtk, getting documentataion or help and
- instructions on building VTK.
- .
- This package provides the shared libraries needed to run C++ programs
- that use VTK.
- .
- To compile C++ code that uses VTK you have to install libvtk5-dev.
-
 Package: python-vtk6
 Architecture: any
 Depends:
+ libvtk6 (= ${binary:Version}),
  ${misc:Depends},
  ${python:Depends},
- ${shlibs:Depends},
- libvtk6 (= ${binary:Version}),
+ ${shlibs:Depends}
 Suggests:
  mayavi2,
  vtk6-doc,
