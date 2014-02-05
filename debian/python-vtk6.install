@@ -1,6 +1,5 @@
-
-debian/build/bin/pvtk				usr/bin
-debian/build/bin/pvtkpython		    	usr/bin
-debian/build/bin/vtkpython			usr/bin
+debian/build/bin/pvtk				 usr/bin
+debian/build/bin/pvtkpython	 usr/bin
+debian/build/bin/vtk6python	 usr/bin
 usr/bin/vtkWrapPython-6.0
 usr/bin/vtkWrapPythonInit-6.0
