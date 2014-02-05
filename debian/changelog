@@ -1,3 +1,9 @@
+vtk6 (6.0.0-3) unstable; urgency=medium
+
+  * [2c49a31] Rename vtkpython to vtk6python. (Closes: #737288)
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 05 Feb 2014 19:14:15 +0100
+
 vtk6 (6.0.0-2) unstable; urgency=medium
 
   * [d293466] Move Build-Depends-Indep BD to Build-Depends.
