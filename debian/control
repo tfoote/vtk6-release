@@ -185,6 +185,7 @@ Description: Visualization Toolkit - A high level 3D visualization library - jav
 
 Package: python-vtk6
 Architecture: any
+Conflicts: python-vtk
 Depends:
  libvtk6 (= ${binary:Version}),
  ${misc:Depends},
