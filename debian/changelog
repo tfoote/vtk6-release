@@ -1,3 +1,10 @@
+vtk6 (6.0.0-4) unstable; urgency=medium
+
+  * [dac7bea] Declare python-vtk6 as conflicted with 
+              python-vtk. (Closes: #737288)
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 07 Feb 2014 21:08:39 +0100
+
 vtk6 (6.0.0-3) unstable; urgency=medium
 
   * [2c49a31] Rename vtkpython to vtk6python. (Closes: #737288)
