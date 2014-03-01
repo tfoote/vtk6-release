@@ -62,7 +62,6 @@ override_dh_auto_install:
 	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.0/vtkWrapJava.cmake
 	# Correct headers for paraview
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
-	mv $(CURDIR)/debian/tmp/usr/bin/vtk $(CURDIR)/debian/tmp/usr/bin/vtk6
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
 	

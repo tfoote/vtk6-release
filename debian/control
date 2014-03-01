@@ -210,6 +210,10 @@ Description: Python bindings for VTK
  information may be available in /usr/share/doc/python-vtk/.
 
 Package: tcl-vtk6
+Conflicts:
+ tcl-vtk
+Replaces:
+ tcl-vtk
 Architecture: any
 Depends:
  libvtk6 (= ${binary:Version}),
