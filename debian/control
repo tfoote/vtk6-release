@@ -128,6 +128,7 @@ Depends:
  libc6-dev,
  libexpat-dev,
  libfreetype6-dev,
+ libgdal-dev,
  libgl1-mesa-dev | libgl-dev,
  libgl2ps-dev,
  libglu1-mesa-dev | libglu-dev,
@@ -210,10 +211,6 @@ Description: Python bindings for VTK
  information may be available in /usr/share/doc/python-vtk/.
 
 Package: tcl-vtk6
-Conflicts:
- tcl-vtk
-Replaces:
- tcl-vtk
 Architecture: any
 Depends:
  libvtk6 (= ${binary:Version}),
@@ -241,6 +238,8 @@ Depends:
 Suggests:
  vtk6-doc,
  vtk6-examples
+Conflicts:
+ tcl-vtk
 Section: interpreters
 Description: Binaries for VTK6
  The Visualization Toolkit (VTK) is an object oriented, high level
