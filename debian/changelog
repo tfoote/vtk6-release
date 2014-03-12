@@ -1,3 +1,15 @@
+vtk6 (6.0.0-5) unstable; urgency=medium
+
+  [ Anton Khirnov ]
+  * [675402e] Fix libav10-compilation. (Closes: #739456)
+
+  [ Anton Gladky ]
+  * [5571d39] Add some depends for libvtk6-dev.
+  * [1dbe2cf] Use /usr/bin/vtk instead /usr/bin/vtk6
+  * [00730af] Add conflict of vtk6 with tcl-vtk.
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 12 Mar 2014 22:39:16 +0100
+
 vtk6 (6.0.0-4) unstable; urgency=medium
 
   * [dac7bea] Declare python-vtk6 as conflicted with 
