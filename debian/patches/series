@@ -6,3 +6,4 @@ vtkTclWrapper.patch
 vtkWrapJava.patch
 matplotlib.patch
 docs.patch
+fix_libav10.patch
