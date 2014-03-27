@@ -64,6 +64,8 @@ override_dh_auto_install:
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets.cmake
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets-none.cmake
 	
 override_dh_shlibdeps:
 	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib
