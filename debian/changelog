@@ -1,3 +1,12 @@
+vtk6 (6.0.0-6) unstable; urgency=medium
+
+  * [932d19c] Add some more entries in Depends section of libvtk6-dev.
+              (Closes: #742629)
+  * [efbf5d1] Fix VTKTargets.cmake. (Closes: #741927)
+  * [7ee8293] Build instantiator. (Closes: #741928)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 27 Mar 2014 21:54:22 +0100
+
 vtk6 (6.0.0-5) unstable; urgency=medium
 
   [ Anton Khirnov ]
