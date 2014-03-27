@@ -38,6 +38,7 @@ extra_flags +=  \
 	-DVTK_BUILD_ALL_MODULES=ON \
 	-DMPI_CXX_INCLUDE_PATH="/usr/include/mpi" \
 	-DVTK_INSTALL_LIBRARY_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
+	-DVTK_MAKE_INSTANTIATORS=ON \
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(extra_flags)
