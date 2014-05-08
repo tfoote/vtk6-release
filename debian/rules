@@ -7,7 +7,7 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 %:
 	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR) --with python2 --with javahelper --parallel
 
-# Module_vtkjsoncpp:BOOL=OFF as we use A. Gladky patch to use system jsoncpp 
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 extra_flags +=  \
  -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
