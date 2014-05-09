@@ -7,8 +7,6 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 %:
 	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR) --with python2 --with javahelper --parallel
 
-export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
-
 extra_flags +=  \
  -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
 	-DBUILD_DOCUMENTATION=ON \
@@ -39,6 +37,11 @@ extra_flags +=  \
 	-DMPI_CXX_INCLUDE_PATH="/usr/include/mpi" \
 	-DVTK_INSTALL_LIBRARY_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
 	-DVTK_MAKE_INSTANTIATORS=ON \
+	-DCMAKE_EXE_LINKER_FLAGS="-Wl,--as-needed" \
+	-DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed" \
+	-DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed" \
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(extra_flags)
@@ -66,7 +69,7 @@ override_dh_auto_install:
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
 	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets.cmake
-	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets-none.cmake
+	#sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets-none.cmake
 	
 override_dh_shlibdeps:
 	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib
