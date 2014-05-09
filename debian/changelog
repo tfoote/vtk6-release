@@ -1,3 +1,14 @@
+vtk6 (6.0.0-7) unstable; urgency=medium
+
+  * [9796292] Add some more entries in Depends section of libvtk6-dev.
+  * [781eb7c] Remove old unused patches.
+  * [a0f2514] Compile java module with -target 1.5. 
+              Thanks to Gianfranco Costamagna <costamagnagianfranco@yahoo.it>.
+              (Closes: #747108)
+  * [15c0d26] Inject -Wl,--as-needed LDFLAGS.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 09 May 2014 20:25:28 +0200
+
 vtk6 (6.0.0-6) unstable; urgency=medium
 
   * [932d19c] Add some more entries in Depends section of libvtk6-dev.
