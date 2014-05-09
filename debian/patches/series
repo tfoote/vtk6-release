@@ -7,3 +7,4 @@ vtkWrapJava.patch
 matplotlib.patch
 docs.patch
 fix_libav10.patch
+10_Java_Target.patch
