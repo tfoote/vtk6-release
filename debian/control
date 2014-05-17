@@ -72,6 +72,7 @@ Standards-Version: 3.9.5
 Homepage: http://www.vtk.org/
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
+XS-Testsuite: autopkgtest
 
 Package: libvtk6
 Architecture: any

@@ -1,0 +1,2 @@
+Tests: build_Boolean build_GenericClip build_Point build_VTU build_Distance build_PNG build_VTP
+Depends: libvtk6-dev, build-essential, cmake
