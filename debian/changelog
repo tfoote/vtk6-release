@@ -1,3 +1,12 @@
+vtk6 (6.1.0+dfsg-1) unstable; urgency=medium
+
+  * [412063d] Update debian watch.
+  * [b7cb12b] Exclude Web/*
+  * [1187019] Imported Upstream version 6.1.0+dfsg. (Closes: #748053)
+  * [b79b4ae] Add autopkgtest.
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 17 May 2014 21:55:34 +0200
+
 vtk6 (6.0.0-7) unstable; urgency=medium
 
   * [9796292] Add some more entries in Depends section of libvtk6-dev.
