@@ -50,11 +50,6 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf $(BUILDDIR)
 
-override_dh_link:
-	cd $(CURDIR)/debian ; rm -f python-vtk6.links ; ./generate_links.sh $(DEB_HOST_MULTIARCH)
-	dh_link -ptcl-vtk6 usr/lib/$(DEB_HOST_MULTIARCH)/libvtkViewsContextIIDTCL-6.0.so usr/lib/$(DEB_HOST_MULTIARCH)/libvtkViewsContext2DTCL.so
-	dh_link
-
 override_dh_auto_build:
 	dh_auto_build
 	# Make doc (see wiki/VTK/debian/buildingDoxygen)
@@ -63,13 +58,12 @@ override_dh_auto_build:
 override_dh_auto_install:
 	dh_auto_install -X.pyc -X.pyo
 	# Modify vtkWrapJava.cmake to properly upload JavaDependencies.cmake.in	from $VTK_DIR
-	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.0/vtkWrapJava.cmake
+	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.1/vtkWrapJava.cmake
 	# Correct headers for paraview
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
-	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets.cmake
-	#sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.0/VTKTargets-none.cmake
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.1/VTKTargets.cmake
 	
 override_dh_shlibdeps:
 	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib
