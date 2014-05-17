@@ -1,7 +1,5 @@
 allpatches.patch
-use_system_json.patch
 soversion-sharedlib.patch
-examples-add-shebang.patch
 vtkTclWrapper.patch
 vtkWrapJava.patch
 matplotlib.patch

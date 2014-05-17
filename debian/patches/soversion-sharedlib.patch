@@ -1,11 +1,9 @@
-Index: vtk-6.0.0/CMake/vtkModuleMacros.cmake
-===================================================================
---- vtk-6.0.0.orig/CMake/vtkModuleMacros.cmake	2013-10-18 12:01:15.000000000 +0200
-+++ vtk-6.0.0/CMake/vtkModuleMacros.cmake	2013-10-18 12:01:25.000000000 +0200
-@@ -289,8 +289,8 @@
+--- a/CMake/vtkModuleMacros.cmake
++++ b/CMake/vtkModuleMacros.cmake
+@@ -341,8 +341,8 @@
  macro(vtk_target_name _name)
    get_property(_type TARGET ${_name} PROPERTY TYPE)
-   if(NOT "${_type}" STREQUAL EXECUTABLE)
+   if(NOT "${_type}" STREQUAL EXECUTABLE AND NOT VTK_JAVA_INSTALL)
 -    set_property(TARGET ${_name} PROPERTY VERSION 1)
 -    set_property(TARGET ${_name} PROPERTY SOVERSION 1)
 +    set_property(TARGET ${_name} PROPERTY VERSION ${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}.${VTK_BUILD_VERSION})
@@ -13,10 +11,8 @@ Index: vtk-6.0.0/CMake/vtkModuleMacros.cmake
    endif()
    if("${_name}" MATCHES "^[Vv][Tt][Kk]")
      set(_vtk "")
-Index: vtk-6.0.0/Rendering/Tk/CMakeLists.txt
-===================================================================
---- vtk-6.0.0.orig/Rendering/Tk/CMakeLists.txt	2013-06-12 21:47:10.000000000 +0200
-+++ vtk-6.0.0/Rendering/Tk/CMakeLists.txt	2013-10-18 14:58:14.000000000 +0200
+--- a/Rendering/Tk/CMakeLists.txt
++++ b/Rendering/Tk/CMakeLists.txt
 @@ -122,7 +122,7 @@
      vtk_target_install(vtkRenderingPythonTkWidgets)
  

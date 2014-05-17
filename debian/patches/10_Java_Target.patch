@@ -3,18 +3,18 @@ Author: Gianfranco Costamagna <costamagnagianfranco@yahoo.it>, Anton Gladky <gla
 Bug-Debian: http://bugs.debian.org/747108
 Last-Update: 2014-05-09
 
---- vtk6-6.0.0.orig/Wrapping/Java/CMakeLists.txt
-+++ vtk6-6.0.0/Wrapping/Java/CMakeLists.txt
-@@ -237,7 +237,7 @@ add_custom_command(
+--- a/Wrapping/Java/CMakeLists.txt
++++ b/Wrapping/Java/CMakeLists.txt
+@@ -309,7 +309,7 @@
    OUTPUT ${VTK_BINARY_DIR}/java/javac_stamp.txt
    DEPENDS ${VTK_JAVA_SOURCE_FILES}
    COMMAND ${JAVA_COMPILE} ${JAVAC_OPTIONS}
--    -source 1.5 -classpath ${VTK_JAVA_HOME}/..${SEPARATOR}${ECLIPSE_SWT_LIBRARIES} -sourcepath ${VTK_SOURCE_DIR}/Wrapping/Java/ -d ${VTK_BINARY_DIR}/java
-+    -source 1.5 -target 1.5 -classpath ${VTK_JAVA_HOME}/..${SEPARATOR}${ECLIPSE_SWT_LIBRARIES} -sourcepath ${VTK_SOURCE_DIR}/Wrapping/Java/ -d ${VTK_BINARY_DIR}/java
-     ${VTK_BINARY_DIR}/java/vtk/*.java ${VTK_BINARY_DIR}/java/vtk/rendering/*.java ${VTK_BINARY_DIR}/java/vtk/rendering/awt/*.java ${SWT_FILES}
+-    -source 1.5 -classpath ${JAVA_COMPILATION_CLASSPATH} -sourcepath ${VTK_SOURCE_DIR}/Wrapping/Java/ -d ${VTK_BINARY_DIR}/java
++    -source 1.5 -target 1.5 -classpath ${JAVA_COMPILATION_CLASSPATH} -sourcepath ${VTK_SOURCE_DIR}/Wrapping/Java/ -d ${VTK_BINARY_DIR}/java
+     ${VTK_BINARY_DIR}/java/vtk/*.java ${VTK_BINARY_DIR}/java/vtk/rendering/*.java ${VTK_BINARY_DIR}/java/vtk/rendering/awt/*.java ${VTK_BINARY_DIR}/java/vtk/sample/*.java ${SWT_FILES} ${JOGL_FILES}
    COMMAND ${CMAKE_COMMAND} -E touch ${VTK_BINARY_DIR}/java/javac_stamp.txt
    COMMENT "Compiling Java Classes"
-@@ -269,7 +269,7 @@ if(BUILD_TESTING)
+@@ -341,7 +341,7 @@
    add_custom_command(
      OUTPUT ${VTK_BINARY_DIR}/java/javac_tests_stamp.txt
      COMMAND ${JAVA_COMPILE} ${JAVAC_OPTIONS} -classpath ${VTK_JAR_PATH}/vtk.jar${SEPARATOR}${VTK_BINARY_DIR}/Wrapping/Java

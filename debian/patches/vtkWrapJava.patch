@@ -1,7 +1,5 @@
-Index: vtk-6.0.0/Wrapping/Tools/vtkWrapJava.c
-===================================================================
---- vtk-6.0.0.orig/Wrapping/Tools/vtkWrapJava.c	2013-10-25 08:46:57.000000000 +0200
-+++ vtk-6.0.0/Wrapping/Tools/vtkWrapJava.c	2013-10-25 08:46:57.000000000 +0200
+--- a/Wrapping/Tools/vtkWrapJava.c
++++ b/Wrapping/Tools/vtkWrapJava.c
 @@ -1251,8 +1251,31 @@
  
    for (i = 0; i < data->NumberOfSuperClasses; i++)
@@ -59,10 +57,8 @@ Index: vtk-6.0.0/Wrapping/Tools/vtkWrapJava.c
      fprintf(fp," { return res; }\n");
      }
    fprintf(fp,"  return NULL;\n");
-Index: vtk-6.0.0/Wrapping/Tools/vtkWrapTcl.c
-===================================================================
---- vtk-6.0.0.orig/Wrapping/Tools/vtkWrapTcl.c	2013-06-12 21:47:10.000000000 +0200
-+++ vtk-6.0.0/Wrapping/Tools/vtkWrapTcl.c	2013-10-25 08:54:19.000000000 +0200
+--- a/Wrapping/Tools/vtkWrapTcl.c
++++ b/Wrapping/Tools/vtkWrapTcl.c
 @@ -1115,7 +1115,30 @@
  
    for (i = 0; i < data->NumberOfSuperClasses; i++)
