@@ -1,6 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Source: http://www.vtk.org/
 Upstream-Name: Visualization Toolkit
+Files-Excluded: Web/*
 
 Files: *
 Copyright: 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
