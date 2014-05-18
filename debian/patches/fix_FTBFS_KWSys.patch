@@ -1,5 +1,6 @@
 Description: fix FTBFS on many platforms
 Origin: http://cmake.org/gitweb?p=cmake.git;a=commitdiff;h=397bccba
+Bug-Debian: https://bugs.debian.org/748552
 Reviewed-By: Anton Gladky <gladk@debian.org>
 Last-Update: 2014-05-18
 

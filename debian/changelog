@@ -1,6 +1,6 @@
 vtk6 (6.1.0+dfsg-2) unstable; urgency=medium
 
-  * [bac80b1] Fix FTBFS on many platforms in KWSYS.
+  * [bac80b1] Fix FTBFS on many platforms in KWSYS. (Closes: #748552)
 
  -- Anton Gladky <gladk@debian.org>  Sun, 18 May 2014 12:55:27 +0200
 
