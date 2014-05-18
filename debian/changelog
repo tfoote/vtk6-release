@@ -1,3 +1,9 @@
+vtk6 (6.1.0+dfsg-2) unstable; urgency=medium
+
+  * [bac80b1] Fix FTBFS on many platforms in KWSYS.
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 18 May 2014 12:55:27 +0200
+
 vtk6 (6.1.0+dfsg-1) unstable; urgency=medium
 
   * [412063d] Update debian watch.
