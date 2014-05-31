@@ -1,4 +1,4 @@
-libvtk6: package-name-doesnt-match-sonames
+libvtk6.1: package-name-doesnt-match-sonames
 # Will be discussed with upstream to have an opportunity to set USE_SYSTEM_lib
 
-libvtk6: embedded-library
+libvtk6.1: embedded-library
