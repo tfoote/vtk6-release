@@ -1,3 +1,11 @@
+vtk6 (6.1.0+dfsg-4) unstable; urgency=medium
+
+  * [26157d6] Fix compilation with gcc-4.9. (Closes: #746923)
+  * [4ccd56b] Ignore quilt dir
+  * [af6c085] Replace libvtk6 binary by libvtk6.1. (Closes: #749920)
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 31 May 2014 08:26:13 +0200
+
 vtk6 (6.1.0+dfsg-3) unstable; urgency=medium
 
   * [208fbac] Remove RPATH from binaries. (Closes: #748667)
