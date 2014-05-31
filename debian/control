@@ -74,7 +74,7 @@ Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
 XS-Testsuite: autopkgtest
 
-Package: libvtk6
+Package: libvtk6.1
 Architecture: any
 Depends:
  ${misc:Depends},
@@ -85,10 +85,13 @@ Replaces:
  libvtk4c2,
  libvtk4c2a,
  libvtk5,
- libvtk5.8
+ libvtk5.8,
+ libvtk6
+Conflicts:
+ libvtk6 (>>6.0.0-7)
 Suggests:
  libvtk6-dev,
- openmpi-bin | lam-runtime,
+ mpi-default-bin,
  vtk6-doc,
  vtk6-examples
 Section: libs
@@ -148,7 +151,7 @@ Depends:
  libswscale-dev,
  libtheora-dev,
  libtiff-dev,
- libvtk6 (= ${binary:Version}),
+ libvtk6.1 (= ${binary:Version}),
  libvtk6-java (= ${binary:Version}),
  libx11-dev,
  libxft-dev,
@@ -199,7 +202,7 @@ Package: python-vtk6
 Architecture: any
 Conflicts: python-vtk
 Depends:
- libvtk6 (= ${binary:Version}),
+ libvtk6.1 (= ${binary:Version}),
  ${misc:Depends},
  ${python:Depends},
  ${shlibs:Depends}
@@ -221,7 +224,7 @@ Description: Python bindings for VTK
 Package: tcl-vtk6
 Architecture: any
 Depends:
- libvtk6 (= ${binary:Version}),
+ libvtk6.1 (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends}
 Suggests:
@@ -240,7 +243,7 @@ Description: Tcl bindings for VTK
 Package: vtk6
 Architecture: any
 Depends:
- libvtk6 (= ${binary:Version}),
+ libvtk6.1 (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends}
 Suggests:
