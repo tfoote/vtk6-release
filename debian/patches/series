@@ -8,3 +8,4 @@ fix_libav10.patch
 10_Java_Target.patch
 fix_FTBFS_KWSys.patch
 fix_ftbfs_gcc49.patch
+use_system_xdmf.patch
