@@ -16,6 +16,7 @@ Build-Depends:
  graphviz,
  hdf5-tools,
  javahelper,
+ libalglib-dev,
  libavcodec-dev,
  libavformat-dev,
  libavutil-dev,
