@@ -44,6 +44,7 @@ extra_flags +=  \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DVTK_USE_SYSTEM_JSONCPP=ON \
 	-DVTK_USE_GCC_VISIBILITY=ON \
+	-DModule_vtkmrmpi=ON \
 
 
 override_dh_auto_configure:
