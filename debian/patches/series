@@ -9,3 +9,4 @@ fix_libav10.patch
 fix_FTBFS_KWSys.patch
 fix_ftbfs_gcc49.patch
 use_system_xdmf.patch
+use_system_sqlite.patch
