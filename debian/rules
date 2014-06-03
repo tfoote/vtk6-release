@@ -43,6 +43,7 @@ extra_flags +=  \
 	-DCMAKE_BUILD_TYPE=None \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DVTK_USE_SYSTEM_JSONCPP=ON \
+	-DVTK_USE_GCC_VISIBILITY=ON \
 
 
 override_dh_auto_configure:
