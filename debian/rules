@@ -8,7 +8,7 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR) --with python2 --with javahelper --parallel
 
 extra_flags +=  \
- -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
+  -DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DBUILD_DOCUMENTATION=ON \
 	-DBUILD_EXAMPLES=ON \
 	-DBUILD_SHARED_LIBS=ON \
