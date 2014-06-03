@@ -1,1 +1,2 @@
 debian/tmp/usr/share/doc/vtk-6.1/doxygen
+debian/build/Utilities/Doxygen/doc/html

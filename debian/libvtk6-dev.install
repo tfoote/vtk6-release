@@ -18,7 +18,6 @@ debian/build/ThirdParty/netcdf/vtk_netcdf.h usr/include/vtk-6.1/
 debian/build/ThirdParty/netcdf/vtk_netcdfcpp.h usr/include/vtk-6.1/
 Wrapping/Java/JavaDependencies.cmake.in usr/lib/cmake/vtk-6.1/
 debian/build/ThirdParty/ftgl/vtkftglConfig.h usr/include/vtk-6.1/
-debian/build/Utilities/Doxygen/doc/html usr/share/doc/libvtk6-dev
 debian/build/lib/cmake/vtk-6.1/Modules/*-Headers.cmake	usr/lib/cmake/vtk-6.1/Modules/
 usr/include/vtk-6.1                    usr/include
 usr/lib/*/*.so
