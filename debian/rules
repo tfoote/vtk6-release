@@ -58,6 +58,8 @@ override_dh_auto_build:
 	dh_auto_build
 	# Make doc (see wiki/VTK/debian/buildingDoxygen)
 	cd $(BUILDDIR) && make DoxygenDoc 
+	# remove .md5 files
+	find $(BUILDDIR)/Utilities/Doxygen/doc/html/ -name "*.md5" | xargs rm -f
 
 override_dh_auto_install:
 	dh_auto_install -X.pyc -X.pyo
