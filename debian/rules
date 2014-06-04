@@ -41,10 +41,10 @@ extra_flags +=  \
 	-DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed" \
 	-DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed" \
 	-DCMAKE_BUILD_TYPE=None \
-	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DVTK_USE_SYSTEM_JSONCPP=ON \
 	-DVTK_USE_GCC_VISIBILITY=ON \
-	-DModule_vtkmrmpi=ON \
+
+#	-DModule_vtkmrmpi=ON \
 
 
 override_dh_auto_configure:
