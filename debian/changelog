@@ -1,10 +1,30 @@
 vtk6 (6.1.0+dfsg-4) unstable; urgency=medium
 
+  [ Anton Gladky ]
   * [26157d6] Fix compilation with gcc-4.9. (Closes: #746923)
   * [4ccd56b] Ignore quilt dir
   * [af6c085] Replace libvtk6 binary by libvtk6.1. (Closes: #749920)
+  * [7cec1b3] Update changelog.
+  * [762d041] Rename autopkgtests.
+  * [94cb1d2] Fix duplicate in d/rules.
+  * [ece06b2] Use system xdmf. (Closes: #750182)
+  * [d266ed9] Use system sqlite. (Closes: #750183)
+  * [d3a259a] Use system jsoncpp. (Closes: #750185)
+  * [8beb5a9] Use system installed netcdf. (Closes: #750188)
+  * [07755ea] Use system alglib. (Closes: #750187)
+  * [f56ccbd] Remove vtkLocalExample from vtk6. (Closes: #750191)
+  * [9694d41] Do not hardcode tcl version. (Closes: #750200)
 
- -- Anton Gladky <gladk@debian.org>  Sat, 31 May 2014 08:26:13 +0200
+  [ Mathieu Malaterre ]
+  * [783c433] Do not override debian compilation flags. (Closes: #750205)
+  * [7842505] Provide clean ABI. (Closes: #750206)
+  * [741b601] Provide MRMPI implementation. (Closes: #750203)
+  * [79b6e65] Remove documentation from libvtk6-dev. (Closes: #750408)
+  * [6b9df91] Fix typo in debian/rules. (Closes: #750196)
+  * [44e156d] Fix typo in debian/copyright. (Closes: #750409)
+  * [126ea5d] Remove md5 files from documentation. (Closes: #750407)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 05 Jun 2014 21:40:50 +0200
 
 vtk6 (6.1.0+dfsg-3) unstable; urgency=medium
 
