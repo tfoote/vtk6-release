@@ -1,3 +1,9 @@
+vtk6 (6.1.0+dfsg-5) unstable; urgency=medium
+
+  * [1fe76a6] Fix BD for s390x (libhdf5-*-dev)
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 09 Jun 2014 13:41:45 +0200
+
 vtk6 (6.1.0+dfsg-4) unstable; urgency=medium
 
   [ Anton Gladky ]
