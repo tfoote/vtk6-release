@@ -251,8 +251,6 @@ Depends:
 Suggests:
  vtk6-doc,
  vtk6-examples
-Conflicts:
- tcl-vtk
 Section: interpreters
 Description: Binaries for VTK6
  The Visualization Toolkit (VTK) is an object oriented, high level
