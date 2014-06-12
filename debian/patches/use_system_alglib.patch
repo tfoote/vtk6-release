@@ -1,4 +1,10 @@
-Description: Use system alglib
+Description: Use system alglib. 
+ [UPD] 2014/06/12. After discussing this issue with upstream, 
+       I decided to disable this patch for the moment. 
+       There is no backport compatibility between 
+       Alglib 1.0 and 3.*. This patch compiles, but no
+       guarantee, that it works witn 3.x
+
 Author: Anton Gladky <gladk@debian.org>
 Bug-Debian: http://bugs.debian.org/750187
 Last-Update: 2014-06-03
