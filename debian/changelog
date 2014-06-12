@@ -1,3 +1,11 @@
+vtk6 (6.1.0+dfsg-6) unstable; urgency=medium
+
+  * [f168c80] Rename bin/vtk to bin/vtk6
+  * [38c7d65] Remove conflict between vtk6 and tcl-vtk. (Closes: #751249)
+  * [bc645d1] Do not use system alglib temporarily.
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 12 Jun 2014 23:50:39 +0200
+
 vtk6 (6.1.0+dfsg-5) unstable; urgency=medium
 
   * [1fe76a6] Fix BD for s390x (libhdf5-*-dev)
