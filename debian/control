@@ -28,7 +28,7 @@ Build-Depends:
  libgl1-mesa-dev | libgl-dev,
  libgl2ps-dev,
  libglu1-mesa-dev | libglu-dev,
- libhdf5-openmpi-dev[!s390x], libhdf5-mpich-dev[s390x],
+ libhdf5-dev,
  libjpeg-dev,
  libjsoncpp-dev,
  libmrmpi-dev,
