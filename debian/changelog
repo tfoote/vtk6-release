@@ -1,3 +1,10 @@
+vtk6 (6.1.0+dfsg-7) unstable; urgency=medium
+
+  * [62edef6] Replace hdf5-mpi by hdf5-dev in BD to fix installation 
+              problem due to libgdal-dev dependency.
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 14 Jun 2014 21:36:55 +0200
+
 vtk6 (6.1.0+dfsg-6) unstable; urgency=medium
 
   * [f168c80] Rename bin/vtk to bin/vtk6
