@@ -158,6 +158,7 @@ Depends:
  libx11-dev,
  libxft-dev,
  libxml2-dev,
+ libxdmf-dev,
  libxss-dev,
  libxt-dev,
  mpi-default-dev,
