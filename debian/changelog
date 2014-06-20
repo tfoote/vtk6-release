@@ -1,3 +1,11 @@
+vtk6 (6.1.0+dfsg-8) unstable; urgency=medium
+
+  * [f813911] Add libxdmf-dev to Depends of libvtk6-dev.
+  * [c470fe3] Install .so-files into site-packages. (Closes: #750474)
+  * [2f93a13] Install vtkLocal. Causes #750474.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 20 Jun 2014 21:57:08 +0200
+
 vtk6 (6.1.0+dfsg-7) unstable; urgency=medium
 
   * [62edef6] Replace hdf5-mpi by hdf5-dev in BD to fix installation 
