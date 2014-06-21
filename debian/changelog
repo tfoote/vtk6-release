@@ -3,8 +3,9 @@ vtk6 (6.1.0+dfsg-8) unstable; urgency=medium
   * [f813911] Add libxdmf-dev to Depends of libvtk6-dev.
   * [c470fe3] Install .so-files into site-packages. (Closes: #750474)
   * [2f93a13] Install vtkLocal. Causes #750474.
+  * [b5e997c] Remove .pyc and .pyo files.
 
- -- Anton Gladky <gladk@debian.org>  Fri, 20 Jun 2014 21:57:08 +0200
+ -- Anton Gladky <gladk@debian.org>  Sat, 21 Jun 2014 09:13:50 +0200
 
 vtk6 (6.1.0+dfsg-7) unstable; urgency=medium
 
