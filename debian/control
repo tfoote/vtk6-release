@@ -71,7 +71,7 @@ Build-Depends:
 XS-Python-Version: current
 Uploaders:
  Anton Gladky <gladk@debian.org>
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://www.vtk.org/
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
