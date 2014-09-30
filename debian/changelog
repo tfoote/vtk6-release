@@ -1,3 +1,20 @@
+vtk6 (6.1.0+dfsg2-1) unstable; urgency=medium
+
+  [ Dimitri John Ledkov ]
+  * [00730bd] Switch vtk6 to Qt5. (Closes: #754948)
+
+  [ Olly Betts ]
+  * [38fb397] Update for wxPython 3.0. (Closes: #761413)
+
+  [ Anton Gladky ]
+  * [1187019] Imported Upstream version 6.1.0+dfsg
+  * [b394a69] Add Examples/GUI/Win32/ into Files-Exclude.
+  * [b066615] Use packages libjs-jquery instead of embedded.
+  * [e7412a2] Set Standards-Version: 3.9.6. No changes.
+  * [9aef415] Imported Upstream version 6.1.0+dfsg2
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 30 Sep 2014 23:08:30 +0200
+
 vtk6 (6.1.0+dfsg-8) unstable; urgency=medium
 
   * [f813911] Add libxdmf-dev to Depends of libvtk6-dev.
