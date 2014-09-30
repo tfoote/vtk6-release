@@ -265,6 +265,7 @@ Package: vtk6-doc
 Architecture: all
 Depends:
  doc-base,
+ libjs-jquery,
  ${misc:Depends}
 Suggests:
  libvtk6-dev,
