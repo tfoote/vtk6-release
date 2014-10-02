@@ -1,3 +1,9 @@
+vtk6 (6.1.0+dfsg2-2) unstable; urgency=medium
+
+  * [463aa5a] Use Qt4 on armel and armhf instead of Qt5. (Closes: #763763)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 02 Oct 2014 22:17:17 +0200
+
 vtk6 (6.1.0+dfsg2-1) unstable; urgency=medium
 
   [ Dimitri John Ledkov ]
