@@ -50,7 +50,6 @@ ifeq (,$(filter $(DEB_HOST_ARCH),$(qt4_archs)))
 	extra_flags += -DVTK_QT_VERSION=5
 else
 	extra_flags += -DVTK_QT_VERSION=4
-endif
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(extra_flags)
