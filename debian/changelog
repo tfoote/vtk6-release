@@ -1,3 +1,9 @@
+vtk6 (6.1.0+dfsg2-3) unstable; urgency=medium
+
+  * [37a6db8] Add missing "endif". (Closes: #763763)
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 03 Oct 2014 15:01:55 +0200
+
 vtk6 (6.1.0+dfsg2-2) unstable; urgency=medium
 
   * [463aa5a] Use Qt4 on armel and armhf instead of Qt5. (Closes: #763763)
