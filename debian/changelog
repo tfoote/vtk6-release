@@ -1,3 +1,13 @@
+vtk6 (6.1.0+dfsg2-4) unstable; urgency=medium
+
+  [ Ondřej Surý ]
+  * [b660a4f] Fix FTBFS against new libjpeg. (Closes: #765938)
+
+  [ Anton Gladky ]
+  * [2d2f360] Fix autopkgtest failures.
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 22 Oct 2014 21:11:52 +0200
+
 vtk6 (6.1.0+dfsg2-3) unstable; urgency=medium
 
   * [37a6db8] Add missing "endif". (Closes: #763763)
