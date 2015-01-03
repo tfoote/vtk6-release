@@ -1,3 +1,12 @@
+vtk6 (6.1.0+dfsg2-5) unstable; urgency=medium
+
+  * [8a28236] Remove libvtk6-java. (Closes: #773422)
+  * [dd23d1b] Move TCL-libraries into /usr/lib. 
+              Thanks Ansgar Burchardt for the hint.
+              (Closes: #773424)
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 03 Jan 2015 21:06:27 +0100
+
 vtk6 (6.1.0+dfsg2-4) unstable; urgency=medium
 
   [ Ondřej Surý ]
