@@ -63,6 +63,7 @@ Build-Depends:
  r-base,
  r-base-core,
  r-base-dev,
+ tcl-dev,
  texlive-binaries,
  texlive-math-extra,
  tk8.6-dev,
@@ -165,6 +166,8 @@ Depends:
  libxt-dev,
  mpi-default-dev,
  python-vtk6 (= ${binary:Version}),
+ tcl-vtk6 (= ${binary:Version}),
+ tcl-dev,
  tk8.6-dev,
  vtk6 (= ${binary:Version}),
  x11proto-core-dev,
@@ -204,6 +207,25 @@ Description: Python bindings for VTK
  This provides the shared libraries that enable one to use VTK from Python
  scripts.  You will need Python and vtk installed to use this. Some useful
  information may be available in /usr/share/doc/python-vtk/.
+
+Package: tcl-vtk6
+Architecture: any
+Depends:
+ libvtk6.1 (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Suggests:
+ vtk6-doc,
+ vtk6-examples
+Section: interpreters
+Description: Tcl bindings for VTK
+ The Visualization Toolkit (VTK) is an object oriented, high level
+ library that allows one to easily write C++ programs, Tcl, Python and
+ Java scripts that do 3D visualization.
+ .
+ This provides the shared libraries and executable that enable one to use
+ VTK from Tcl/Tk scripts. You will need Tcl/Tk and vtk installed to use
+ this.
 
 Package: vtk6
 Architecture: any
@@ -251,14 +273,16 @@ Suggests:
  libvtk6-dev,
  python,
  python-vtk6,
+ tcl-vtk6,
+ tclsh,
  vtk6-doc
 Section: graphics
 Depends:
  ${misc:Depends}
-Description: C++ and Python example programs/scripts for VTK
+Description: C++, Tcl and Python example programs/scripts for VTK
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
  Java scripts that do 3D visualization.
  .
- This package contains examples from the VTK source. To compile
- the C++ examples you will need to install the libvtk6-dev package as well.
+ The Python and Tcl examples can be run with the corresponding packages
+ (python-vtk6, tcl-vtk6).

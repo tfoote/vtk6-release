@@ -81,6 +81,5 @@ override_dh_auto_install:
 	mv $(CURDIR)/debian/tmp/usr/bin/vtk $(CURDIR)/debian/tmp/usr/bin/vtk6
 	find $(CURDIR)/debian/tmp/ -name "*.pyc" | xargs rm -f
 	find $(CURDIR)/debian/tmp/ -name "*.pyo" | xargs rm -f
-
-override_dh_shlibdeps:
-	dh_shlibdeps -a -l /usr/lib/jvm/default-java/lib
+	find $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH) -name *TCL* -exec mv {} $(CURDIR)/debian/tmp/usr/lib/ \;
+	rename 's/\.so.*/.so/'  $(CURDIR)/debian/tmp/usr/lib/*
