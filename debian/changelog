@@ -1,3 +1,10 @@
+vtk6 (6.1.0+dfsg2-6) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * [0b9b309] Fix FTBFS due to new freetype. (Closes: #779802)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 12 Mar 2015 18:44:44 +0100
+
 vtk6 (6.1.0+dfsg2-5) unstable; urgency=medium
 
   * [8a28236] Remove libvtk6-java. (Closes: #773422)
