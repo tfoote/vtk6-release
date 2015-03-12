@@ -16,3 +16,4 @@ use_system_sqlite.patch
 wxpython3.0.patch
 
 fix_GLintptr_FTBFS.patch
+freetype-update.patch
