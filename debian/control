@@ -39,12 +39,10 @@ Build-Depends:
  libosmesa6-dev,
  libpng-dev,
  libpq-dev,
- qtbase5-dev [!armel !armhf],
- libqt5webkit5-dev [!armel !armhf],
- libqt5opengl5-dev [!armel !armhf],
- qttools5-private-dev [!armel !armhf],
  libqt4-dev [armel armhf],
  libqt4-opengl-dev [armel armhf],
+ libqt5opengl5-dev [!armel !armhf],
+ libqt5webkit5-dev [!armel !armhf],
  libqtwebkit-dev [armel armhf],
  libsqlite3-dev,
  libswscale-dev,
@@ -52,19 +50,21 @@ Build-Depends:
  libtiff-dev,
  libutfcpp-dev,
  libx11-dev,
- libxml2-dev,
  libxdmf-dev,
+ libxml2-dev,
  libxpm-dev,
  libxt-dev,
  mpi-default-dev,
  pkg-config,
- python-autobahn,
- python-six,
- python-twisted,
  python-all-dev (<< 2.8),
  python-all-dev (>= 2.7),
+ python-autobahn,
  python-matplotlib,
  python-mpi4py,
+ python-six,
+ python-twisted,
+ qtbase5-dev [!armel !armhf],
+ qttools5-private-dev [!armel !armhf],
  r-base,
  r-base-core,
  r-base-dev,
@@ -84,45 +84,6 @@ Homepage: http://www.vtk.org/
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
 XS-Testsuite: autopkgtest
-
-Package: libvtk6.2
-Architecture: any
-Depends:
- ${misc:Depends},
- ${shlibs:Depends}
-Replaces:
- libvtk32,
- libvtk4,
- libvtk4c2,
- libvtk4c2a,
- libvtk5,
- libvtk5.8,
- libvtk6
-Conflicts:
- libvtk6 (>>6.0.0-7)
-Suggests:
- libvtk6-dev,
- mpi-default-bin,
- vtk6-doc,
- vtk6-examples
-Section: libs
-Description: Visualization Toolkit - A high level 3D visualization library - runtime
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
- .
- VTK enables users to concentrate on their work by providing a large
- number of excellent and feature packed high level functions that do
- visualization.  The library needs OpenGL to render the graphics and
- for Linux machines Mesa is necessary. The terms/copyright can be read
- in /usr/share/doc/vtk/README and README.html.  VTK-Linux-HOWTO has
- information about using vtk, getting documentataion or help and
- instructions on building VTK.
- .
- This package provides the shared libraries needed to run C++ programs
- that use VTK.
- .
- To compile C++ code that uses VTK you have to install libvtk5-dev.
 
 Package: libvtk6-dev
 Architecture: any
@@ -164,20 +125,20 @@ Depends:
  libtiff-dev,
  libvtk6.2 (= ${binary:Version}),
  libx11-dev,
+ libxdmf-dev,
  libxft-dev,
  libxml2-dev,
- libxdmf-dev,
  libxss-dev,
  libxt-dev,
  mpi-default-dev,
  python-vtk6 (= ${binary:Version}),
- tcl-vtk6 (= ${binary:Version}),
+ python-zope.interface,
  tcl-dev,
+ tcl-vtk6 (= ${binary:Version}),
  tk8.6-dev,
  vtk6 (= ${binary:Version}),
  x11proto-core-dev,
  zlib1g-dev,
- python-zope.interface,
  ${misc:Depends}
 Suggests:
  vtk6-doc,
@@ -191,19 +152,59 @@ Description: VTK header files for building C++ code
  This package provides the VTK header files required to compile
  C++ programs that use VTK to do 3D visualisation.
 
+Package: libvtk6.2
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Replaces:
+ libvtk32,
+ libvtk4,
+ libvtk4c2,
+ libvtk4c2a,
+ libvtk5,
+ libvtk5.8,
+ libvtk6
+Conflicts:
+ libvtk6 (>>6.0.0-7)
+Suggests:
+ libvtk6-dev,
+ mpi-default-bin,
+ vtk6-doc,
+ vtk6-examples
+Section: libs
+Description: Visualization Toolkit - A high level 3D visualization library - runtime
+ The Visualization Toolkit (VTK) is an object oriented, high level
+ library that allows one to easily write C++ programs, Tcl, Python and
+ Java scripts that do 3D visualization.
+ .
+ VTK enables users to concentrate on their work by providing a large
+ number of excellent and feature packed high level functions that do
+ visualization.  The library needs OpenGL to render the graphics and
+ for Linux machines Mesa is necessary. The terms/copyright can be read
+ in /usr/share/doc/vtk/README and README.html.  VTK-Linux-HOWTO has
+ information about using vtk, getting documentataion or help and
+ instructions on building VTK.
+ .
+ This package provides the shared libraries needed to run C++ programs
+ that use VTK.
+ .
+ To compile C++ code that uses VTK you have to install libvtk5-dev.
+
 Package: python-vtk6
 Architecture: any
-Conflicts: python-vtk
+Conflicts:
+ python-vtk
 Depends:
  libvtk6.2 (= ${binary:Version}),
- ${misc:Depends},
- ${python:Depends},
- ${shlibs:Depends},
- python-six,
- python-twisted,
  python-autobahn,
  python-mpi4py,
- python-zope.interface
+ python-six,
+ python-twisted,
+ python-zope.interface,
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Suggests:
  mayavi2,
  vtk6-doc,

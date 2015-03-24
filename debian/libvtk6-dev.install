@@ -1,5 +1,6 @@
 # add doxygen docs
 # to get paraview debian/build properly on top of vtk
+/usr/lib/*/python2.7/site-packages/vtk/*
 CMake/TopologicalSort.cmake usr/lib/cmake/vtk-6.2/
 CMake/exportheader.cmake.in usr/lib/cmake/vtk-6.2/
 CMake/vtkGroups.cmake usr/lib/cmake/vtk-6.2/
@@ -14,12 +15,11 @@ Testing/Core/vtkTesting*.h usr/include/vtk-6.2
 Testing/Rendering/vtkRegressionTestImage.h usr/include/vtk-6.2/
 Testing/Rendering/vtkTesting*.h usr/include/vtk-6.2
 ThirdParty/ftgl/src/FTGL.h usr/include/vtk-6.2/
-debian/build/ThirdParty/netcdf/vtk_netcdf.h usr/include/vtk-6.2/
-debian/build/ThirdParty/netcdf/vtk_netcdfcpp.h usr/include/vtk-6.2/
 Wrapping/Java/JavaDependencies.cmake.in usr/lib/cmake/vtk-6.2/
 debian/build/ThirdParty/ftgl/vtkftglConfig.h usr/include/vtk-6.2/
+debian/build/ThirdParty/netcdf/vtk_netcdf.h usr/include/vtk-6.2/
+debian/build/ThirdParty/netcdf/vtk_netcdfcpp.h usr/include/vtk-6.2/
 debian/build/lib/cmake/vtk-6.2/Modules/*-Headers.cmake	usr/lib/cmake/vtk-6.2/Modules/
 usr/include/vtk-6.2                    usr/include
 usr/lib/*/*.so
-/usr/lib/*/python2.7/site-packages/vtk/*
 usr/lib/cmake/vtk-6.2
