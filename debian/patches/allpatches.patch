@@ -30,11 +30,11 @@ Forwarded: <no|not-needed|url proving that it has been forwarded>
 Reviewed-By: <name and email of someone who approved the patch>
 Last-Update: <YYYY-MM-DD>
 
-Index: vtk-6.0.0/Utilities/Doxygen/doxyfile.in
+Index: VTK-6.2.0/Utilities/Doxygen/doxyfile.in
 ===================================================================
---- vtk-6.0.0.orig/Utilities/Doxygen/doxyfile.in	2013-10-08 08:46:11.000000000 +0200
-+++ vtk-6.0.0/Utilities/Doxygen/doxyfile.in	2013-10-08 08:46:11.000000000 +0200
-@@ -22,6 +22,7 @@
+--- VTK-6.2.0.orig/Utilities/Doxygen/doxyfile.in
++++ VTK-6.2.0/Utilities/Doxygen/doxyfile.in
+@@ -22,6 +22,7 @@ PDF_HYPERLINKS       = YES
  
  HAVE_DOT             = @HAVE_DOT_YESNO@
  DOT_PATH             = "@DOT_PATH@"
@@ -42,11 +42,11 @@ Index: vtk-6.0.0/Utilities/Doxygen/doxyfile.in
  CLASS_GRAPH          = YES
  COLLABORATION_GRAPH  = YES
  TEMPLATE_RELATIONS   = YES
-Index: vtk-6.0.0/Wrapping/Tcl/vtkTkAppInit.cxx
+Index: VTK-6.2.0/Wrapping/Tcl/vtkTkAppInit.cxx
 ===================================================================
---- vtk-6.0.0.orig/Wrapping/Tcl/vtkTkAppInit.cxx	2013-10-08 08:46:11.000000000 +0200
-+++ vtk-6.0.0/Wrapping/Tcl/vtkTkAppInit.cxx	2013-10-08 08:46:11.000000000 +0200
-@@ -165,6 +165,8 @@
+--- VTK-6.2.0.orig/Wrapping/Tcl/vtkTkAppInit.cxx
++++ VTK-6.2.0/Wrapping/Tcl/vtkTkAppInit.cxx
+@@ -165,6 +165,8 @@ int Tcl_AppInit(Tcl_Interp *interp)
    // Help Tcl find the Tcl/Tk helper files.
    const char* relative_dirs[] =
      {

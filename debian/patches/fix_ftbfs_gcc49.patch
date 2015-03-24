@@ -4,9 +4,11 @@ Bug-Debian: http://bugs.debian.org/746923
 Forwarded: https://github.com/Kitware/VTK/pull/7
 Last-Update: 2014-05-30
 
---- vtk6-6.1.0+dfsg.orig/Filters/ParallelMPI/vtkDistributedDataFilter.cxx
-+++ vtk6-6.1.0+dfsg/Filters/ParallelMPI/vtkDistributedDataFilter.cxx
-@@ -1094,7 +1094,10 @@ vtkDataSet *vtkDistributedDataFilter::Te
+Index: VTK-6.2.0/Filters/ParallelMPI/vtkDistributedDataFilter.cxx
+===================================================================
+--- VTK-6.2.0.orig/Filters/ParallelMPI/vtkDistributedDataFilter.cxx
++++ VTK-6.2.0/Filters/ParallelMPI/vtkDistributedDataFilter.cxx
+@@ -1079,7 +1079,10 @@ vtkDataSet *vtkDistributedDataFilter::Te
    vtkIdType cellsPerNode = numTotalCells / nprocs;
  
    vtkIdList **sendCells = new vtkIdList * [ nprocs ];
@@ -18,7 +20,7 @@ Last-Update: 2014-05-30
  
    if (numConsumers == nprocs - 1)
      {
-@@ -1585,7 +1588,9 @@ vtkFloatArray **
+@@ -1564,7 +1567,9 @@ vtkFloatArray **
    // Exchange int arrays
  
    float **recvArrays = new float * [nprocs];
@@ -29,7 +31,7 @@ Last-Update: 2014-05-30
  
    if (sendSize[me] > 0)  // sent myself an array
      {
-@@ -1706,7 +1711,9 @@ vtkIdTypeArray **
+@@ -1686,7 +1691,9 @@ vtkIdTypeArray **
    // Exchange int arrays
  
    vtkIdType **recvArrays = new vtkIdType * [nprocs];
@@ -40,7 +42,7 @@ Last-Update: 2014-05-30
  
    if (sendSize[me] > 0)  // sent myself an array
      {
-@@ -2810,7 +2817,9 @@ void vtkDistributedDataFilter::AddConsta
+@@ -2789,7 +2796,9 @@ void vtkDistributedDataFilter::AddConsta
  
    unsigned char *vals = new unsigned char [npoints];
  
@@ -51,7 +53,7 @@ Last-Update: 2014-05-30
  
    vtkUnsignedCharArray *Array = vtkUnsignedCharArray::New();
    Array->SetName(arrayName);
-@@ -2830,7 +2839,9 @@ void vtkDistributedDataFilter::AddConsta
+@@ -2809,7 +2818,9 @@ void vtkDistributedDataFilter::AddConsta
  
    unsigned char *vals = new unsigned char [ncells];
  
@@ -62,7 +64,7 @@ Last-Update: 2014-05-30
  
    vtkUnsignedCharArray *Array = vtkUnsignedCharArray::New();
    Array->SetName(arrayName);
-@@ -3027,7 +3038,9 @@ int vtkDistributedDataFilter::AssignGlob
+@@ -3008,7 +3019,9 @@ int vtkDistributedDataFilter::AssignGlob
    vtkIdType nGridPoints = grid->GetNumberOfPoints();
  
    vtkIdType *numPointsOutside = new vtkIdType [nprocs];
@@ -73,7 +75,7 @@ Last-Update: 2014-05-30
  
    vtkIdTypeArray *globalIds = vtkIdTypeArray::New();
    globalIds->SetNumberOfValues(nGridPoints);
-@@ -3109,10 +3122,16 @@ int vtkDistributedDataFilter::AssignGlob
+@@ -3090,10 +3103,16 @@ int vtkDistributedDataFilter::AssignGlob
    // global ID back?
  
    vtkFloatArray **ptarrayOut = new vtkFloatArray * [nprocs];
@@ -92,7 +94,7 @@ Last-Update: 2014-05-30
  
    vtkIdType *next = new vtkIdType [nprocs];
    vtkIdType *next3 = new vtkIdType [nprocs];
-@@ -3287,7 +3306,9 @@ vtkIdTypeArray **vtkDistributedDataFilte
+@@ -3268,7 +3287,9 @@ vtkIdTypeArray **vtkDistributedDataFilte
      {
      // There are no cells in my assigned region
  
@@ -103,7 +105,7 @@ Last-Update: 2014-05-30
  
      return gids;
      }
-@@ -3492,7 +3513,10 @@ vtkIdTypeArray **vtkDistributedDataFilte
+@@ -3473,7 +3494,10 @@ vtkIdTypeArray **vtkDistributedDataFilte
    std::multimap<int, int>::iterator mapIt;
  
    vtkIdTypeArray **processList = new vtkIdTypeArray * [nprocs];
@@ -115,7 +117,7 @@ Last-Update: 2014-05-30
  
    for (int i=0; i<nprocs; i++)
      {
-@@ -3582,7 +3606,9 @@ vtkIdTypeArray **vtkDistributedDataFilte
+@@ -3563,7 +3587,9 @@ vtkIdTypeArray **vtkDistributedDataFilte
    vtkIdType numPoints = grid->GetNumberOfPoints();
  
    vtkIdTypeArray **ghostPtIds = new vtkIdTypeArray * [nprocs];

@@ -1,19 +1,7 @@
 allpatches.patch
 soversion-sharedlib.patch
-vtkTclWrapper.patch
-vtkWrapJava.patch
 matplotlib.patch
-docs.patch
-fix_libav10.patch
-10_Java_Target.patch
-fix_FTBFS_KWSys.patch
-fix_ftbfs_gcc49.patch
-use_system_xdmf.patch
 use_system_sqlite.patch
-
-# Temporarly disable system_alglib
-# use_system_alglib.patch
-wxpython3.0.patch
-
-fix_GLintptr_FTBFS.patch
-freetype-update.patch
+fix_ftbfs_gcc49.patch
+use_system_utf8.patch
+use_system_mpi4py.patch
