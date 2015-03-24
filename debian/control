@@ -1,149 +1,143 @@
 Source: vtk6
-Section: graphics
-Priority: optional
 Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
-Build-Depends:
- chrpath,
- cmake (>= 2.8.5),
- debhelper (>= 9),
- default-jdk,
- dh-python,
- doxygen-latex,
- dpkg-dev (>= 1.16.1~),
- ftgl-dev,
- ghostscript,
- gnuplot-nox,
- graphviz,
- hdf5-tools,
- javahelper,
- libalglib-dev,
- libavcodec-dev,
- libavformat-dev,
- libavutil-dev,
- libboost-all-dev,
- libdigest-md5-perl,
- libexpat-dev,
- libfreetype6-dev,
- libgdal-dev,
- libgl1-mesa-dev | libgl-dev,
- libgl2ps-dev,
- libglew-dev,
- libglu1-mesa-dev | libglu-dev,
- libhdf5-dev,
- libjpeg-dev,
- libjsoncpp-dev,
- libmrmpi-dev,
- libmysqlclient-dev,
- libnetcdf-dev,
- libogg-dev,
- libosmesa6-dev,
- libpng-dev,
- libpq-dev,
- libqt4-dev [armel armhf],
- libqt4-opengl-dev [armel armhf],
- libqt5opengl5-dev [!armel !armhf],
- libqt5webkit5-dev [!armel !armhf],
- libqtwebkit-dev [armel armhf],
- libsqlite3-dev,
- libswscale-dev,
- libtheora-dev,
- libtiff-dev,
- libutfcpp-dev,
- libx11-dev,
- libxdmf-dev,
- libxml2-dev,
- libxpm-dev,
- libxt-dev,
- mpi-default-dev,
- pkg-config,
- python-all-dev (<< 2.8),
- python-all-dev (>= 2.7),
- python-autobahn,
- python-matplotlib,
- python-mpi4py,
- python-six,
- python-twisted,
- qtbase5-dev [!armel !armhf],
- qttools5-private-dev [!armel !armhf],
- r-base,
- r-base-core,
- r-base-dev,
- tcl-dev,
- texlive-binaries,
- texlive-math-extra,
- tk8.6-dev,
- x11proto-core-dev,
- xauth,
- xvfb,
- zlib1g-dev
-XS-Python-Version: current
-Uploaders:
- Anton Gladky <gladk@debian.org>
+Uploaders: Anton Gladky <gladk@debian.org>
+Section: graphics
+Testsuite: autopkgtest
+Priority: optional
+Build-Depends: chrpath,
+               cmake (>= 2.8.5),
+               debhelper (>= 9),
+               default-jdk,
+               dh-python,
+               doxygen-latex,
+               dpkg-dev (>= 1.16.1~),
+               ftgl-dev,
+               ghostscript,
+               gnuplot-nox,
+               graphviz,
+               hdf5-tools,
+               javahelper,
+               libalglib-dev,
+               libavcodec-dev,
+               libavformat-dev,
+               libavutil-dev,
+               libboost-all-dev,
+               libdigest-md5-perl,
+               libexpat-dev,
+               libfreetype6-dev,
+               libgdal-dev,
+               libgl1-mesa-dev | libgl-dev,
+               libgl2ps-dev,
+               libglew-dev,
+               libglu1-mesa-dev | libglu-dev,
+               libhdf5-dev,
+               libjpeg-dev,
+               libjsoncpp-dev,
+               libmrmpi-dev,
+               libmysqlclient-dev,
+               libnetcdf-dev,
+               libogg-dev,
+               libosmesa6-dev,
+               libpng-dev,
+               libpq-dev,
+               libqt4-dev [armel armhf],
+               libqt4-opengl-dev [armel armhf],
+               libqt5opengl5-dev [!armel !armhf],
+               libqt5webkit5-dev [!armel !armhf],
+               libqtwebkit-dev [armel armhf],
+               libsqlite3-dev,
+               libswscale-dev,
+               libtheora-dev,
+               libtiff-dev,
+               libutfcpp-dev,
+               libx11-dev,
+               libxdmf-dev,
+               libxml2-dev,
+               libxpm-dev,
+               libxt-dev,
+               mpi-default-dev,
+               pkg-config,
+               python-all-dev (<< 2.8),
+               python-all-dev (>= 2.7),
+               python-autobahn,
+               python-matplotlib,
+               python-mpi4py,
+               python-six,
+               python-twisted,
+               qtbase5-dev [!armel !armhf],
+               qttools5-private-dev [!armel !armhf],
+               r-base,
+               r-base-core,
+               r-base-dev,
+               tcl-dev,
+               texlive-binaries,
+               texlive-math-extra,
+               tk8.6-dev,
+               x11proto-core-dev,
+               xauth,
+               xvfb,
+               zlib1g-dev
 Standards-Version: 3.9.6
-Homepage: http://www.vtk.org/
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/vtk6.git
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
-XS-Testsuite: autopkgtest
+Homepage: http://www.vtk.org/
+X-Python-Version: current
 
 Package: libvtk6-dev
 Architecture: any
-Conflicts:
- libvtk-dev,
- libvtk32-dev,
- libvtk4-dev,
- libvtk5-dev
-Replaces:
- libvtk-dev,
- libvtk32-dev,
- libvtk4-dev,
- libvtk5-dev
-Depends:
- libavcodec-dev,
- libavformat-dev,
- libavutil-dev,
- libc6-dev,
- libeigen3-dev,
- libexpat-dev,
- libfreetype6-dev,
- libgdal-dev,
- libgl1-mesa-dev | libgl-dev,
- libgl2ps-dev,
- libglu1-mesa-dev | libglu-dev,
- libjpeg-dev,
- libjsoncpp-dev,
- libmysqlclient-dev,
- libnetcdf-dev,
- libogg-dev,
- libpng-dev,
- libpq-dev,
- libpython-dev,
- libqt4-dev,
- libqt4-opengl-dev,
- libqtwebkit-dev,
- libswscale-dev,
- libtheora-dev,
- libtiff-dev,
- libvtk6.2 (= ${binary:Version}),
- libx11-dev,
- libxdmf-dev,
- libxft-dev,
- libxml2-dev,
- libxss-dev,
- libxt-dev,
- mpi-default-dev,
- python-vtk6 (= ${binary:Version}),
- python-zope.interface,
- tcl-dev,
- tcl-vtk6 (= ${binary:Version}),
- tk8.6-dev,
- vtk6 (= ${binary:Version}),
- x11proto-core-dev,
- zlib1g-dev,
- ${misc:Depends}
-Suggests:
- vtk6-doc,
- vtk6-examples
 Section: libdevel
+Depends: libavcodec-dev,
+         libavformat-dev,
+         libavutil-dev,
+         libc6-dev,
+         libeigen3-dev,
+         libexpat-dev,
+         libfreetype6-dev,
+         libgdal-dev,
+         libgl1-mesa-dev | libgl-dev,
+         libgl2ps-dev,
+         libglu1-mesa-dev | libglu-dev,
+         libjpeg-dev,
+         libjsoncpp-dev,
+         libmysqlclient-dev,
+         libnetcdf-dev,
+         libogg-dev,
+         libpng-dev,
+         libpq-dev,
+         libpython-dev,
+         libqt4-dev,
+         libqt4-opengl-dev,
+         libqtwebkit-dev,
+         libswscale-dev,
+         libtheora-dev,
+         libtiff-dev,
+         libvtk6.2 (= ${binary:Version}),
+         libx11-dev,
+         libxdmf-dev,
+         libxft-dev,
+         libxml2-dev,
+         libxss-dev,
+         libxt-dev,
+         mpi-default-dev,
+         python-vtk6 (= ${binary:Version}),
+         python-zope.interface,
+         tcl-dev,
+         tcl-vtk6 (= ${binary:Version}),
+         tk8.6-dev,
+         vtk6 (= ${binary:Version}),
+         x11proto-core-dev,
+         zlib1g-dev,
+         ${misc:Depends}
+Suggests: vtk6-doc,
+          vtk6-examples
+Conflicts: libvtk-dev,
+           libvtk32-dev,
+           libvtk4-dev,
+           libvtk5-dev
+Replaces: libvtk-dev,
+          libvtk32-dev,
+          libvtk4-dev,
+          libvtk5-dev
 Description: VTK header files for building C++ code
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -154,25 +148,21 @@ Description: VTK header files for building C++ code
 
 Package: libvtk6.2
 Architecture: any
-Depends:
- ${misc:Depends},
- ${shlibs:Depends}
-Replaces:
- libvtk32,
- libvtk4,
- libvtk4c2,
- libvtk4c2a,
- libvtk5,
- libvtk5.8,
- libvtk6
-Conflicts:
- libvtk6 (>>6.0.0-7)
-Suggests:
- libvtk6-dev,
- mpi-default-bin,
- vtk6-doc,
- vtk6-examples
 Section: libs
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: libvtk6-dev,
+          mpi-default-bin,
+          vtk6-doc,
+          vtk6-examples
+Conflicts: libvtk6 (>> 6.0.0-7)
+Replaces: libvtk32,
+          libvtk4,
+          libvtk4c2,
+          libvtk4c2a,
+          libvtk5,
+          libvtk5.8,
+          libvtk6
 Description: Visualization Toolkit - A high level 3D visualization library - runtime
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -193,24 +183,20 @@ Description: Visualization Toolkit - A high level 3D visualization library - run
 
 Package: python-vtk6
 Architecture: any
-Conflicts:
- python-vtk
-Depends:
- libvtk6.2 (= ${binary:Version}),
- python-autobahn,
- python-mpi4py,
- python-six,
- python-twisted,
- python-zope.interface,
- ${misc:Depends},
- ${python:Depends},
- ${shlibs:Depends}
-Suggests:
- mayavi2,
- vtk6-doc,
- vtk6-examples
-XB-Python-Version: ${python:Versions}
 Section: python
+Depends: libvtk6.2 (= ${binary:Version}),
+         python-autobahn,
+         python-mpi4py,
+         python-six,
+         python-twisted,
+         python-zope.interface,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Suggests: mayavi2,
+          vtk6-doc,
+          vtk6-examples
+Conflicts: python-vtk
 Description: Python bindings for VTK
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -222,14 +208,12 @@ Description: Python bindings for VTK
 
 Package: tcl-vtk6
 Architecture: any
-Depends:
- libvtk6.2 (= ${binary:Version}),
- ${misc:Depends},
- ${shlibs:Depends}
-Suggests:
- vtk6-doc,
- vtk6-examples
 Section: interpreters
+Depends: libvtk6.2 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: vtk6-doc,
+          vtk6-examples
 Description: Tcl bindings for VTK
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -241,14 +225,12 @@ Description: Tcl bindings for VTK
 
 Package: vtk6
 Architecture: any
-Depends:
- libvtk6.2 (= ${binary:Version}),
- ${misc:Depends},
- ${shlibs:Depends}
-Suggests:
- vtk6-doc,
- vtk6-examples
 Section: interpreters
+Depends: libvtk6.2 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: vtk6-doc,
+          vtk6-examples
 Description: Binaries for VTK6
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -258,15 +240,13 @@ Description: Binaries for VTK6
 
 Package: vtk6-doc
 Architecture: all
-Depends:
- doc-base,
- libjs-jquery,
- ${misc:Depends}
-Suggests:
- libvtk6-dev,
- vtk6-examples,
- vtk6data
 Section: doc
+Depends: doc-base,
+         libjs-jquery,
+         ${misc:Depends}
+Suggests: libvtk6-dev,
+          vtk6-examples,
+          vtk6data
 Description: VTK class reference documentation
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
@@ -280,17 +260,15 @@ Description: VTK class reference documentation
 
 Package: vtk6-examples
 Architecture: all
-Suggests:
- libqt4-dev,
- libvtk6-dev,
- python,
- python-vtk6,
- tcl-vtk6,
- tclsh,
- vtk6-doc
 Section: graphics
-Depends:
- ${misc:Depends}
+Depends: ${misc:Depends}
+Suggests: libqt4-dev,
+          libvtk6-dev,
+          python,
+          python-vtk6,
+          tcl-vtk6,
+          tclsh,
+          vtk6-doc
 Description: C++, Tcl and Python example programs/scripts for VTK
  The Visualization Toolkit (VTK) is an object oriented, high level
  library that allows one to easily write C++ programs, Tcl, Python and
