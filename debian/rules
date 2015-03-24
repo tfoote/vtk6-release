@@ -29,6 +29,7 @@ extra_flags +=  \
 	-DVTK_USE_SYSTEM_ZLIB=ON \
 	-DVTK_USE_SYSTEM_JSONCPP=ON \
 	-DVTK_USE_SYSTEM_NETCDF=ON \
+	-DVTK_USE_SYSTEM_GLEW=ON \
 	-DVTK_EXTRA_COMPILER_WARNINGS=ON \
 	-DVTK_Group_Imaging=ON \
 	-DVTK_Group_MPI=ON \
@@ -69,12 +70,12 @@ override_dh_auto_build:
 override_dh_auto_install:
 	dh_auto_install -X.pyc -X.pyo
 	# Modify vtkWrapJava.cmake to properly upload JavaDependencies.cmake.in	from $VTK_DIR
-	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.1/vtkWrapJava.cmake
+	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.2/vtkWrapJava.cmake
 	# Correct headers for paraview
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
-	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.1/VTKTargets.cmake
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.2/VTKTargets.cmake
 	chrpath -d $(CURDIR)/debian/build/bin/vtk6python
 	chrpath -d $(CURDIR)/debian/build/bin/pvtk
 	chrpath -d $(CURDIR)/debian/build/bin/pvtkpython
