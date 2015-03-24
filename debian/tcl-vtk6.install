@@ -1,5 +1,5 @@
-usr/bin/vtkWrapTcl-6.1
-usr/bin/vtkWrapTclInit-6.1
+usr/bin/vtkWrapTcl-6.2
+usr/bin/vtkWrapTclInit-6.2
 usr/lib/tcltk
 usr/lib/lib*.so.*
 usr/lib/lib*.so

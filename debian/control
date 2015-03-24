@@ -27,6 +27,7 @@ Build-Depends:
  libgdal-dev,
  libgl1-mesa-dev | libgl-dev,
  libgl2ps-dev,
+ libglew-dev,
  libglu1-mesa-dev | libglu-dev,
  libhdf5-dev,
  libjpeg-dev,
@@ -49,6 +50,7 @@ Build-Depends:
  libswscale-dev,
  libtheora-dev,
  libtiff-dev,
+ libutfcpp-dev,
  libx11-dev,
  libxml2-dev,
  libxdmf-dev,
@@ -56,6 +58,9 @@ Build-Depends:
  libxt-dev,
  mpi-default-dev,
  pkg-config,
+ python-autobahn,
+ python-six,
+ python-twisted,
  python-all-dev (<< 2.8),
  python-all-dev (>= 2.7),
  python-matplotlib,
@@ -80,7 +85,7 @@ Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-science/packages/vtk6.git
 XS-Testsuite: autopkgtest
 
-Package: libvtk6.1
+Package: libvtk6.2
 Architecture: any
 Depends:
  ${misc:Depends},
@@ -157,7 +162,7 @@ Depends:
  libswscale-dev,
  libtheora-dev,
  libtiff-dev,
- libvtk6.1 (= ${binary:Version}),
+ libvtk6.2 (= ${binary:Version}),
  libx11-dev,
  libxft-dev,
  libxml2-dev,
@@ -172,6 +177,7 @@ Depends:
  vtk6 (= ${binary:Version}),
  x11proto-core-dev,
  zlib1g-dev,
+ python-zope.interface,
  ${misc:Depends}
 Suggests:
  vtk6-doc,
@@ -189,10 +195,15 @@ Package: python-vtk6
 Architecture: any
 Conflicts: python-vtk
 Depends:
- libvtk6.1 (= ${binary:Version}),
+ libvtk6.2 (= ${binary:Version}),
  ${misc:Depends},
  ${python:Depends},
- ${shlibs:Depends}
+ ${shlibs:Depends},
+ python-six,
+ python-twisted,
+ python-autobahn,
+ python-mpi4py,
+ python-zope.interface
 Suggests:
  mayavi2,
  vtk6-doc,
@@ -211,7 +222,7 @@ Description: Python bindings for VTK
 Package: tcl-vtk6
 Architecture: any
 Depends:
- libvtk6.1 (= ${binary:Version}),
+ libvtk6.2 (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends}
 Suggests:
@@ -230,7 +241,7 @@ Description: Tcl bindings for VTK
 Package: vtk6
 Architecture: any
 Depends:
- libvtk6.1 (= ${binary:Version}),
+ libvtk6.2 (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends}
 Suggests:
