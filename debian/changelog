@@ -1,3 +1,19 @@
+vtk6 (6.2.0+dfsg1-1~exp1) experimental; urgency=medium
+
+  * [0a01541] Update install-files for 6.2 version.
+  * [4bc3890] Update/remove patches.
+  * [874a7d6] Update d/rules.
+  * [60c9ecc] Update d/copyright
+  * [eb727c1] Remove old patches.
+  * [9b57b0d] Fix dep-3 header in patch.
+  * [3612db2] Imported Upstream version 6.2.0+dfsg1
+  * [8121882] Use wrap-and-sort.
+  * [895a399] Use cme fix dpkg-control.
+  * [ff73402] Better fix for #773424.
+  * [d31a99c] Update descriptions in d/control.
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 26 Mar 2015 19:15:10 +0100
+
 vtk6 (6.1.0+dfsg2-6) unstable; urgency=medium
 
   [ James Cowgill ]
