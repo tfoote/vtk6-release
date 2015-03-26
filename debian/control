@@ -72,7 +72,7 @@ Build-Depends: chrpath,
                tcl-dev,
                texlive-binaries,
                texlive-math-extra,
-               tk8.6-dev,
+               tk-dev,
                x11proto-core-dev,
                xauth,
                xvfb,
@@ -138,10 +138,9 @@ Replaces: libvtk-dev,
           libvtk32-dev,
           libvtk4-dev,
           libvtk5-dev
-Description: VTK header files for building C++ code
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+Description: VTK header files
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
  This package provides the VTK header files required to compile
  C++ programs that use VTK to do 3D visualisation.
@@ -163,23 +162,12 @@ Replaces: libvtk32,
           libvtk5,
           libvtk5.8,
           libvtk6
-Description: Visualization Toolkit - A high level 3D visualization library - runtime
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
- .
- VTK enables users to concentrate on their work by providing a large
- number of excellent and feature packed high level functions that do
- visualization.  The library needs OpenGL to render the graphics and
- for Linux machines Mesa is necessary. The terms/copyright can be read
- in /usr/share/doc/vtk/README and README.html.  VTK-Linux-HOWTO has
- information about using vtk, getting documentataion or help and
- instructions on building VTK.
+Description: VTK libraries
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
  This package provides the shared libraries needed to run C++ programs
  that use VTK.
- .
- To compile C++ code that uses VTK you have to install libvtk5-dev.
 
 Package: python-vtk6
 Architecture: any
@@ -198,13 +186,10 @@ Suggests: mayavi2,
           vtk6-examples
 Conflicts: python-vtk
 Description: Python bindings for VTK
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
- This provides the shared libraries that enable one to use VTK from Python
- scripts.  You will need Python and vtk installed to use this. Some useful
- information may be available in /usr/share/doc/python-vtk/.
+ This package provides the python bindings for VTK.
 
 Package: tcl-vtk6
 Architecture: any
@@ -215,13 +200,11 @@ Depends: libvtk6.2 (= ${binary:Version}),
 Suggests: vtk6-doc,
           vtk6-examples
 Description: Tcl bindings for VTK
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
- This provides the shared libraries and executable that enable one to use
- VTK from Tcl/Tk scripts. You will need Tcl/Tk and vtk installed to use
- this.
+ This package provides the shared libraries and executable that enable 
+ one to use VTK from Tcl/Tk scripts.
 
 Package: vtk6
 Architecture: any
@@ -232,11 +215,10 @@ Depends: libvtk6.2 (= ${binary:Version}),
 Suggests: vtk6-doc,
           vtk6-examples
 Description: Binaries for VTK6
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
- This provides binaries for VTK6
+ This package provides binaries for VTK6
 
 Package: vtk6-doc
 Architecture: all
@@ -248,15 +230,10 @@ Suggests: libvtk6-dev,
           vtk6-examples,
           vtk6data
 Description: VTK class reference documentation
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
- This package contains exhaustive HTML documentation for the all the
- documented VTK C++ classes.  The documentation was generated using
- doxygen and some excellent perl scripts from Sebastien Barre et. al.
- Please read the README.docs in /usr/share/doc/vtk-doc/ for details.
- The documentation is available under /usr/share/doc/vtk/html.
+ This package provides documentation for VTK6
 
 Package: vtk6-examples
 Architecture: all
@@ -269,10 +246,8 @@ Suggests: libqt4-dev,
           tcl-vtk6,
           tclsh,
           vtk6-doc
-Description: C++, Tcl and Python example programs/scripts for VTK
- The Visualization Toolkit (VTK) is an object oriented, high level
- library that allows one to easily write C++ programs, Tcl, Python and
- Java scripts that do 3D visualization.
+Description: VTK examples
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
  .
- The Python and Tcl examples can be run with the corresponding packages
- (python-vtk6, tcl-vtk6).
+ This package provides examples for VTK6
