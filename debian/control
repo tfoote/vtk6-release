@@ -125,14 +125,8 @@ Depends: libavcodec-dev,
          ${shlibs:Depends}
 Suggests: vtk6-doc,
           vtk6-examples
-Conflicts: libvtk-dev,
-           libvtk32-dev,
-           libvtk4-dev,
-           libvtk5-dev
-Replaces: libvtk-dev,
-          libvtk32-dev,
-          libvtk4-dev,
-          libvtk5-dev
+Conflicts: libvtk5-dev
+Replaces: libvtk5-dev
 Description: VTK header files
  The Visualization Toolkit (VTK) is an open-source software system
  for 3D computer graphics, image processing, and visualization.
@@ -169,12 +163,7 @@ Suggests: mpi-default-bin,
           vtk6-doc,
           vtk6-examples
 Conflicts: libvtk6 (>> 6.0.0-7)
-Replaces: libvtk32,
-          libvtk4,
-          libvtk4c2,
-          libvtk4c2a,
-          libvtk5,
-          libvtk5.8,
+Replaces: libvtk5.8,
           libvtk6
 Description: VTK libraries
  The Visualization Toolkit (VTK) is an open-source software system
