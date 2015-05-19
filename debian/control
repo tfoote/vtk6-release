@@ -40,11 +40,8 @@ Build-Depends: chrpath,
                libosmesa6-dev,
                libpng-dev,
                libpq-dev,
-               libqt4-dev [armel armhf],
-               libqt4-opengl-dev [armel armhf],
                libqt5opengl5-dev [!armel !armhf],
                libqt5webkit5-dev [!armel !armhf],
-               libqtwebkit-dev [armel armhf],
                libsqlite3-dev,
                libswscale-dev,
                libtheora-dev,
@@ -146,14 +143,11 @@ Package: libvtk6-qt-dev
 Architecture: any
 Section: libdevel
 Depends: libvtk6-dev (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends},
-         qtbase5-dev [!armel !armhf],
-         qttools5-private-dev [!armel !armhf],
-         libqt4-dev,
+         qtbase5-dev,
+         qttools5-private-dev,
          libqtwebkit-dev,
-         libqt4-opengl-dev,
-         libqt5opengl5-dev [!armel !armhf],
-         libqt5webkit5-dev [!armel !armhf],
-         libqtwebkit-dev [armel armhf]
+         libqt5opengl5-dev,
+         libqt5webkit5-dev
 Replaces: libvtk6-dev (<<6.2.0+dfsg1-2)
 Breaks: libvtk6-dev (<<6.2.0+dfsg1-2)
 Description: VTK header files, containing Qt files
@@ -270,8 +264,7 @@ Package: vtk6-examples
 Architecture: all
 Section: graphics
 Depends: ${misc:Depends}
-Suggests: libqt4-dev,
-          libvtk6-dev,
+Suggests: libvtk6-dev,
           python,
           python-vtk6,
           tcl-vtk6,
