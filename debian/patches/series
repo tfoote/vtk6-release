@@ -1,7 +1,7 @@
-allpatches.patch
-soversion-sharedlib.patch
-matplotlib.patch
-use_system_sqlite.patch
-fix_ftbfs_gcc49.patch
-use_system_utf8.patch
-use_system_mpi4py.patch
+10_allpatches.patch
+20_soversion-sharedlib.patch
+30_matplotlib.patch
+40_use_system_sqlite.patch
+50_use_system_utf8.patch
+60_use_system_mpi4py.patch
+70_fix_ftbfs_gcc49.patch
