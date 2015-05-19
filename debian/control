@@ -105,9 +105,6 @@ Depends: libavcodec-dev,
          libpng-dev,
          libpq-dev,
          libpython-dev,
-         libqt4-dev,
-         libqt4-opengl-dev,
-         libqtwebkit-dev,
          libswscale-dev,
          libtheora-dev,
          libtiff-dev,
@@ -127,7 +124,7 @@ Depends: libavcodec-dev,
          vtk6 (= ${binary:Version}),
          x11proto-core-dev,
          zlib1g-dev,
-         ${misc:Depends}
+         ${misc:Depends}, ${shlibs:Depends}
 Suggests: vtk6-doc,
           vtk6-examples
 Conflicts: libvtk-dev,
@@ -145,13 +142,33 @@ Description: VTK header files
  This package provides the VTK header files required to compile
  C++ programs that use VTK to do 3D visualisation.
 
+Package: libvtk6-qt-dev
+Architecture: any
+Section: libdevel
+Depends: libvtk6-dev (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends},
+         qtbase5-dev [!armel !armhf],
+         qttools5-private-dev [!armel !armhf],
+         libqt4-dev,
+         libqtwebkit-dev,
+         libqt4-opengl-dev,
+         libqt5opengl5-dev [!armel !armhf],
+         libqt5webkit5-dev [!armel !armhf],
+         libqtwebkit-dev [armel armhf]
+Replaces: libvtk6-dev (<<6.2.0+dfsg1-2)
+Breaks: libvtk6-dev (<<6.2.0+dfsg1-2)
+Description: VTK header files, containing Qt files
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
+ .
+ This package provides the VTK header files required to compile
+ C++ programs that use VTK to do 3D visualisation. Qt files
+
 Package: libvtk6.2
 Architecture: any
 Section: libs
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Suggests: libvtk6-dev,
-          mpi-default-bin,
+Suggests: mpi-default-bin,
           vtk6-doc,
           vtk6-examples
 Conflicts: libvtk6 (>> 6.0.0-7)
@@ -168,6 +185,20 @@ Description: VTK libraries
  .
  This package provides the shared libraries needed to run C++ programs
  that use VTK.
+
+Package: libvtk6.2-qt
+Architecture: any
+Section: libs
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Replaces: libvtk6.2 (<<6.2.0+dfsg1-2)
+Breaks: libvtk6.2 (<<6.2.0+dfsg1-2)
+Description: VTK libraries, Qt files
+ The Visualization Toolkit (VTK) is an open-source software system
+ for 3D computer graphics, image processing, and visualization.
+ .
+ This package provides the shared libraries needed to run C++ programs
+ that use VTK. Qt files
 
 Package: python-vtk6
 Architecture: any

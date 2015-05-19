@@ -83,3 +83,8 @@ override_dh_auto_install:
 	find $(CURDIR)/debian/tmp/ -name "*.pyc" | xargs rm -f
 	find $(CURDIR)/debian/tmp/ -name "*.pyo" | xargs rm -f
 	sed -i -e "9 a\ append libPath /${DEB_HOST_MULTIARCH}" $(CURDIR)/debian/tmp/usr/lib/tcltk/vtk-6.2/pkgIndex.tcl
+
+override_dh_install-arch:
+	dh_install -a
+	find $(CURDIR)/debian/libvtk6-dev/ -name "*Qt*" -exec rm {} \;
+	find $(CURDIR)/debian/libvtk6.2/ -name "*Qt*" -exec rm {} \;
