@@ -1,3 +1,12 @@
+vtk6 (6.2.0+dfsg1-1) unstable; urgency=medium
+
+  * [458b38a] Put Qt-files into a separate package. (Closes: #750193)
+  * [880e68d] Remove Qt4 dependencies. (Closes: #784557, #765491)
+  * [8e7e02a] Apply cme fix dpkg-control.
+  * [541359c] Clean conflicts with obsolete packages.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 19 May 2015 23:18:54 +0200
+
 vtk6 (6.2.0+dfsg1-1~exp1) experimental; urgency=medium
 
   * [0a01541] Update install-files for 6.2 version.
