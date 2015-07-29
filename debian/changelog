@@ -1,3 +1,9 @@
+vtk6 (6.2.0+dfsg1-2) unstable; urgency=medium
+
+  * [73ff79a] Fix compilation on arm* with missing Qt. (Closes: #793304)
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 29 Jul 2015 16:10:50 -0700
+
 vtk6 (6.2.0+dfsg1-1) unstable; urgency=medium
 
   * [458b38a] Put Qt-files into a separate package. (Closes: #750193)
