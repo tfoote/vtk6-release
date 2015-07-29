@@ -33,7 +33,6 @@ extra_flags +=  \
 	-DVTK_EXTRA_COMPILER_WARNINGS=ON \
 	-DVTK_Group_Imaging=ON \
 	-DVTK_Group_MPI=ON \
-	-DVTK_Group_Qt=ON \
 	-DVTK_Group_Tk=ON \
 	-DVTK_Group_Views=ON \
 	-DVTK_BUILD_ALL_MODULES=ON \
@@ -46,14 +45,21 @@ extra_flags +=  \
 	-DCMAKE_BUILD_TYPE=None \
 	-DVTK_USE_GCC_VISIBILITY=ON \
 
-qt4_archs = armel armhf
-ifeq (,$(filter $(DEB_HOST_ARCH),$(qt4_archs)))
-	extra_flags += -DVTK_QT_VERSION=5
+noqt_archs = armel armhf
+ifeq (,$(filter $(DEB_HOST_ARCH),$(noqt_archs)))
+	extra_flags += -DVTK_QT_VERSION=5	-DVTK_Group_Qt=ON
 else
-	extra_flags += -DVTK_QT_VERSION=4
+	extra_flags += -DVTK_QT_VERSION=4	-DVTK_Group_Qt=OFF  -DModule_vtkGUISupportQt=OFF -DModule_vtkGUISupportQtOpenGL=OFF -DModule_vtkGUISupportQtSQL=OFF
 endif
 
 override_dh_auto_configure:
+ifneq (,$(filter $(DEB_HOST_ARCH),$(noqt_archs)))
+	echo '' > $(CURDIR)/Views/Qt/module.cmake
+	echo '' > $(CURDIR)/GUISupport/QtWebkit/module.cmake
+	echo '' > $(CURDIR)/Rendering/Qt/module.cmake
+	echo '' > $(CURDIR)/GUISupport/QtOpenGL/module.cmake
+	echo '' > $(CURDIR)/Examples/GUI/Qt/SimpleView/CMakeLists.txt
+endif
 	dh_auto_configure -- $(extra_flags)
 
 override_dh_auto_clean:

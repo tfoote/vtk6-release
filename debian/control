@@ -40,6 +40,8 @@ Build-Depends: chrpath,
                libosmesa6-dev,
                libpng-dev,
                libpq-dev,
+               libqt4-dev [armel armhf],
+               libqt4-opengl-dev [armel armhf],
                libqt5opengl5-dev [!armel !armhf],
                libqt5webkit5-dev [!armel !armhf],
                libsqlite3-dev,
@@ -135,7 +137,7 @@ Description: VTK header files
  C++ programs that use VTK to do 3D visualisation.
 
 Package: libvtk6-qt-dev
-Architecture: any
+Architecture: amd64 arm64 i386 powerpc ppc64el mips mipsel kfreebsd-amd64 kfreebsd-i386 s390x
 Section: libdevel
 Depends: libvtk6-dev (= ${binary:Version}),
          ${misc:Depends},
@@ -173,7 +175,7 @@ Description: VTK libraries
  that use VTK.
 
 Package: libvtk6.2-qt
-Architecture: any
+Architecture: amd64 arm64 i386 powerpc ppc64el mips mipsel kfreebsd-amd64 kfreebsd-i386 s390x
 Section: libs
 Depends: ${misc:Depends},
          ${shlibs:Depends}
