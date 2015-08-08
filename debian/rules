@@ -9,6 +9,8 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 
 extra_flags +=  \
   -DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_C_COMPILER=mpicc \
+	-DCMAKE_CXX_COMPILER=mpic++ \
 	-DBUILD_DOCUMENTATION=ON \
 	-DBUILD_EXAMPLES=ON \
 	-DBUILD_SHARED_LIBS=ON \
