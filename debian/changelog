@@ -2,6 +2,7 @@ vtk6 (6.2.0+dfsg1-3) unstable; urgency=medium
 
   [ Anton Gladky ]
   * [f225c63] Use the current tk-version. (Closes: #750200)
+  * [c44cb24] Add BD on libnetcdf-cxx-legacy-dev. (Closes: #794040)
 
   [ Nico Schlömer ]
   * [1ec0dac] Provide MPI capabilities. (Closes: #789168)
