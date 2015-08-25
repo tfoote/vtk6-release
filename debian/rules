@@ -96,3 +96,4 @@ override_dh_install-arch:
 	dh_install -a
 	find $(CURDIR)/debian/libvtk6-dev/ -name "*Qt*" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6.2/ -name "*Qt*" -exec rm {} \;
+	find $(CURDIR)/debian/libvtk6-dev/usr/include/ -name "Q*" -exec rm {} \;

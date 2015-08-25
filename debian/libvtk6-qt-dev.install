@@ -3,3 +3,4 @@ usr/lib/*/python2.7/site-packages/vtk/*Qt*
 usr/lib/cmake/vtk-6.2/Modules/*Qt*
 usr/lib/cmake/vtk-6.2/Modules/*Qt*
 usr/include/vtk-6.2/*Qt*
+usr/include/vtk-6.2/Q*
