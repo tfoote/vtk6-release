@@ -1,3 +1,10 @@
+vtk6 (6.2.0+dfsg1-4) unstable; urgency=medium
+
+  * [83a91c2] Move some more header-files into libvtk6-qt-dev. (Closes: #796891)
+  * [4c30afa] Remove useless _formulas.log. First step to reproducible builds.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 25 Aug 2015 20:13:44 +0200
+
 vtk6 (6.2.0+dfsg1-3) unstable; urgency=medium
 
   [ Anton Gladky ]
