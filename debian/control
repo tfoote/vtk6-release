@@ -146,7 +146,6 @@ Depends: libvtk6-dev (= ${binary:Version}),
          ${shlibs:Depends},
          qtbase5-dev,
          qttools5-private-dev,
-         libqtwebkit-dev,
          libqt5opengl5-dev,
          libqt5webkit5-dev
 Breaks: libvtk6-dev (<< 6.2.0+dfsg1-4)
