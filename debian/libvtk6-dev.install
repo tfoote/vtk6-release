@@ -23,3 +23,4 @@ debian/build/lib/cmake/vtk-6.2/Modules/*-Headers.cmake	usr/lib/cmake/vtk-6.2/Mod
 usr/include/vtk-6.2                    usr/include
 usr/lib/*/*.so
 usr/lib/cmake/vtk-6.2
+usr/share/doc/vtk-6.2/doxygen/* /usr/share/vtk-6.2/doxygen/
