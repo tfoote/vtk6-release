@@ -1,3 +1,11 @@
+vtk6 (6.2.0+dfsg1-5) UNRELEASED; urgency=medium
+
+  * Team upload
+  * Re-introduce libvtk6-java
+    Closes: #798963
+
+ -- Andreas Tille <tille@debian.org>  Sat, 19 Dec 2015 08:10:26 +0100
+
 vtk6 (6.2.0+dfsg1-4) unstable; urgency=medium
 
   * [83a91c2] Move some more header-files into libvtk6-qt-dev. (Closes: #796891)

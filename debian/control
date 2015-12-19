@@ -110,6 +110,7 @@ Depends: libavcodec-dev,
          libtheora-dev,
          libtiff-dev,
          libvtk6.2 (= ${binary:Version}),
+         ibvtk6-java (= ${binary:Version}),
          libx11-dev,
          libxdmf-dev,
          libxft-dev,
@@ -188,6 +189,25 @@ Description: VTK libraries, Qt files
  .
  This package provides the shared libraries needed to run C++ programs
  that use VTK. Qt files
+
+Package: libvtk6-java
+Architecture: any
+Depends:
+ ${java:Depends},
+ ${misc:Depends},
+ ${shlibs:Depends}
+Suggests:
+ java-virtual-machine,
+ libvtk6-dev (= ${binary:Version}),
+ vtk6-doc,
+ vtk6-examples
+Section: java
+Description: Visualization Toolkit - A high level 3D visualization library - java
+ The Visualization Toolkit (VTK) is an object oriented, high level
+ library that allows one to easily write C++ programs, Tcl, Python and
+ Java scripts that do 3D visualization.
+ .
+ This package provides the VTK Java language support.
 
 Package: python-vtk6
 Architecture: any
