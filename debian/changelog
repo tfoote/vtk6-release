@@ -1,10 +1,23 @@
-vtk6 (6.2.0+dfsg1-5) UNRELEASED; urgency=medium
+vtk6 (6.2.0+dfsg1-5) unstable; urgency=medium
 
-  * Team upload
-  * Re-introduce libvtk6-java
-    Closes: #798963
+  [ Anton Gladky ]
+  * [5110a34] Remove libqtwebkit-dev from depends of libvtk6-qt-dev.
 
- -- Andreas Tille <tille@debian.org>  Sat, 19 Dec 2015 08:10:26 +0100
+  [ Gert Wollny ]
+  * [8fd5f1f] Move vtk-doc perl-scripts to dev-package. (Closes: #751395)
+
+  [ Andreas Tille ]
+  * [9581b71] Re-introduce libvtk6-java. (Closes: #798963)
+  * [9689d50] Remove files from Git repository that are not part of
+              upstream source
+
+  [ Bas Couwenberg ]
+  * [429f902] Add patch for GDAL 2.0 support. (Closes: #802624)
+
+  [ Andreas Cadhalpun ]
+  * [8c4dcf0] Add support for FFmpeg 2.9. (Closes: #803869)
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 20 Dec 2015 18:02:41 +0100
 
 vtk6 (6.2.0+dfsg1-4) unstable; urgency=medium
 
