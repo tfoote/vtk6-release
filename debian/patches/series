@@ -6,3 +6,4 @@
 60_use_system_mpi4py.patch
 70_fix_ftbfs_gcc49.patch
 80_fix_arm_compilation.patch
+90_gdal-2.0.patch
