@@ -2,6 +2,7 @@ vtk6 (6.2.0+dfsg1-5) unstable; urgency=medium
 
   [ Anton Gladky ]
   * [5110a34] Remove libqtwebkit-dev from depends of libvtk6-qt-dev.
+  * Update d/copyright. Thanks to Thorsten Alteholz for pointing this out.
 
   [ Gert Wollny ]
   * [8fd5f1f] Move vtk-doc perl-scripts to dev-package. (Closes: #751395)
