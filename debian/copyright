@@ -33,7 +33,7 @@ License: BSD-3-clause
 
 Files: ThirdParty/xdmf2/vtkxdmf2/libsrc/*
 Copyright: 2002 US Army Research Laboratory
-License: BSD-like
+License: other
  This software is distributed WITHOUT ANY WARRANTY; without
  even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the above copyright notice
@@ -187,7 +187,7 @@ Files:  Filters/Parallel/vtkBlockDistribution.h
         Infovis/BoostGraphAlgorithms/vtkBoostBreadthFirstSearch.cxx
         Common/DataModel/vtkDistributedGraphHelper.*
 Copyright: 2008 The Trustees of Indiana University
-Lciense: Boost-1.0
+License: Boost-1.0
   Boost Software License - Version 1.0 - August 17th, 2003
   .
   Permission is hereby granted, free of charge, to any person or organization
