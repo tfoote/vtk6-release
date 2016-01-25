@@ -1,3 +1,9 @@
+vtk6 (6.2.0+dfsg1-6) unstable; urgency=medium
+
+  * [18cd92a] Add missing libaec-dev to build-depends.
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 25 Jan 2016 21:55:22 +0100
+
 vtk6 (6.2.0+dfsg1-5) unstable; urgency=medium
 
   [ Anton Gladky ]
