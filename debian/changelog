@@ -1,7 +1,7 @@
-vtk6 (6.2.0+dfsg1-6.1) UNRELEASED; urgency=medium
+vtk6 (6.2.0+dfsg1-7) UNRELEASED; urgency=medium
 
-  * Non-maintainer upload
   * d/patched/96 Fix race condition in vtkLookupTableMapdata
+  * d/control: Add Gert Wollny to uploaders  
 
  -- Gert Wollny <gw.fossdev@gmail.com>  Sun, 31 Jan 2016 17:37:41 +0100
 
