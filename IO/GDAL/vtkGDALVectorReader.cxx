@@ -44,7 +44,11 @@ class vtkGDALVectorReader::Internal
 public:
   Internal( const char* srcName, int srcMode, int appendFeatures, int addFeatIds )
     {
+#if GDAL_VERSION_MAJOR < 2
     this->Source = OGRSFDriverRegistrar::Open( srcName, srcMode, &this->Driver );
+#else
+    this->Source = (GDALDataset*) OGROpen( srcName, srcMode, NULL );
+#endif
     if ( ! this->Source )
       {
       this->LastError = CPLGetLastErrorMsg();
@@ -61,7 +65,11 @@ public:
     {
     if ( this->Source )
       {
+#if GDAL_VERSION_MAJOR < 2
       OGRDataSource::DestroyDataSource( this->Source );
+#else
+      GDALClose( (GDALDatasetH) this->Source );
+#endif
       }
     }
 
@@ -307,7 +315,11 @@ public:
     return nCells;
     }
 
+#if GDAL_VERSION_MAJOR < 2
   OGRDataSource* Source;
+#else
+  GDALDataset* Source;
+#endif
   OGRSFDriver* Driver;
   const char* LastError;
   int LayerIdx;

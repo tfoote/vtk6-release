@@ -49,7 +49,7 @@
 class vtkSQLQuery;
 class vtkSQLiteQuery;
 class vtkStringArray;
-struct vtk_sqlite3;
+struct sqlite3;
 
 class VTKIOSQL_EXPORT vtkSQLiteDatabase : public vtkSQLDatabase
 {
@@ -147,7 +147,7 @@ protected:
   virtual bool ParseURL(const char* url);
 
 private:
-  vtk_sqlite3 *SQLiteInstance;
+  sqlite3 *SQLiteInstance;
 
   // We want this to be private, a user of this class
   // should not be setting this for any reason

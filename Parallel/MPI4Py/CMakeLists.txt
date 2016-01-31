@@ -17,7 +17,7 @@ if(VTK_USE_SYSTEM_MPI4PY)
     mark_as_advanced(MPI4PY_INCLUDE_DIR)
   endif()
 else()
-  set(MPI4PY_INCLUDE_DIR "${vtkmpi4py_SOURCE_DIR}/vtkmpi4py/src/include")
+  set(MPI4PY_INCLUDE_DIR "/usr/include")
 endif()
 include_directories("${MPI4PY_INCLUDE_DIR}")
 
