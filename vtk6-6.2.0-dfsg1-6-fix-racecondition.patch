@@ -1,0 +1,234 @@
+commit 88349595a1410bbb8670fbd31550c38297f15b68
+Author: Gert Wollny <gw.fossdev@gmail.com>
+Date:   Sun Jan 31 17:40:33 2016 +0100
+
+    Add patch to fix race condition
+
+diff --git a/debian/changelog b/debian/changelog
+index f8003d3..e2927d0 100644
+--- a/debian/changelog
++++ b/debian/changelog
+@@ -1,3 +1,10 @@
++vtk6 (6.2.0+dfsg1-6.1) UNRELEASED; urgency=medium
++
++  * Non-maintainer upload
++  * d/patched/96 Fix race condition in vtkLookupTableMapdata
++
++ -- Gert Wollny <gw.fossdev@gmail.com>  Sun, 31 Jan 2016 17:37:41 +0100
++
+ vtk6 (6.2.0+dfsg1-6) unstable; urgency=medium
+ 
+   * [18cd92a] Add missing libaec-dev to build-depends.
+diff --git a/debian/patches/96_concurrent_vtkLookupTableMapData_fix.patch b/debian/patches/96_concurrent_vtkLookupTableMapData_fix.patch
+new file mode 100644
+index 0000000..242b2f3
+--- /dev/null
++++ b/debian/patches/96_concurrent_vtkLookupTableMapData_fix.patch
+@@ -0,0 +1,198 @@
++Description: Fix crash in function called from multiple threads
++ vtkLookupTableMapData() was not thread safe and could lead to
++ crashes when accessed from multiple threads. Added a mutex around
++ the logic to determine if the color table size needed to be
++ increased.
++ .
++ Added a multi-threaded test that crashes on occasion prior
++ to this patch, but does not crash with this patch applied.
++Author: Cory Quammen <cory.quammen@kitware.com>
++Last-Update: 2016-01-31
++Bug: http://www.vtk.org/Bug/view.php?id=15365
++
++diff --git a/Common/Core/Testing/Cxx/CMakeLists.txt b/Common/Core/Testing/Cxx/CMakeLists.txt
++--- a/Common/Core/Testing/Cxx/CMakeLists.txt
+++++ b/Common/Core/Testing/Cxx/CMakeLists.txt
++@@ -32,6 +32,7 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
++   TestGarbageCollector.cxx
++   # TestInstantiator.cxx # Have not enabled instantiators.
++   TestLookupTable.cxx
+++  TestLookupTableThreaded.cxx
++   TestMath.cxx
++   TestMinimalStandardRandomSequence.cxx
++   TestNew.cxx
++diff --git a/Common/Core/Testing/Cxx/TestLookupTableThreaded.cxx b/Common/Core/Testing/Cxx/TestLookupTableThreaded.cxx
++new file mode 100644
++index 0000000..4330609
++--- /dev/null
+++++ b/Common/Core/Testing/Cxx/TestLookupTableThreaded.cxx
++@@ -0,0 +1,57 @@
+++/*=========================================================================
+++
+++  Program:   Visualization Toolkit
+++  Module:    TestLookupTableThreaded.cxx
+++
+++  Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
+++  All rights reserved.
+++  See Copyright.txt or http://www.kitware.com/Copyright.htm for details.
+++
+++     This software is distributed WITHOUT ANY WARRANTY; without even
+++     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+++     PURPOSE.  See the above copyright notice for more information.
+++
+++=========================================================================*/
+++
+++#include "vtkLookupTable.h"
+++#include "vtkMultiThreader.h"
+++#include "vtkNew.h"
+++
+++namespace {
+++
+++vtkLookupTable * lut;
+++
+++VTK_THREAD_RETURN_TYPE ThreadedMethod(void *)
+++{
+++  int numberOfValues = 25;
+++  double* input = new double[numberOfValues];
+++  unsigned char* output = new unsigned char[4*numberOfValues];
+++  int inputType = VTK_DOUBLE;
+++  int inputIncrement = 1;
+++  int outputFormat = VTK_RGBA;
+++
+++  lut->MapScalarsThroughTable2(input, output, inputType, numberOfValues,
+++                               inputIncrement, outputFormat);
+++
+++  delete[] input;
+++  delete[] output;
+++
+++  return VTK_THREAD_RETURN_VALUE;
+++}
+++
+++} // end anonymous namespace
+++
+++int TestLookupTableThreaded(int, char* [])
+++{
+++  lut = vtkLookupTable::New();
+++  lut->SetNumberOfTableValues( 1024 );
+++
+++  vtkNew<vtkMultiThreader> threader;
+++  threader->SetSingleMethod( ThreadedMethod, NULL );
+++  threader->SetNumberOfThreads( 4 );
+++  threader->SingleMethodExecute();
+++
+++  lut->Delete();
+++
+++  return EXIT_SUCCESS;
+++}
++diff --git a/Common/Core/vtkLookupTable.cxx b/Common/Core/vtkLookupTable.cxx
++index 53d9663..2d90054 100644
++--- a/Common/Core/vtkLookupTable.cxx
+++++ b/Common/Core/vtkLookupTable.cxx
++@@ -18,6 +18,7 @@
++ #include "vtkBitArray.h"
++ #include "vtkMath.h"
++ #include "vtkMathConfigure.h"
+++#include "vtkMutexLock.h"
++ #include "vtkObjectFactory.h"
++ #include "vtkStringArray.h"
++ #include "vtkVariantArray.h"
++@@ -81,6 +82,8 @@ vtkLookupTable::vtkLookupTable(int sze, int ext)
++   this->Scale = VTK_SCALE_LINEAR;
++ 
++   this->OpaqueFlag=1;
+++
+++  this->ResizeMutex = vtkSimpleMutexLock::New();
++ }
++ 
++ //----------------------------------------------------------------------------
++@@ -88,6 +91,7 @@ vtkLookupTable::~vtkLookupTable()
++ {
++   this->Table->UnRegister( this );
++   this->Table = NULL;
+++  this->ResizeMutex->Delete();
++ }
++ 
++ //----------------------------------------------------------------------------
++@@ -641,8 +645,8 @@ namespace {
++ 
++ //----------------------------------------------------------------------------
++ template<class T>
++-void vtkLookupTableMapData(vtkLookupTable *self, T *input,
++-                           unsigned char *output, int length,
+++void vtkLookupTableMapData(vtkLookupTable *self, vtkSimpleMutexLock *mutex,
+++                           T *input, unsigned char *output, int length,
++                            int inIncr, int outFormat, TableParameters & p)
++ {
++   int i = length;
++@@ -654,14 +658,24 @@ void vtkLookupTableMapData(vtkLookupTable *self, T *input,
++   // end. When this function is called repeatedly with the same size
++   // lookup table, memory reallocation will be done only one the first
++   // call if at all.
+++
++   vtkUnsignedCharArray* lookupTable = self->GetTable();
++   vtkIdType numberOfColors = lookupTable->GetNumberOfTuples();
++   vtkIdType neededSize = (numberOfColors + vtkLookupTable::NUMBER_OF_SPECIAL_COLORS) *
++     lookupTable->GetNumberOfComponents();
+++
+++  // Since this involves a potential array resize and this function
+++  // might be accessed concurently from more than one thread, we need a
+++  // mutex here. This shouldn't affect performance much if this function
+++  // is used to map many input values, but if it is called repeatedly
+++  // with short input arrays, performance may be much worse.
+++  mutex->Lock();
++   if (lookupTable->GetSize() < neededSize)
++     {
++     lookupTable->Resize(numberOfColors + vtkLookupTable::NUMBER_OF_SPECIAL_COLORS);
++     }
+++  mutex->Unlock();
+++
++   unsigned char* table = lookupTable->GetPointer(0);
++ 
++   // Writing directly to the memory location instead of adding them
++@@ -1159,7 +1173,7 @@ void vtkLookupTable::MapScalarsThroughTable2(void *input,
++           {
++           newInput->SetValue(i, bitArray->GetValue(id));
++           }
++-        vtkLookupTableMapData(this,
+++        vtkLookupTableMapData(this, this->ResizeMutex,
++                               static_cast<unsigned char*>(newInput->GetPointer(0)),
++                               output, numberOfValues,
++                               inputIncrement, outputFormat, p);
++@@ -1169,7 +1183,7 @@ void vtkLookupTable::MapScalarsThroughTable2(void *input,
++         break;
++ 
++       vtkTemplateMacro(
++-        vtkLookupTableMapData(this,static_cast<VTK_TT*>(input),output,
+++        vtkLookupTableMapData(this, this->ResizeMutex, static_cast<VTK_TT*>(input),output,
++                               numberOfValues, inputIncrement, outputFormat, p)
++         );
++       default:
++diff --git a/Common/Core/vtkLookupTable.h b/Common/Core/vtkLookupTable.h
++index f233c85..d0401df 100644
++--- a/Common/Core/vtkLookupTable.h
+++++ b/Common/Core/vtkLookupTable.h
++@@ -56,6 +56,8 @@
++ 
++ #include "vtkUnsignedCharArray.h" // Needed for inline method
++ 
+++class vtkSimpleMutexLock;
+++
++ #define VTK_RAMP_LINEAR 0
++ #define VTK_RAMP_SCURVE 1
++ #define VTK_RAMP_SQRT 2
++@@ -359,6 +361,8 @@ protected:
++   int OpaqueFlag;
++   vtkTimeStamp OpaqueFlagBuildTime;
++ 
+++  vtkSimpleMutexLock* ResizeMutex;
+++
++ private:
++   vtkLookupTable(const vtkLookupTable&);  // Not implemented.
++   void operator=(const vtkLookupTable&);  // Not implemented.
++@@ -373,6 +377,3 @@ inline unsigned char *vtkLookupTable::WritePointer(const vtkIdType id,
++ }
++ 
++ #endif
++-
++-
++-
+diff --git a/debian/patches/series b/debian/patches/series
+index 23a2c92..9582b3a 100644
+--- a/debian/patches/series
++++ b/debian/patches/series
+@@ -8,3 +8,4 @@
+ 80_fix_arm_compilation.patch
+ 90_gdal-2.0.patch
+ 95_ffmpeg_2.9.patch
++96_concurrent_vtkLookupTableMapData_fix.patch
