@@ -9,3 +9,4 @@
 90_gdal-2.0.patch
 95_ffmpeg_2.9.patch
 96_concurrent_vtkLookupTableMapData_fix.patch
+97_fix_latex_doxygen.patch
