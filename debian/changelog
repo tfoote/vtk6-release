@@ -1,3 +1,12 @@
+vtk6 (6.2.0+dfsg1-8) UNRELEASED; urgency=medium
+
+  * [e2667e8] d/libvtk6-qt-dev: also install QT*.so files 
+    (needed by vtk-dicom)
+  * update changelog
+  * update changelog
+
+ -- Gert Wollny <gw.fossdev@gmail.com>  Wed, 03 Feb 2016 15:05:29 +0000
+
 vtk6 (6.2.0+dfsg1-7) unstable; urgency=medium
 
   * Add patch 96_* to fix a race condition in vtkLookupTableMapData
