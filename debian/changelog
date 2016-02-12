@@ -1,3 +1,13 @@
+vtk6 (6.2.0+dfsg1-8) unstable; urgency=medium
+
+  [ Anton Gladky ]
+  * [3bf2478] Add allow-stderr to autopkgtest. (Closes: #767338)
+
+  [ Matthias Klose ]
+  * [78abebb] Set JVM max memory to 1024m.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 12 Feb 2016 20:37:38 +0100
+
 vtk6 (6.2.0+dfsg1-7) unstable; urgency=medium
 
   * Add patch 96_* to fix a race condition in vtkLookupTableMapData
