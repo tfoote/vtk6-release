@@ -141,7 +141,7 @@ Description: VTK header files
  C++ programs that use VTK to do 3D visualisation.
 
 Package: libvtk6-qt-dev
-Architecture: amd64 arm64 i386 powerpc ppc64el mips mipsel kfreebsd-amd64 kfreebsd-i386 s390x hppa x32
+Architecture: any
 Section: libdevel
 Depends: libvtk6-dev (= ${binary:Version}),
          ${misc:Depends},
@@ -178,7 +178,7 @@ Description: VTK libraries
  that use VTK.
 
 Package: libvtk6.2-qt
-Architecture: amd64 arm64 i386 powerpc ppc64el mips mipsel kfreebsd-amd64 kfreebsd-i386 s390x hppa x32
+Architecture: any
 Section: libs
 Depends: ${misc:Depends},
          ${shlibs:Depends}
