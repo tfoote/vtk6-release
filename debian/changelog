@@ -4,9 +4,6 @@ vtk6 (6.2.0+dfsg1-8) UNRELEASED; urgency=medium
   * [7f90dea] Update Java installation locations
   * [c15ed1e] Move Python packages aout of *-dev packages and 
     provide a symlink in the python-vtk6 package instead 
-  * [842987d] Add the libvtk*Qt*.so files to libvtk6-qt-dev
-  * [7f90dea] Update Java installation locations
-  * [c15ed1e] Move Python packages out of *-dev packages
   * [74543a2] add overrides and move PythonTK lib to python package
   * [2685ea2] Make perl scripts executable
 
