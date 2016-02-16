@@ -4,3 +4,5 @@ debian/build/bin/vtk6python	 usr/bin
 usr/bin/vtkWrapPython-6.2
 usr/bin/vtkWrapPythonInit-6.2
 usr/lib/*/python2.7/site-packages/vtk usr/lib/python2.7/dist-packages
+usr/lib/*/libvtkRenderingPythonTkWidgets.so usr/lib/python2.7/dist-packages/vtk/
+
