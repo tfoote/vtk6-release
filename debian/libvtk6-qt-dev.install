@@ -1,4 +1,5 @@
-usr/lib/*/python2.7/site-packages/vtk/*Qt*
+# remove Python files here and privide a symlink in the python package 
+# usr/lib/*/python2.7/site-packages/vtk/*Qt*
 usr/lib/*/*Qt*.so
 usr/lib/cmake/vtk-6.2/Modules/*Qt*
 usr/include/vtk-6.2/*Qt*

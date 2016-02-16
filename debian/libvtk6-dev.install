@@ -1,6 +1,7 @@
 # add doxygen docs
-# to get paraview debian/build properly on top of vtk
-/usr/lib/*/python2.7/site-packages/vtk/*
+# to get paraview debian/build properly on top of vtk we now add this as a symlink 
+# in the python-vtk6 package 
+# /usr/lib/*/python2.7/site-packages/vtk/*
 CMake/TopologicalSort.cmake usr/lib/cmake/vtk-6.2/
 CMake/exportheader.cmake.in usr/lib/cmake/vtk-6.2/
 CMake/vtkGroups.cmake usr/lib/cmake/vtk-6.2/
