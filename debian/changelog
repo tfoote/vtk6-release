@@ -2,10 +2,8 @@ vtk6 (6.2.0+dfsg1-8) UNRELEASED; urgency=medium
 
   * [842987d] Add the libvtk*Qt*.so files to libvtk6-qt-dev
   * [7f90dea] Update Java installation locations
-  * Add the libvtk*Qt*.so files to libvtk6-qt-dev
-  * Update Java installation locations
-  * Update changelog for 6.2.0+dfsg1-8 release
-  * Remove python files from -dev packages and provide an according symlink in the python-vtk6 package
+  * [c15ed1e] Move Python packages aout of *-dev packages and 
+    provide a symlink in the python-vtk6 package instead 
 
  -- Gert Wollny <gw.fossdev@gmail.com>  Wed, 03 Feb 2016 15:05:29 +0000
 

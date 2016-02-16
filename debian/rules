@@ -100,6 +100,6 @@ override_dh_install-arch:
 	find $(CURDIR)/debian/libvtk6-qt-dev/ -name "*Java.so" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6-dev/usr/include/ -name "Q*" -exec rm {} \;
 	rm -rf $(CURDIR)/debian/libvtk6-doc/usr/share/doc/vtk6-doc/html/_formulas.log
-        cd $(CURDIR)/debian/python-vtk6/ && \
-          mkdir -p /usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/vtk && \
-          ln -s  /usr/lib/python2.7/dist/packages/vtk  /usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/vtk
+	mkdir -p  $(CURDIR)/debian/python-vtk6/usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/ && \
+          cd $(CURDIR)/debian/python-vtk6/usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/ && \
+	  ln -s  /usr/lib/python2.7/dist/packages/vtk vtk
