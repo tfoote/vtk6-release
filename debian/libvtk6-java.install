@@ -1,5 +1,5 @@
 usr/bin/vtkParseJava-6.2                    usr/bin
 usr/bin/vtkWrapJava-6.2                     usr/bin
 usr/lib/*/vtk6.jar                          usr/share/java
-usr/lib/*/*Java.so
+usr/lib/*/*Java.so                          usr/lib/jni
 
