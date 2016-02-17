@@ -1,14 +1,14 @@
-vtk6 (6.2.0+dfsg1-9) UNRELEASED; urgency=medium
+vtk6 (6.2.0+dfsg1-9) unstable; urgency=medium
 
   * [842987d] Add the libvtk*Qt*.so files to libvtk6-qt-dev
-  * [7f90dea] Update Java installation locations Closes: #773420 
+  * [b9dee31] Update Java installation locations Closes: #773420 
   * [c15ed1e] Move Python packages out of *-dev packages and provide
       a symlink in the python-vtk6 package instead Closes: #737325
       Closes: #773379 
   * [74543a2] add overrides and move PythonTK lib to python package
   * [2685ea2] Make perl scripts executable
 
- -- Gert Wollny <gw.fossdev@gmail.com>  Wed, 03 Feb 2016 15:05:29 +0000
+ -- Gert Wollny <gw.fossdev@gmail.com>  Wed, 17 Feb 2016 12:13:56 +0000
 
 vtk6 (6.2.0+dfsg1-8) unstable; urgency=medium
 
