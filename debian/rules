@@ -96,9 +96,7 @@ override_dh_install-arch:
 	dh_install -a
 	find $(CURDIR)/debian/libvtk6-dev/ -name "*Qt*" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6.2/ -name "*Qt*" -exec rm {} \;
-	find $(CURDIR)/debian/libvtk6-dev/ -name "*Java.so" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6-dev/ -name "libvtkRenderingPythonTkWidgets.so" -exec rm {} \;
-	find $(CURDIR)/debian/libvtk6-qt-dev/ -name "*Java.so" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6-dev/usr/include/ -name "Q*" -exec rm {} \;
 	chmod 755 $(CURDIR)/debian/libvtk6-dev/usr/share/vtk-6.2/doxygen/*.pl
 	rm -rf $(CURDIR)/debian/libvtk6-doc/usr/share/doc/vtk6-doc/html/_formulas.log

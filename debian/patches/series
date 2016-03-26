@@ -11,3 +11,4 @@
 96_concurrent_vtkLookupTableMapData_fix.patch
 97_fix_latex_doxygen.patch
 100_javac-heap.patch
+101_java_install_path.patch
