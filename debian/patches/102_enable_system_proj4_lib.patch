@@ -1,0 +1,207 @@
+Description: Correct code to enable use of system proj4 
+Author: Matthew Woehlke <matthew.woehlke@kitware.com>
+Bug: https://bugs.debian.org/750184
+Upstream-Bug: http://www.vtk.org/Bug/view.php?id=14126
+
+Index: vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
+===================================================================
+--- vtk6-6.2.0+dfsg1.orig/CMake/FindLIBPROJ4.cmake
++++ vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
+@@ -12,7 +12,7 @@ if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIB
+   endif ()
+ 
+   find_library( LIBPROJ4_LIBRARIES
+-    NAMES proj4 libproj4
++    NAMES proj
+     PATHS
+       ${_LIBPROJ4_DIR}/lib64
+       ${CMAKE_INSTALL_PREFIX}/lib64
+@@ -28,7 +28,7 @@ if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIB
+   )
+ 
+   find_path( LIBPROJ4_INCLUDE_DIR
+-    NAMES lib_proj.h
++    NAMES proj_api.h
+     PATHS
+       ${_LIBPROJ4_DIR}
+       ${_LIBPROJ4_DIR}/include
+Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.cxx
+===================================================================
+--- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoProjection.cxx
++++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.cxx
+@@ -80,7 +80,7 @@ int vtkGeoProjection::GetNumberOfProject
+   if ( vtkGeoProjectionNumProj < 0 )
+     {
+     vtkGeoProjectionNumProj = 0;
+-    for ( const PROJ_LIST* pj = proj_list; pj && pj->id; ++ pj )
++    for ( const PJ_LIST* pj = pj_list; pj && pj->id; ++ pj )
+       ++ vtkGeoProjectionNumProj;
+     }
+   return vtkGeoProjectionNumProj;
+@@ -91,7 +91,7 @@ const char* vtkGeoProjection::GetProject
+   if ( projection < 0 || projection >= vtkGeoProjection::GetNumberOfProjections() )
+     return 0;
+ 
+-  return proj_list[projection].id;
++  return pj_list[projection].id;
+ }
+ //-----------------------------------------------------------------------------
+ const char* vtkGeoProjection::GetProjectionDescription( int projection )
+@@ -99,7 +99,7 @@ const char* vtkGeoProjection::GetProject
+   if ( projection < 0 || projection >= vtkGeoProjection::GetNumberOfProjections() )
+     return 0;
+ 
+-  return proj_list[projection].descr[0];
++  return pj_list[projection].descr[0];
+ }
+ //-----------------------------------------------------------------------------
+ vtkGeoProjection::vtkGeoProjection()
+@@ -116,7 +116,7 @@ vtkGeoProjection::~vtkGeoProjection()
+   this->SetName( 0 );
+   if ( this->Projection )
+     {
+-    proj_free( this->Projection );
++    pj_free( this->Projection );
+     }
+   delete this->Internals;
+   this->Internals = NULL;
+@@ -142,7 +142,7 @@ int vtkGeoProjection::GetIndex()
+   if ( ! this->Projection )
+     return -1;
+   int i = 0;
+-  for ( const PROJ_LIST* proj = proj_list; proj && proj->id; ++ proj, ++ i )
++  for ( const PJ_LIST* proj = pj_list; proj && proj->id; ++ proj, ++ i )
+     {
+     if ( ! strcmp( proj->id, this->Name ) )
+       {
+@@ -162,7 +162,7 @@ const char* vtkGeoProjection::GetDescrip
+   return this->Projection->descr;
+ }
+ //-----------------------------------------------------------------------------
+-PROJ* vtkGeoProjection::GetProjection()
++projPJ vtkGeoProjection::GetProjection()
+ {
+   this->UpdateProjection();
+   return this->Projection;
+@@ -178,7 +178,7 @@ int vtkGeoProjection::UpdateProjection()
+ 
+   if ( this->Projection )
+     {
+-    proj_free( this->Projection );
++    pj_free( this->Projection );
+     this->Projection = 0;
+     }
+ 
+@@ -217,7 +217,7 @@ int vtkGeoProjection::UpdateProjection()
+     pjArgs[3+i] = stringHolder[i].c_str();
+     }
+ 
+-  this->Projection = proj_init( argSize, const_cast<char**>( pjArgs ) );
++  this->Projection = pj_init( argSize, const_cast<char**>( pjArgs ) );
+   delete[] pjArgs;
+   if ( this->Projection )
+     {
+Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.h
+===================================================================
+--- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoProjection.h
++++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.h
+@@ -29,8 +29,9 @@
+ #include "vtkGeovisCoreModule.h" // For export macro
+ #include "vtkObject.h"
+ 
+-struct PROJconsts;
+-typedef PROJconsts PROJ;
++struct PJconsts;
++typedef struct PJconsts PJ;
++typedef PJ* projPJ;
+ 
+ class VTKGEOVISCORE_EXPORT vtkGeoProjection : public vtkObject
+ {
+@@ -85,7 +86,7 @@ public:
+   // this method returns may be freed, so you should not use the PROJ.4 structure
+   // after changing any parameters. Also, you should not modify the PROJ.4 structure
+   // on your own as it will then be out of sync with the vtkGeoProjection class.
+-  PROJ* GetProjection();
++  projPJ GetProjection();
+ 
+   // Description:
+   // Add an optional parameter to the projection that will be computed or
+@@ -125,7 +126,7 @@ protected:
+ 
+   char* Name;
+   double CentralMeridian;
+-  PROJ* Projection;
++  projPJ Projection;
+   vtkTimeStamp ProjectionMTime;
+ 
+ private:
+Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoTransform.cxx
+===================================================================
+--- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoTransform.cxx
++++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoTransform.cxx
+@@ -73,8 +73,8 @@ void vtkGeoTransform::TransformPoints( v
+     }
+   dstCoords->DeepCopy( srcCoords );
+ 
+-  PROJ* src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
+-  PROJ* dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
++  projPJ src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
++  projPJ dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
+   if ( ! src && ! dst )
+     {
+     // we've already copied srcCoords to dstCoords and src=dst=0 implies no transform...
+@@ -156,20 +156,20 @@ vtkAbstractTransform* vtkGeoTransform::M
+ 
+ void vtkGeoTransform::InternalTransformPoints( double* x, vtkIdType numPts, int stride )
+ {
+-  PROJ* src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
+-  PROJ* dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
++  projPJ src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
++  projPJ dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
+   int delta = stride - 2;
+-  PROJ_LP lp;
+-  PROJ_XY xy;
++  projLP lp;
++  projXY xy;
+   if ( src )
+     {
+     // Convert from src system to lat/long using inverse of src transform
+     double* coord = x;
+     for ( vtkIdType i = 0; i < numPts; ++ i )
+       {
+-      xy.x = coord[0]; xy.y = coord[1];
+-      lp = proj_inv( xy, src );
+-      coord[0] = lp.lam; coord[1] = lp.phi;
++      xy.u = coord[0]; xy.v = coord[1];
++      lp = pj_inv( xy, src );
++      coord[0] = lp.u; coord[1] = lp.v;
+       }
+     }
+   else // ! src
+@@ -190,9 +190,9 @@ void vtkGeoTransform::InternalTransformP
+     double* coord = x;
+     for ( vtkIdType i = 0; i < numPts; ++ i )
+       {
+-      lp.lam = coord[0]; lp.phi = coord[1];
+-      xy = proj_fwd( lp, dst );
+-      coord[0] = xy.x; coord[1] = xy.y;
++      lp.u = coord[0]; lp.v = coord[1];
++      xy = pj_fwd( lp, dst );
++      coord[0] = xy.u; coord[1] = xy.v;
+       }
+     }
+   else // ! dst
+Index: vtk6-6.2.0+dfsg1/ThirdParty/libproj4/vtk_libproj4.h.in
+===================================================================
+--- vtk6-6.2.0+dfsg1.orig/ThirdParty/libproj4/vtk_libproj4.h.in
++++ vtk6-6.2.0+dfsg1/ThirdParty/libproj4/vtk_libproj4.h.in
+@@ -18,7 +18,8 @@
+ /* Use the libproj4 library configured for VTK.  */
+ #cmakedefine VTK_USE_SYSTEM_LIBPROJ4
+ #ifdef VTK_USE_SYSTEM_LIBPROJ4
+-# include <lib_proj.h>
++# include <projects.h>
++# include <proj_api.h>
+ #else
+ # include <vtklibproj4/lib_proj.h>
+ #endif
