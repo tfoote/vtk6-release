@@ -46,6 +46,7 @@ extra_flags +=  \
 	-DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed" \
 	-DCMAKE_BUILD_TYPE=None \
 	-DVTK_USE_GCC_VISIBILITY=ON \
+	-DModule_vtkRenderingExternal=ON
 
 noqt_archs = armel armhf
 ifeq (,$(filter $(DEB_HOST_ARCH),$(noqt_archs)))
