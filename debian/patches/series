@@ -13,3 +13,4 @@
 100_javac-heap.patch
 101_java_install_path.patch
 102_enable_system_proj4_lib.patch
+104_fix_gcc_version_6.patch
