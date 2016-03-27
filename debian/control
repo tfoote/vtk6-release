@@ -215,7 +215,8 @@ Package: python-vtk6
 Architecture: any
 Section: python
 Depends: libvtk6.2 (= ${binary:Version}),
-         python-autobahn,
+	 libvtk6.2-qt (= ${binary:Version}),
+	 python-autobahn,
          python-mpi4py,
          python-six,
          python-twisted,
@@ -237,6 +238,7 @@ Package: tcl-vtk6
 Architecture: any
 Section: interpreters
 Depends: libvtk6.2 (= ${binary:Version}),
+	 libvtk6.2-qt (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Suggests: vtk6-doc,
