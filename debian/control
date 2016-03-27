@@ -79,7 +79,7 @@ Build-Depends: chrpath,
                xauth,
                xvfb,
                zlib1g-dev
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/vtk6.git
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/vtk6.git
 Homepage: http://www.vtk.org/
