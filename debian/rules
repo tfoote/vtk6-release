@@ -49,12 +49,7 @@ extra_flags +=  \
 	-DVTK_USE_GCC_VISIBILITY=ON \
 	-DModule_vtkRenderingExternal=ON
 
-noqt_archs = armel armhf
-ifeq (,$(filter $(DEB_HOST_ARCH),$(noqt_archs)))
-	extra_flags += -DVTK_QT_VERSION=5	-DVTK_Group_Qt=ON
-else
-	extra_flags += -DVTK_QT_VERSION=4	-DVTK_Group_Qt=OFF  -DModule_vtkGUISupportQt=OFF -DModule_vtkGUISupportQtOpenGL=OFF -DModule_vtkGUISupportQtSQL=OFF
-endif
+extra_flags += -DVTK_QT_VERSION=5	-DVTK_Group_Qt=ON
 
 override_dh_auto_configure:
 ifneq (,$(filter $(DEB_HOST_ARCH),$(noqt_archs)))
