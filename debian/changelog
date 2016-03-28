@@ -1,3 +1,19 @@
+vtk6 (6.2.0+dfsg1-10) unstable; urgency=medium
+
+  * [81e7008] d/p/101: Correct install path for Java files within build system
+  * [61b464c] d/control: Set minimum version for libgl2ps-dev, Closes: #766491
+  * [4ac3ffc] d/control: Enable module vtkRenderingExternal, Closes: #810344
+  * [7ae06a0] d/p/102: Enable use of system proj4, Closes: #750184
+  * [ce3f3ad] d/control: Enable system LIBPROJ4
+  * [7720d44] Apply new patches 101 also 102 in source code
+  * [d446bd8] d/control: Update standards version to 3.9.7
+  * [70da96e] d/control: depends python-vtk6 and tcl-vtk6 on libvtk6.2-qt 
+  * [2e881c5] Update watchfile to only search for 6.X.X versions
+  * [e28b82b] d/control, d/rules: Move to qt5 also on armel, armhf
+  * [f2883f3] d/p/104: Enables compiling with gcc-6. Closes: #812296
+
+ -- Gert Wollny <gw.fossdev@gmail.com>  Mon, 28 Mar 2016 08:55:49 +0000
+
 vtk6 (6.2.0+dfsg1-9) unstable; urgency=medium
 
   * [842987d] Add the libvtk*Qt*.so files to libvtk6-qt-dev
