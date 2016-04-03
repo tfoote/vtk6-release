@@ -29,9 +29,8 @@
 #include "vtkGeovisCoreModule.h" // For export macro
 #include "vtkObject.h"
 
-struct PJconsts;
-typedef struct PJconsts PJ;
-typedef PJ* projPJ;
+struct PROJconsts;
+typedef PROJconsts PROJ;
 
 class VTKGEOVISCORE_EXPORT vtkGeoProjection : public vtkObject
 {
@@ -86,7 +85,7 @@ public:
   // this method returns may be freed, so you should not use the PROJ.4 structure
   // after changing any parameters. Also, you should not modify the PROJ.4 structure
   // on your own as it will then be out of sync with the vtkGeoProjection class.
-  projPJ GetProjection();
+  PROJ* GetProjection();
 
   // Description:
   // Add an optional parameter to the projection that will be computed or
@@ -126,7 +125,7 @@ protected:
 
   char* Name;
   double CentralMeridian;
-  projPJ Projection;
+  PROJ* Projection;
   vtkTimeStamp ProjectionMTime;
 
 private:

@@ -73,8 +73,8 @@ void vtkGeoTransform::TransformPoints( vtkPoints* srcPts, vtkPoints* dstPts )
     }
   dstCoords->DeepCopy( srcCoords );
 
-  projPJ src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
-  projPJ dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
+  PROJ* src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
+  PROJ* dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
   if ( ! src && ! dst )
     {
     // we've already copied srcCoords to dstCoords and src=dst=0 implies no transform...
@@ -156,20 +156,20 @@ vtkAbstractTransform* vtkGeoTransform::MakeTransform()
 
 void vtkGeoTransform::InternalTransformPoints( double* x, vtkIdType numPts, int stride )
 {
-  projPJ src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
-  projPJ dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
+  PROJ* src = this->SourceProjection ? this->SourceProjection->GetProjection() : 0;
+  PROJ* dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : 0;
   int delta = stride - 2;
-  projLP lp;
-  projXY xy;
+  PROJ_LP lp;
+  PROJ_XY xy;
   if ( src )
     {
     // Convert from src system to lat/long using inverse of src transform
     double* coord = x;
     for ( vtkIdType i = 0; i < numPts; ++ i )
       {
-      xy.u = coord[0]; xy.v = coord[1];
-      lp = pj_inv( xy, src );
-      coord[0] = lp.u; coord[1] = lp.v;
+      xy.x = coord[0]; xy.y = coord[1];
+      lp = proj_inv( xy, src );
+      coord[0] = lp.lam; coord[1] = lp.phi;
       }
     }
   else // ! src
@@ -190,9 +190,9 @@ void vtkGeoTransform::InternalTransformPoints( double* x, vtkIdType numPts, int 
     double* coord = x;
     for ( vtkIdType i = 0; i < numPts; ++ i )
       {
-      lp.u = coord[0]; lp.v = coord[1];
-      xy = pj_fwd( lp, dst );
-      coord[0] = xy.u; coord[1] = xy.v;
+      lp.lam = coord[0]; lp.phi = coord[1];
+      xy = proj_fwd( lp, dst );
+      coord[0] = xy.x; coord[1] = xy.y;
       }
     }
   else // ! dst
