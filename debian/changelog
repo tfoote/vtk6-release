@@ -1,3 +1,12 @@
+vtk6 (6.2.0+dfsg1-11) unstable; urgency=medium
+
+  * [efaf1ec] remove dependencies on libxdmf-dev because it is not be used
+  * [7fd27ac] Revert use of system libproj4 for now, Closes: #819741
+  * [a108eef] Prefer parallel HDF5 over serial
+  * [f55e5ab] Limit cmake to >= 3.2 because of HDF5_PREFER_PARALLEL
+
+ -- Gert Wollny <gw.fossdev@gmail.com>  Mon, 04 Apr 2016 10:41:02 +0000
+
 vtk6 (6.2.0+dfsg1-10) unstable; urgency=medium
 
   * [81e7008] d/p/101: Correct install path for Java files within build system
