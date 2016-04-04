@@ -6,7 +6,7 @@ Section: graphics
 Testsuite: autopkgtest
 Priority: optional
 Build-Depends: chrpath,
-               cmake (>= 2.8.5),
+               cmake (>= 3.2.0),
                debhelper (>= 9),
                default-jdk,
                dh-python,
