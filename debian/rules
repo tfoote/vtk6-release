@@ -25,7 +25,7 @@ extra_flags +=  \
 	-DVTK_USE_SYSTEM_HDF5=ON \
         -DHDF5_PREFER_PARALLEL=ON \
 	-DVTK_USE_SYSTEM_JPEG=ON \
-	-DVTK_USE_SYSTEM_LIBPROJ4=OFF \
+	-DVTK_USE_SYSTEM_LIBPROJ4=ON \
 	-DVTK_USE_SYSTEM_LIBXML2=ON \
 	-DVTK_USE_SYSTEM_OGGTHEORA=ON \
 	-DVTK_USE_SYSTEM_PNG=ON \
@@ -74,29 +74,30 @@ override_dh_auto_build:
 	find $(BUILDDIR)/Utilities/Doxygen/doc/html/ -name "*.md5" | xargs rm -f
 
 override_dh_auto_install:
+	pwd
 	dh_auto_install -X.pyc -X.pyo
 	# Modify vtkWrapJava.cmake to properly upload JavaDependencies.cmake.in	from $VTK_DIR
-	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.2/vtkWrapJava.cmake
+	perl -pi -e "s|{dir}/JavaDependencies.cmake.in\"|{VTK_DIR}/JavaDependencies.cmake.in\"|" debian/tmp/usr/lib/cmake/vtk-6.3/vtkWrapJava.cmake
 	# Correct headers for paraview
 	perl -pi.bak -e "s|cxx|include|g" ThirdParty/netcdf/vtk_netcdfcpp.h
 	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/vtk6.jar
 	mv $(CURDIR)/debian/build/bin/vtkpython $(CURDIR)/debian/build/bin/vtk6python
-	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.2/VTKTargets.cmake
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/cmake/vtk-6.3/VTKTargets.cmake
 	chrpath -d $(CURDIR)/debian/build/bin/vtk6python
 	chrpath -d $(CURDIR)/debian/build/bin/pvtk
 	chrpath -d $(CURDIR)/debian/build/bin/pvtkpython
 	mv $(CURDIR)/debian/tmp/usr/bin/vtk $(CURDIR)/debian/tmp/usr/bin/vtk6
 	find $(CURDIR)/debian/tmp/ -name "*.pyc" | xargs rm -f
 	find $(CURDIR)/debian/tmp/ -name "*.pyo" | xargs rm -f
-	sed -i -e "9 a\ append libPath /${DEB_HOST_MULTIARCH}" $(CURDIR)/debian/tmp/usr/lib/tcltk/vtk-6.2/pkgIndex.tcl
+	sed -i -e "9 a\ append libPath /${DEB_HOST_MULTIARCH}" $(CURDIR)/debian/tmp/usr/lib/tcltk/vtk-6.3/pkgIndex.tcl
 
 override_dh_install-arch:
 	dh_install -a
 	find $(CURDIR)/debian/libvtk6-dev/ -name "*Qt*" -exec rm {} \;
-	find $(CURDIR)/debian/libvtk6.2/ -name "*Qt*" -exec rm {} \;
+	find $(CURDIR)/debian/libvtk6.3/ -name "*Qt*" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6-dev/ -name "libvtkRenderingPythonTkWidgets.so" -exec rm {} \;
 	find $(CURDIR)/debian/libvtk6-dev/usr/include/ -name "Q*" -exec rm {} \;
-	chmod 755 $(CURDIR)/debian/libvtk6-dev/usr/share/vtk-6.2/doxygen/*.pl
+	chmod 755 $(CURDIR)/debian/libvtk6-dev/usr/share/vtk-6.3/doxygen/*.pl
 	rm -rf $(CURDIR)/debian/libvtk6-doc/usr/share/doc/vtk6-doc/html/_formulas.log
 	mkdir -p  $(CURDIR)/debian/python-vtk6/usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/ && \
           cd $(CURDIR)/debian/python-vtk6/usr/lib/$(DEB_HOST_MULTIARCH)/python2.7/site-packages/ && \
