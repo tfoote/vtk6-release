@@ -122,7 +122,7 @@ if(TK_FOUND AND VTK_USE_TK)
     vtk_target_install(vtkRenderingPythonTkWidgets)
 
     set_property(TARGET vtkRenderingPythonTkWidgets PROPERTY OUTPUT_NAME
-         vtkRenderingPythonTkWidgets)
+         vtkRenderingPythonTkWidgets-${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION})
 
     set(Module_PYTHON_LIBS ${VTK_TK_LIBRARIES})
     if(VTK_USE_X)

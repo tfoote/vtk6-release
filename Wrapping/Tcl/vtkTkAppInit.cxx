@@ -165,8 +165,6 @@ int Tcl_AppInit(Tcl_Interp *interp)
   // Help Tcl find the Tcl/Tk helper files.
   const char* relative_dirs[] =
     {
-      "../share/tcltk",
-      "../../share/tcltk",
       "TclTk/lib",
       ".." VTK_INSTALL_TCL_DIR,
       0

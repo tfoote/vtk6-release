@@ -189,11 +189,11 @@ int vtkFFMPEGWriterInternal::Start()
   c->height = this->Dim[1];
   if (this->Writer->GetCompression())
     {
-    c->pix_fmt = AV_PIX_FMT_YUVJ422P;
+    c->pix_fmt = PIX_FMT_YUVJ422P;
     }
   else
     {
-    c->pix_fmt = AV_PIX_FMT_BGR24;
+    c->pix_fmt = PIX_FMT_BGR24;
     }
 
   //to do playback at actual recorded rate, this will need more work see also below
@@ -272,13 +272,13 @@ int vtkFFMPEGWriterInternal::Start()
 #endif
 
   //for the output of the writer's input...
-  this->rgbInput = av_frame_alloc();
+  this->rgbInput = avcodec_alloc_frame();
   if (!this->rgbInput)
     {
     vtkGenericWarningMacro (<< "Could not make rgbInput avframe." );
     return 0;
     }
-  int RGBsize = avpicture_get_size(AV_PIX_FMT_RGB24, c->width, c->height);
+  int RGBsize = avpicture_get_size(PIX_FMT_RGB24, c->width, c->height);
   unsigned char *rgb = (unsigned char *)av_malloc(sizeof(unsigned char) * RGBsize);
   if (!rgb)
     {
@@ -286,10 +286,10 @@ int vtkFFMPEGWriterInternal::Start()
     return 0;
     }
   //The rgb buffer should get deleted when this->rgbInput is.
-  avpicture_fill((AVPicture *)this->rgbInput, rgb, AV_PIX_FMT_RGB24, c->width, c->height);
+  avpicture_fill((AVPicture *)this->rgbInput, rgb, PIX_FMT_RGB24, c->width, c->height);
 
   //and for the output to the codec's input.
-  this->yuvOutput = av_frame_alloc();
+  this->yuvOutput = avcodec_alloc_frame();
   if (!this->yuvOutput)
     {
     vtkGenericWarningMacro (<< "Could not make yuvOutput avframe." );
@@ -347,12 +347,12 @@ int vtkFFMPEGWriterInternal::Write(vtkImageData *id)
   //convert that to YUV for input to the codec
 #ifdef VTK_FFMPEG_HAS_IMG_CONVERT
   img_convert((AVPicture *)this->yuvOutput, cc->pix_fmt,
-              (AVPicture *)this->rgbInput, AV_PIX_FMT_RGB24,
+              (AVPicture *)this->rgbInput, PIX_FMT_RGB24,
               cc->width, cc->height);
 #else
   //convert that to YUV for input to the codec
   SwsContext* convert_ctx = sws_getContext(
-    cc->width, cc->height, AV_PIX_FMT_RGB24,
+    cc->width, cc->height, PIX_FMT_RGB24,
     cc->width, cc->height, cc->pix_fmt,
     SWS_BICUBIC, NULL, NULL, NULL);
 
@@ -445,14 +445,14 @@ void vtkFFMPEGWriterInternal::End()
   if (this->yuvOutput)
     {
     av_free(this->yuvOutput->data[0]);
-    av_frame_free(&this->yuvOutput);
+    av_free(this->yuvOutput);
     this->yuvOutput = NULL;
     }
 
   if (this->rgbInput)
     {
     av_free(this->rgbInput->data[0]);
-    av_frame_free(&this->rgbInput);
+    av_free(this->rgbInput);
     this->rgbInput = NULL;
     }
 

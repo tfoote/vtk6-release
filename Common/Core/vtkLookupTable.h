@@ -56,8 +56,6 @@
 
 #include "vtkUnsignedCharArray.h" // Needed for inline method
 
-class vtkSimpleMutexLock;
-
 #define VTK_RAMP_LINEAR 0
 #define VTK_RAMP_SCURVE 1
 #define VTK_RAMP_SQRT 2
@@ -361,8 +359,6 @@ protected:
   int OpaqueFlag;
   vtkTimeStamp OpaqueFlagBuildTime;
 
-  vtkSimpleMutexLock* ResizeMutex;
-
 private:
   vtkLookupTable(const vtkLookupTable&);  // Not implemented.
   void operator=(const vtkLookupTable&);  // Not implemented.
@@ -377,3 +373,6 @@ inline unsigned char *vtkLookupTable::WritePointer(const vtkIdType id,
 }
 
 #endif
+
+
+

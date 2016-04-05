@@ -80,8 +80,6 @@ if(APPLE)
   set(JAVAC_OPTIONS -J-Xmx512m)
 endif()
 
-set(JAVAC_OPTIONS -J-Xmx1024m)
-
 get_property(java_modules GLOBAL PROPERTY VTK_JAVA_WRAPPED)
 foreach(module IN LISTS java_modules)
   if(NOT ${module}_EXCLUDE_FROM_WRAPPING)

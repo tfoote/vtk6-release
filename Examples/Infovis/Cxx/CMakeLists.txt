@@ -26,6 +26,11 @@ if(vtkViewsInfovis_LOADED)
 endif()
 
 # If Qt is enabled include the QT based examples
+if(vtkGUISupportQt_LOADED)
+  add_subdirectory(EasyView)
+  add_subdirectory(CustomLinkView)
+  add_subdirectory(StatsView)
+endif()
 
 if(vtkInfovisParallel_LOADED)
   add_executable(ParallelBFS ParallelBFS.cxx)

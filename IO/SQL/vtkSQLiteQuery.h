@@ -47,7 +47,7 @@
 class vtkSQLiteDatabase;
 class vtkVariant;
 class vtkVariantArray;
-struct sqlite3_stmt;
+struct vtk_sqlite3_stmt;
 
 class VTKIOSQL_EXPORT vtkSQLiteQuery : public vtkSQLQuery
 {
@@ -155,7 +155,7 @@ private:
   vtkSQLiteQuery(const vtkSQLiteQuery &); // Not implemented.
   void operator=(const vtkSQLiteQuery &); // Not implemented.
 
-  sqlite3_stmt *Statement;
+  vtk_sqlite3_stmt *Statement;
   bool InitialFetch;
   int InitialFetchResult;
   char *LastErrorText;

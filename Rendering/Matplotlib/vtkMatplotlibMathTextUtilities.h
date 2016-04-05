@@ -132,10 +132,6 @@ protected:
   // Function used to check MPL availability and update MPLMathTextAvailable.
   // This will do tests only the first time this method is called.
   static void CheckMPLAvailability();
-  static void DisableMPL()
-    {
-    MPLMathTextAvailable = UNAVAILABLE;
-    };
 
 private:
   vtkMatplotlibMathTextUtilities(const vtkMatplotlibMathTextUtilities&); // Not implemented.

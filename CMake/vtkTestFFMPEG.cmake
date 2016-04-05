@@ -32,8 +32,8 @@ if(FFMPEG_INCLUDE_DIR)
 #include <${FFMEG_CODEC_HEADER_PATH}/avcodec.h>
 int main()
 {
-  img_convert(0, AV_PIX_FMT_RGB24,
-              0, AV_PIX_FMT_RGB24,
+  img_convert(0, PIX_FMT_RGB24,
+              0, PIX_FMT_RGB24,
               0, 0);
   return 0;
 }\n")

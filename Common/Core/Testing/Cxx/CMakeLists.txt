@@ -32,7 +32,6 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
   TestGarbageCollector.cxx
   # TestInstantiator.cxx # Have not enabled instantiators.
   TestLookupTable.cxx
-  TestLookupTableThreaded.cxx
   TestMath.cxx
   TestMinimalStandardRandomSequence.cxx
   TestNew.cxx
