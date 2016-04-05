@@ -1,3 +1,15 @@
+vtk6 (6.3.0+dfsg1-1) UNRELEASED; urgency=medium
+
+  * [b864c36] Remove all patches to prepare for update to 6.3.0
+  * [4641342] d/watch: Correct repackage suffix
+  * [e7e6dfa] Imported Upstream version 6.3.0+dfsg1
+  * [1033ba0] Update patchset for new version
+  * [b1828b6] * New upstream version 6.3.0, Closes: #805010
+              * Move native java modules into new -jni package 
+              * Enable use of system proj4, Closes: #750184
+
+ -- Gert Wollny <gw.fossdev@gmail.com>  Tue, 05 Apr 2016 11:00:55 +0000
+
 vtk6 (6.2.0+dfsg1-11) unstable; urgency=medium
 
   * [efaf1ec] remove dependencies on libxdmf-dev because it is not be used
