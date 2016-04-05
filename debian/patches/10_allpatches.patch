@@ -30,18 +30,6 @@ Forwarded: <no|not-needed|url proving that it has been forwarded>
 Reviewed-By: <name and email of someone who approved the patch>
 Last-Update: <YYYY-MM-DD>
 
-Index: VTK-6.2.0/Utilities/Doxygen/doxyfile.in
-===================================================================
---- VTK-6.2.0.orig/Utilities/Doxygen/doxyfile.in
-+++ VTK-6.2.0/Utilities/Doxygen/doxyfile.in
-@@ -22,6 +22,7 @@ PDF_HYPERLINKS       = YES
- 
- HAVE_DOT             = @HAVE_DOT_YESNO@
- DOT_PATH             = "@DOT_PATH@"
-+DOT_IMAGE_FORMAT     = svg
- CLASS_GRAPH          = YES
- COLLABORATION_GRAPH  = YES
- TEMPLATE_RELATIONS   = YES
 Index: VTK-6.2.0/Wrapping/Tcl/vtkTkAppInit.cxx
 ===================================================================
 --- VTK-6.2.0.orig/Wrapping/Tcl/vtkTkAppInit.cxx
