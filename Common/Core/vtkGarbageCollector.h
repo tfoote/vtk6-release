@@ -131,10 +131,10 @@ public:
   static void DeferredCollectionPop();
 
   // Description:
-  // Set/Get global garbage collection debugging flag.  When set to true,
+  // Set/Get global garbage collection debugging flag.  When set to 1,
   // all garbage collection checks will produce debugging information.
-  static void SetGlobalDebugFlag(bool flag);
-  static bool GetGlobalDebugFlag();
+  static void SetGlobalDebugFlag(int flag);
+  static int GetGlobalDebugFlag();
 
 protected:
   vtkGarbageCollector();

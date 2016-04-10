@@ -159,8 +159,11 @@ void vtkOSOpenGLRenderWindow::DestroyWindow()
     }
 
 
-  delete[] this->Capabilities;
-  this->Capabilities = 0;
+  if (this->Capabilities)
+    {
+    delete[] this->Capabilities;
+    this->Capabilities = 0;
+    }
 
   this->DestroyOffScreenWindow();
 

@@ -144,12 +144,6 @@ bool vtkChartLegend::Paint(vtkContext2D *painter)
   // Draw all of the legend labels and marks
   for(size_t i = 0; i < this->Storage->ActivePlots.size(); ++i)
     {
-    if (!this->Storage->ActivePlots[i]->GetLegendVisibility())
-      {
-      // skip if legend is not visible.
-      continue;
-      }
-
     vtkStringArray *labels = this->Storage->ActivePlots[i]->GetLabels();
     for (vtkIdType l = 0; labels && (l < labels->GetNumberOfValues()); ++l)
       {
@@ -194,11 +188,6 @@ vtkRectf vtkChartLegend::GetBoundingRect(vtkContext2D *painter)
   // metrics, but these could be cached.
   for(size_t i = 0; i < this->Storage->ActivePlots.size(); ++i)
     {
-    if (!this->Storage->ActivePlots[i]->GetLegendVisibility())
-      {
-      // skip if legend is not visible.
-      continue;
-      }
     vtkStringArray *labels = this->Storage->ActivePlots[i]->GetLabels();
     for (vtkIdType l = 0; labels && (l < labels->GetNumberOfTuples()); ++l)
       {
@@ -215,11 +204,6 @@ vtkRectf vtkChartLegend::GetBoundingRect(vtkContext2D *painter)
   int numLabels = 0;
   for(size_t i = 0; i < this->Storage->ActivePlots.size(); ++i)
     {
-    if (!this->Storage->ActivePlots[i]->GetLegendVisibility())
-      {
-      // skip if legend is not visible.
-      continue;
-      }
     numLabels += this->Storage->ActivePlots[i]->GetNumberOfLabels();
     }
 

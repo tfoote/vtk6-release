@@ -50,7 +50,7 @@ vtkTextRendererStringToImage::~vtkTextRendererStringToImage()
 
 //-----------------------------------------------------------------------------
 vtkVector2i vtkTextRendererStringToImage::GetBounds(
-    vtkTextProperty *property, const vtkUnicodeString& string, int dpi)
+    vtkTextProperty *property, const vtkUnicodeString& string)
 {
   int tmp[4] = { 0, 0, 0, 0 };
   vtkVector2i recti(tmp);
@@ -59,8 +59,7 @@ vtkVector2i vtkTextRendererStringToImage::GetBounds(
     return recti;
     }
 
-  this->Implementation->TextRenderer->GetBoundingBox(property, string, tmp,
-                                                     dpi);
+  this->Implementation->TextRenderer->GetBoundingBox(property, string, tmp);
 
   recti.Set(tmp[1] - tmp[0],
             tmp[3] - tmp[2]);
@@ -70,8 +69,7 @@ vtkVector2i vtkTextRendererStringToImage::GetBounds(
 
 //-----------------------------------------------------------------------------
 vtkVector2i vtkTextRendererStringToImage::GetBounds(vtkTextProperty *property,
-                                                    const vtkStdString& string,
-                                                    int dpi)
+                                                    const vtkStdString& string)
 {
   vtkVector2i recti(0, 0);
   int tmp[4];
@@ -80,8 +78,7 @@ vtkVector2i vtkTextRendererStringToImage::GetBounds(vtkTextProperty *property,
     return recti;
     }
 
-  this->Implementation->TextRenderer->GetBoundingBox(property, string, tmp,
-                                                     dpi);
+  this->Implementation->TextRenderer->GetBoundingBox(property, string, tmp);
 
   recti.Set(tmp[1] - tmp[0],
             tmp[3] - tmp[2]);
@@ -91,20 +88,34 @@ vtkVector2i vtkTextRendererStringToImage::GetBounds(vtkTextProperty *property,
 
 //-----------------------------------------------------------------------------
 int vtkTextRendererStringToImage::RenderString(
-    vtkTextProperty *property, const vtkUnicodeString& string, int dpi,
+    vtkTextProperty *property, const vtkUnicodeString& string,
     vtkImageData *data, int textDims[2])
 {
+  // Get the required size, and initialize a new QImage to draw on.
+  vtkVector2i box = this->GetBounds(property, string);
+  if (box.GetX() == 0 || box.GetY() == 0)
+    {
+    return 0;
+    }
+
   return this->Implementation->TextRenderer->RenderString(property, string,
-                                                          data, textDims, dpi);
+                                                          data, textDims);
 }
 
 //-----------------------------------------------------------------------------
 int vtkTextRendererStringToImage::RenderString(vtkTextProperty *property,
-                                           const vtkStdString& string, int dpi,
+                                           const vtkStdString& string,
                                            vtkImageData *data, int textDims[2])
 {
+  // Get the required size, and initialize a new QImage to draw on.
+  vtkVector2i box = this->GetBounds(property, string);
+  if (box.GetX() == 0 || box.GetY() == 0)
+    {
+    return 0;
+    }
+
   return this->Implementation->TextRenderer->RenderString(property, string,
-                                                          data, textDims, dpi);
+                                                          data, textDims);
 }
 
 //-----------------------------------------------------------------------------

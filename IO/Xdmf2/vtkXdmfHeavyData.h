@@ -55,7 +55,7 @@ public:
   ~vtkXdmfHeavyData();
 
   // Description:
-  vtkDataObject* ReadData(xdmf2::XdmfGrid* xmfGrid, int blockId = -1);
+  vtkDataObject* ReadData(xdmf2::XdmfGrid* xmfGrid);
 
   // Description:
   vtkDataObject* ReadData();
@@ -70,11 +70,10 @@ public:
   // of points possible.
   static int GetNumberOfPointsPerCell(int vtk_cell_type);
 
-
 private:
   // Description:
   // Read a temporal collection.
-  vtkDataObject* ReadTemporalCollection(xdmf2::XdmfGrid* xmfTemporalCollection, int blockId);
+  vtkDataObject* ReadTemporalCollection(xdmf2::XdmfGrid* xmfTemporalCollection);
 
   // Description:
   // Read a spatial-collection or a tree.
@@ -83,7 +82,7 @@ private:
   // Description:
   // Read a non-composite grid. Note here uniform has nothing to do with
   // vtkUniformGrid but to what Xdmf's GridType="Uniform".
-  vtkDataObject* ReadUniformData(xdmf2::XdmfGrid* xmfGrid, int blockId);
+  vtkDataObject* ReadUniformData(xdmf2::XdmfGrid* xmfGrid);
 
   // Description:
   // Reads the topology and geometry for an unstructured grid. Does not read any
@@ -157,6 +156,7 @@ private:
   // Creates a new dataset with egdes selected by the set, extracting them from
   // the input dataset.
   vtkDataSet* ExtractEdges(xdmf2::XdmfSet* xmfSet, vtkDataSet* dataSet);
+
 };
 
 #endif

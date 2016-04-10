@@ -1938,6 +1938,8 @@
             </class>
             <class id="vtkBiQuadraticQuadraticWedge" library="Filtering">
             </class>
+            <class id="vtkExplicitCell" library="Filtering">
+            </class>
             <class id="vtkQuadraticEdge" library="Filtering">
             </class>
             <class id="vtkQuadraticHexahedron" library="Filtering">

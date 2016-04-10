@@ -26,16 +26,12 @@
 
 #include "vtkRenderingOpenGL2Module.h" // For export macro
 #include "vtkPolyDataMapper2D.h"
-#include "vtkOpenGLHelper.h" // used for ivars
-#include <string> // For API.
-#include <vector> //for ivars
+#include "vtkglVBOHelper.h" // used for ivars
 
-class vtkOpenGLBufferObject;
-class vtkOpenGLHelper;
-class vtkOpenGLVertexBufferObject;
-class vtkPoints;
 class vtkRenderer;
-class vtkTextureObject;
+class vtkPoints;
+
+namespace vtkgl {class CellBO; }
 
 class VTKRENDERINGOPENGL2_EXPORT vtkOpenGLPolyDataMapper2D : public vtkPolyDataMapper2D
 {
@@ -58,68 +54,50 @@ protected:
   vtkOpenGLPolyDataMapper2D();
   ~vtkOpenGLPolyDataMapper2D();
 
-  // the following is all extra stuff to work around the
-  // fact that gl_PrimitiveID does not work correctly on
-  // Apple devices with AMD graphics hardware. See apple
-  // bug ID 20747550
-  bool HaveAppleBug;
-  std::vector<float> AppleBugPrimIDs;
-  vtkOpenGLBufferObject *AppleBugPrimIDBuffer;
-
   // Description:
   // Does the shader source need to be recomputed
-  virtual bool GetNeedToRebuildShaders(
-    vtkOpenGLHelper &cellBO, vtkViewport *ren, vtkActor2D *act);
+  virtual bool GetNeedToRebuildShader(vtkgl::CellBO &cellBO, vtkViewport *ren, vtkActor2D *act);
 
   // Description:
   // Build the shader source code
-  virtual void BuildShaders(std::string &VertexCode,
+  virtual void BuildShader(std::string &VertexCode,
                            std::string &fragmentCode,
                            std::string &geometryCode,
                            vtkViewport *ren, vtkActor2D *act);
 
   // Description:
   // Determine what shader to use and compile/link it
-  virtual void UpdateShaders(vtkOpenGLHelper &cellBO,
-    vtkViewport *viewport, vtkActor2D *act);
+  virtual void UpdateShader(vtkgl::CellBO &cellBO, vtkViewport *viewport, vtkActor2D *act);
 
   // Description:
   // Set the shader parameteres related to the mapper/input data, called by UpdateShader
-  virtual void SetMapperShaderParameters(vtkOpenGLHelper &cellBO, vtkViewport *ren, vtkActor2D *act);
+  virtual void SetMapperShaderParameters(vtkgl::CellBO &cellBO, vtkViewport *ren, vtkActor2D *act);
 
 
     // Description:
   // Set the shader parameteres related to the Camera
-  void SetCameraShaderParameters(vtkOpenGLHelper &cellBO, vtkViewport *viewport, vtkActor2D *act);
+  void SetCameraShaderParameters(vtkgl::CellBO &cellBO, vtkViewport *viewport, vtkActor2D *act);
 
   // Description:
   // Set the shader parameteres related to the property
-  void SetPropertyShaderParameters(vtkOpenGLHelper &cellBO, vtkViewport *viewport, vtkActor2D *act);
+  void SetPropertyShaderParameters(vtkgl::CellBO &cellBO, vtkViewport *viewport, vtkActor2D *act);
 
   // Description:
   // Update the scene when necessary.
   void UpdateVBO(vtkActor2D *act, vtkViewport *viewport);
 
   // The VBO and its layout.
-  vtkOpenGLVertexBufferObject *VBO;
+  vtkgl::BufferObject VBO;
+  vtkgl::VBOLayout Layout;
 
   // Structures for the various cell types we render.
-  vtkOpenGLHelper Points;
-  vtkOpenGLHelper Lines;
-  vtkOpenGLHelper Tris;
-  vtkOpenGLHelper TriStrips;
-  vtkOpenGLHelper *LastBoundBO;
-
-  vtkTextureObject *CellScalarTexture;
-  vtkOpenGLBufferObject *CellScalarBuffer;
-  bool HaveCellScalars;
-  int PrimitiveIDOffset;
+  vtkgl::CellBO Points;
+  vtkgl::CellBO Lines;
+  vtkgl::CellBO Tris;
+  vtkgl::CellBO TriStrips;
 
   vtkTimeStamp VBOUpdateTime; // When was the VBO updated?
   vtkPoints *TransformedPoints;
-
-  // do we have wide lines that require special handling
-  virtual bool HaveWideLines(vtkViewport *, vtkActor2D *);
 
 private:
   vtkOpenGLPolyDataMapper2D(const vtkOpenGLPolyDataMapper2D&);  // Not implemented.

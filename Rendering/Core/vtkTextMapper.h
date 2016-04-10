@@ -22,6 +22,13 @@
 //
 // .SECTION See Also
 // vtkActor2D vtkTextActor vtkTextActor3D vtkTextProperty vtkTextRenderer
+//
+// .SECTION Note
+// This class will be overridden by the older vtkOpenGLFreeTypeTextMapper when
+// the vtkRenderingFreeTypeOpenGL library is linked into the executable. That
+// class provides legacy support for regression testing, but lacks many of the
+// newer features provided by this implementation (such as unicode and MathText
+// strings). Do not link with that library if such features are needed.
 
 #ifndef vtkTextMapper_h
 #define vtkTextMapper_h
@@ -73,6 +80,18 @@ public:
   void ShallowCopy(vtkTextMapper *tm);
 
   // Description:
+  // Determine the number of lines in the input string.
+  // @deprecated This is a legacy method that was used in an older
+  // implementation, and may be removed in the future.
+  VTK_LEGACY(int GetNumberOfLines(const char *input));
+
+  // Description:
+  // Get the number of lines in this mapper's input.
+  // @deprecated This is a legacy method that was used in an older
+  // implementation, and may be removed in the future.
+  VTK_LEGACY(int GetNumberOfLines());
+
+  // Description:
   // Set and return the font size (in points) required to make this mapper fit
   // in a given
   // target rectangle (width x height, in pixels). A static version of the method
@@ -102,6 +121,12 @@ public:
                                          int nbOfMappers, int *winSize,
                                          int *stringSize, float sizeFactor);
 
+  // Description:
+  // Get the available system font size matching a font size.
+  // @deprecated This is a legacy method that was used in an older
+  // implementation, and may be removed in the future.
+  VTK_LEGACY(virtual int GetSystemFontSize(int size));
+
   void RenderOverlay(vtkViewport *, vtkActor2D *);
   void ReleaseGraphicsResources(vtkWindow *);
   unsigned long GetMTime();
@@ -117,12 +142,11 @@ private:
   vtkTextMapper(const vtkTextMapper&);  // Not implemented.
   void operator=(const vtkTextMapper&);  // Not implemented.
 
-  void UpdateQuad(vtkActor2D *actor, int dpi);
-  void UpdateImage(int dpi);
+  void UpdateQuad(vtkActor2D *actor);
+  void UpdateImage();
 
   int TextDims[2];
 
-  int RenderedDPI;
   vtkTimeStamp CoordsTime;
   vtkTimeStamp TCoordsTime;
   vtkNew<vtkImageData> Image;
@@ -132,4 +156,14 @@ private:
   vtkNew<vtkTexture> Texture;
 };
 
+
+#ifndef VTK_LEGACY_REMOVE
+inline int vtkTextMapper::GetSystemFontSize(int size)
+{
+  VTK_LEGACY_BODY(vtkTextMapper::GetSystemFontSize, "VTK 6.0")
+  return size;
+}
+#endif // VTK_LEGACY_REMOVE
+
 #endif
+

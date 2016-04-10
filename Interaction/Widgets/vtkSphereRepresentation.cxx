@@ -325,13 +325,8 @@ void vtkSphereRepresentation::WidgetInteraction(double e[2])
 
     if ( path != NULL )
       {
-      double pos[3], dir[3], c[3];
-      this->SpherePicker->GetPickPosition(pos);
-      this->SphereSource->GetCenter(c);
-      dir[0] = pos[0] - c[0];
-      dir[1] = pos[1] - c[1];
-      dir[2] = pos[2] - c[2];
-      this->SetHandleDirection(dir);
+      this->HandleSource->SetCenter(this->SpherePicker->GetPickPosition());
+      this->SpherePicker->GetPickPosition(this->HandlePosition);
       }
     }
 
@@ -477,7 +472,6 @@ void vtkSphereRepresentation::SetRadius(double r)
 }
 
 //----------------------------------------------------------------------------
-// This method may change the radius of the sphere
 void vtkSphereRepresentation::SetHandlePosition(double handle[3])
 {
   double h[3];
@@ -492,7 +486,7 @@ void vtkSphereRepresentation::SetHandlePosition(double handle[3])
     this->HandleDirection[2] = handle[2] - c[2];
     double r = static_cast<double>(
       vtkMath::Distance2BetweenPoints(handle,c) );
-    this->SphereSource->SetRadius(sqrt(r));
+    this->SphereSource->SetRadius(r);
     this->SphereSource->Update();
     this->HandleSource->Update();
     this->Modified();
@@ -500,24 +494,24 @@ void vtkSphereRepresentation::SetHandlePosition(double handle[3])
 }
 
 //----------------------------------------------------------------------------
-// This method preserves the radius of the sphere. The handle is repositioned
-// on the existing sphere but in the new direction. So the handle will move across
-// the surface of the sphere. Note that the HandlePosition[3] data member is
-// adjusted to be consistent with the sphere center and the current sphere radius.
 void vtkSphereRepresentation::SetHandleDirection(double dir[3])
 {
   double *d = this->HandleDirection;
-  double dirMag = vtkMath::Norm(dir);
-  if ( (dirMag != 0.0) && (d[0] != dir[0] || d[1] != dir[1] || d[2] != dir[2]) )
+  if ( d[0] != dir[0] || d[1] != dir[1] || d[2] != dir[2] )
     {
-    double r, f, c[3];
-    r = this->SphereSource->GetRadius();
-    f = r / dirMag;
+    double c[3], handle[3];
     this->SphereSource->GetCenter(c);
-    this->HandlePosition[0] = c[0] + f*dir[0];
-    this->HandlePosition[1] = c[1] + f*dir[1];
-    this->HandlePosition[2] = c[2] + f*dir[2];
-    this->HandleSource->SetCenter(this->HandlePosition);
+    handle[0] = c[0] + dir[0];
+    handle[1] = c[1] + dir[1];
+    handle[2] = c[2] + dir[2];
+    this->HandleSource->SetCenter(handle);
+    this->HandleDirection[0] = dir[0];
+    this->HandleDirection[1] = dir[1];
+    this->HandleDirection[2] = dir[2];
+    double r = static_cast<double>(
+      vtkMath::Distance2BetweenPoints(handle,c) );
+    this->SphereSource->SetRadius(r);
+    this->SphereSource->Update();
     this->HandleSource->Update();
     this->Modified();
     }

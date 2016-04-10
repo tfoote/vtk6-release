@@ -92,7 +92,10 @@ vtkUnstructuredGridVolumeRayCastMapper::~vtkUnstructuredGridVolumeRayCastMapper(
 {
   this->Threader->Delete();
 
-  delete [] this->Image;
+  if ( this->Image )
+    {
+    delete [] this->Image;
+    }
 
   if ( this->RenderTableSize )
     {
@@ -340,7 +343,10 @@ void vtkUnstructuredGridVolumeRayCastMapper::Render( vtkRenderer *ren, vtkVolume
        this->ImageMemorySize[1] > oldImageMemorySize[1] )
     {
     // If there is an image there must be row bounds
-    delete [] this->Image;
+    if ( this->Image )
+      {
+      delete [] this->Image;
+      }
 
     this->Image = new unsigned char[(this->ImageMemorySize[0] *
                                      this->ImageMemorySize[1] * 4)];
@@ -496,8 +502,11 @@ void vtkUnstructuredGridVolumeRayCastMapper::Render( vtkRenderer *ren, vtkVolume
     }
 
 
-  delete [] this->ZBuffer;
-  this->ZBuffer = NULL;
+  if ( this->ZBuffer )
+    {
+    delete [] this->ZBuffer;
+    this->ZBuffer = NULL;
+    }
 
   this->UpdateProgress(1.0);
 }

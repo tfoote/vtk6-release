@@ -1134,23 +1134,21 @@ int vtkTessellatorFilter::RequestData(
       this->Subdivider->SetCellId( cell );
       vtkCell* cp = this->Subdivider->GetCell(); // We set the cell ID, get the vtkCell pointer
       int np = cp->GetCellType();
-      double* pcoord = cp->GetParametricCoords();
       if (
-        !pcoord ||
         np == VTK_POLYGON || np == VTK_TRIANGLE_STRIP || np == VTK_CONVEX_POINT_SET ||
-        np == VTK_POLY_LINE || np == VTK_POLY_VERTEX || np == VTK_POLYHEDRON ||
-        np == VTK_QUADRATIC_POLYGON)
+        np == VTK_POLY_LINE || np == VTK_POLY_VERTEX || np == VTK_POLYHEDRON )
         {
         if ( ! vtkTessellatorHasPolys )
           {
           vtkWarningMacro(
             "Input dataset has cells without parameterizations "
-            "(VTK_POLYGON,VTK_POLY_LINE,VTK_POLY_VERTEX,VTK_TRIANGLE_STRIP,VTK_CONVEX_POINT_SET,VTK_QUADRATIC_POLYGON). "
+            "(VTK_POLYGON,VTK_POLY_LINE,VTK_POLY_VERTEX,VTK_TRIANGLE_STRIP,VTK_CONVEX_POINT_SET). "
             "They will be ignored. Use vtkTriangleFilter, vtkTetrahedralize, etc. to parameterize them first." );
           vtkTessellatorHasPolys = 1;
           }
         continue;
         }
+      double* pcoord = cp->GetParametricCoords();
       double* gcoord;
       vtkDataArray* field;
       for ( p = 0; p < cp->GetNumberOfPoints(); ++p )
@@ -1349,7 +1347,7 @@ int vtkTessellatorFilter::RequestData(
           cp->EvaluateLocation( dummySubId, pts[p] + 3, pts[p], weights );
           this->Subdivider->EvaluateFields( pts[p], weights, 6 );
           }
-        VTK_FALLTHROUGH;
+        // fall through
       case VTK_QUADRATIC_HEXAHEDRON:
         for ( p = 20; p < 27; ++p )
           {

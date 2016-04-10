@@ -265,7 +265,6 @@ protected:
   char *Input;
   bool InputRendered;
   double FormerOrientation;
-  int RenderedDPI;
 
   vtkTextProperty *ScaledTextProperty;
 

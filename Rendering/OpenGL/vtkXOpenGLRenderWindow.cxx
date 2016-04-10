@@ -26,15 +26,7 @@
 
 // Define GLX_GLXEXT_LEGACY to prevent glx.h from including the glxext.h
 // provided by the system.
-//#define GLX_GLXEXT_LEGACY
-
-// New Workaround:
-// The GLX_GLXEXT_LEGACY definition was added to work around system glxext.h
-// files that used the GLintptr and GLsizeiptr types, but did not define them.
-// However, this broke multisampling (See PR#15433). Instead of using that
-// define, we're just defining the missing typedefs here.
-typedef ptrdiff_t GLintptr;
-typedef ptrdiff_t GLsizeiptr;
+#define GLX_GLXEXT_LEGACY
 #include "GL/glx.h"
 
 #include "vtkgl.h"
@@ -164,7 +156,6 @@ vtkglX::GLXFBConfig* vtkXOpenGLRenderWindowTryForFBConfig(Display *DisplayId,
   if (doublebuff)
     {
     attributes[index++] = GLX_DOUBLEBUFFER;
-    attributes[index++] = True;
     }
   if (stencil)
     {
@@ -175,7 +166,6 @@ vtkglX::GLXFBConfig* vtkXOpenGLRenderWindowTryForFBConfig(Display *DisplayId,
     {
     // also try for STEREO
     attributes[index++] = GLX_STEREO;
-    attributes[index++] = True;
     }
   if (multisamples)
     {
@@ -223,7 +213,6 @@ XVisualInfo *vtkXOpenGLRenderWindowTryForVisual(Display *DisplayId,
   if (doublebuff)
     {
     attributes[index++] = GLX_DOUBLEBUFFER;
-    attributes[index++] = True;
     }
   if (stencil)
     {
@@ -234,7 +223,6 @@ XVisualInfo *vtkXOpenGLRenderWindowTryForVisual(Display *DisplayId,
     {
     // also try for STEREO
     attributes[index++] = GLX_STEREO;
-    attributes[index++] = True;
     }
   if (multisamples)
     {
@@ -798,8 +786,11 @@ void vtkXOpenGLRenderWindow::DestroyWindow()
     this->DisplayId = NULL;
     }
 
-  delete[] this->Capabilities;
-  this->Capabilities = 0;
+  if (this->Capabilities)
+    {
+    delete[] this->Capabilities;
+    this->Capabilities = 0;
+    }
 
   // make sure all other code knows we're not mapped anymore
   this->Mapped = 0;

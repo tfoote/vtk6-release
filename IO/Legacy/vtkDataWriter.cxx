@@ -27,7 +27,6 @@
 #include "vtkFloatArray.h"
 #include "vtkGraph.h"
 #include "vtkIntArray.h"
-#include "vtkLegacyReaderVersion.h"
 #include "vtkLongArray.h"
 #include "vtkLookupTable.h"
 #include "vtkObjectFactory.h"
@@ -101,9 +100,12 @@ vtkDataWriter::~vtkDataWriter()
   delete [] this->LookupTableName;
   delete [] this->FieldDataName;
 
-  delete [] this->OutputString;
-  this->OutputString = NULL;
-  this->OutputStringLength = 0;
+  if (this->OutputString)
+    {
+    delete [] this->OutputString;
+    this->OutputString = NULL;
+    this->OutputStringLength = 0;
+    }
 }
 
 
@@ -124,10 +126,12 @@ ostream *vtkDataWriter::OpenVTKFile()
   if (this->WriteToOutputString)
     {
     // Get rid of any old output string.
-    delete [] this->OutputString;
-    this->OutputString = NULL;
-    this->OutputStringLength = 0;
-
+    if (this->OutputString)
+      {
+      delete [] this->OutputString;
+      this->OutputString = NULL;
+      this->OutputStringLength = 0;
+      }
     // Allocate the new output string. (Note: this will only work with binary).
     if (!this->GetInputExecutive(0, 0))
       {
@@ -174,8 +178,7 @@ int vtkDataWriter::WriteHeader(ostream *fp)
 {
   vtkDebugMacro(<<"Writing header...");
 
-  *fp << "# vtk DataFile Version " << vtkLegacyReaderMajorVersion << "."
-      << vtkLegacyReaderMinorVersion << "\n";
+  *fp << "# vtk DataFile Version 3.0\n";
   *fp << this->Header << "\n";
 
   if ( this->FileType == VTK_ASCII )

@@ -97,7 +97,7 @@ int TestPUnstructuredGridConnectivity(int argc, char* argv[])
     UpdateGrid(i);
 
 #ifdef DEBUG
-    WriteDataSet(Grid,grdfname.str());
+    WriteDataSet(Grid,grdfname.str().c_str());
 #endif
 
     vtkMPIUtilities::Printf(cntrl,"[INFO]: iteration=%d\n",i);
@@ -124,7 +124,7 @@ int TestPUnstructuredGridConnectivity(int argc, char* argv[])
 
 #ifdef DEBUG
     assert("pre: ghost grid should not be NULL!" && (ghostGrid != NULL) );
-    WriteDataSet(ghostGrid,ghostfname.str());
+    WriteDataSet(ghostGrid,ghostfname.str().c_str());
 #endif
 
     rc += CheckGrid(ghostGrid,i);

@@ -47,7 +47,7 @@ proc stripGhosts {} {
    set inputDS [pf GetPolyDataInput]
    set outputDS [pf GetUnstructuredGridOutput]
    $outputDS ShallowCopy $inputDS
-   $outputDS RemoveGhostCells
+   $outputDS RemoveGhostCells 1
 }
 
 vtkExtractEdges edges

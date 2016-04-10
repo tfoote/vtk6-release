@@ -29,16 +29,6 @@
 #include "vtkSystemIncludes.h"
 #include <math.h>
 
-//----------------------------------------------------------------------------
-// Check for unsupported old compilers.
-#if defined(_MSC_VER) && _MSC_VER <= 1400
-# error VTK requires MSVC++ 9.0 aka Visual Studio 2008 or newer
-#endif
-
-#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 1))
-# error VTK requires gcc 4.1 or newer
-#endif
-
 // Convert a macro representing a value to a string.
 //
 // Example: vtkQuoteMacro(__LINE__) will expand to "1234" whereas
@@ -260,7 +250,7 @@ virtual void Set##name (type _arg1, type _arg2) \
     this->name[1] = _arg2; \
     this->Modified(); \
     } \
-  } \
+  }; \
 void Set##name (type _arg[2]) \
   { \
   this->Set##name (_arg[0], _arg[1]); \
@@ -277,7 +267,7 @@ virtual void Get##name (type &_arg1, type &_arg2) \
     _arg1 = this->name[0]; \
     _arg2 = this->name[1]; \
   vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " << #name " = (" << _arg1 << "," << _arg2 << ")"); \
-  } \
+  }; \
 virtual void Get##name (type _arg[2]) \
   { \
   this->Get##name (_arg[0], _arg[1]);\
@@ -294,7 +284,7 @@ virtual void Set##name (type _arg1, type _arg2, type _arg3) \
     this->name[2] = _arg3; \
     this->Modified(); \
     } \
-  } \
+  }; \
 virtual void Set##name (type _arg[3]) \
   { \
   this->Set##name (_arg[0], _arg[1], _arg[2]);\
@@ -312,7 +302,7 @@ virtual void Get##name (type &_arg1, type &_arg2, type &_arg3) \
     _arg2 = this->name[1]; \
     _arg3 = this->name[2]; \
   vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " << #name " = (" << _arg1 << "," << _arg2 << "," << _arg3 << ")"); \
-  } \
+  }; \
 virtual void Get##name (type _arg[3]) \
   { \
   this->Get##name (_arg[0], _arg[1], _arg[2]);\
@@ -330,7 +320,7 @@ virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4) \
     this->name[3] = _arg4; \
     this->Modified(); \
     } \
-  } \
+  }; \
 virtual void Set##name (type _arg[4]) \
   { \
   this->Set##name (_arg[0], _arg[1], _arg[2], _arg[3]);\
@@ -350,7 +340,7 @@ virtual void Get##name (type &_arg1, type &_arg2, type &_arg3, type &_arg4) \
     _arg3 = this->name[2]; \
     _arg4 = this->name[3]; \
   vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " << #name " = (" << _arg1 << "," << _arg2 << "," << _arg3 << "," << _arg4 << ")"); \
-  } \
+  }; \
 virtual void Get##name (type _arg[4]) \
   { \
   this->Get##name (_arg[0], _arg[1], _arg[2], _arg[3]);\
@@ -370,7 +360,7 @@ virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4, type _ar
     this->name[5] = _arg6; \
     this->Modified(); \
     } \
-  } \
+  }; \
 virtual void Set##name (type _arg[6]) \
   { \
   this->Set##name (_arg[0], _arg[1], _arg[2], _arg[3], _arg[4], _arg[5]);\
@@ -391,7 +381,7 @@ virtual void Get##name (type &_arg1, type &_arg2, type &_arg3, type &_arg4, type
     _arg5 = this->name[4]; \
     _arg6 = this->name[5]; \
   vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " << #name " = (" << _arg1 << "," << _arg2 << "," << _arg3 << "," << _arg4 << "," << _arg5 <<"," << _arg6 << ")"); \
-  } \
+  }; \
 virtual void Get##name (type _arg[6]) \
   { \
   this->Get##name (_arg[0], _arg[1], _arg[2], _arg[3], _arg[4], _arg[5]);\
@@ -574,7 +564,7 @@ virtual vtkCoordinate *Get##name##Coordinate () \
     vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " #name "Coordinate address " << this->name##Coordinate ); \
     return this->name##Coordinate; \
 } \
-virtual void Set##name(double x[3]) {this->Set##name(x[0],x[1],x[2]);} \
+virtual void Set##name(double x[3]) {this->Set##name(x[0],x[1],x[2]);}; \
 virtual void Set##name(double x, double y, double z) \
 { \
     this->name##Coordinate->SetValue(x,y,z); \
@@ -590,7 +580,7 @@ virtual vtkCoordinate *Get##name##Coordinate () \
     vtkDebugMacro(<< this->GetClassName() << " (" << this << "): returning " #name "Coordinate address " << this->name##Coordinate ); \
     return this->name##Coordinate; \
 } \
-virtual void Set##name(double x[2]) {this->Set##name(x[0],x[1]);} \
+virtual void Set##name(double x[2]) {this->Set##name(x[0],x[1]);}; \
 virtual void Set##name(double x, double y) \
 { \
     this->name##Coordinate->SetValue(x,y); \
@@ -646,6 +636,15 @@ virtual double *Get##name() \
     return thisClass::New(); \
   } \
   public:
+
+// Legacy versions of vtkTypeMacro and helpers.
+#if !defined(VTK_LEGACY_REMOVE)
+# define vtkExportedTypeRevisionMacro(thisClass,superclass,dllExport) \
+  vtkTypeMacro(thisClass,superclass)
+# define vtkTypeRevisionMacro(thisClass,superclass) \
+  vtkTypeMacro(thisClass,superclass)
+# define vtkCxxRevisionMacro(thisClass, revision)
+#endif
 
 // Macro to implement the instantiator's wrapper around the New()
 // method.  Use this macro if and only if vtkStandardNewMacro or
@@ -792,7 +791,7 @@ virtual double *Get##name() \
 #else
   // Setup compile-time warnings for uses of deprecated methods if
   // possible on this compiler.
-# if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+# if defined(__GNUC__) && !defined(__INTEL_COMPILER) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
 #  define VTK_LEGACY(method) method __attribute__((deprecated))
 # elif defined(_MSC_VER)
 #  define VTK_LEGACY(method) __declspec(deprecated) method
@@ -831,21 +830,6 @@ virtual double *Get##name() \
 // Qualifiers used for function arguments and return types indicating that the
 // class is wrapped externally.
 #define VTK_WRAP_EXTERN
-
-//----------------------------------------------------------------------------
-// Switch case fall-through policy.
-
-// Use "VTK_FALLTHROUGH;" to annotate deliberate fall-through in switches,
-// use it analogously to "break;".  The trailing semi-colon is required.
-#if __cplusplus >= 201103L && defined(__has_warning)
-# if __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
-#  define VTK_FALLTHROUGH [[clang::fallthrough]]
-# endif
-#endif
-
-#ifndef VTK_FALLTHROUGH
-# define VTK_FALLTHROUGH ((void)0)
-#endif
 
 #endif
 // VTK-HeaderTest-Exclude: vtkSetGet.h

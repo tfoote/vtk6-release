@@ -34,7 +34,6 @@
 #define JMAX(ext) ext[3]
 #define KMIN(ext) ext[4]
 #define KMAX(ext) ext[5]
-#define PRINT(x) cout<<"("<<myRank<<")"<<x<<endl;
 
 //------------------------------------------------------------------------------
 void vtkAMRUtilities::PrintSelf( std::ostream& os, vtkIndent indent )
@@ -409,48 +408,47 @@ void vtkAMRUtilities::BlankGridsAtLevel(vtkOverlappingAMR* amr, int levelIdx,
       }
     N = grid->GetNumberOfCells();
 
-    vtkUnsignedCharArray *ghosts = vtkUnsignedCharArray::New();
-    ghosts->SetNumberOfTuples(N);
-    ghosts->FillComponent(0, 0);
-    ghosts->SetName(vtkDataSetAttributes::GhostArrayName());
+    vtkUnsignedCharArray* vis = vtkUnsignedCharArray::New();
+    vis->SetName("visibility");
+    vis->SetNumberOfTuples( N );
+    vis->FillComponent(0,static_cast<char>(1));
+    grid->SetCellVisibilityArray(vis);
+    vis->Delete();
 
-    if (children.size() > dataSetIdx)
+    if (children.size() <= dataSetIdx)
+      continue;
+
+    std::vector<unsigned int>& dsChildren = children[dataSetIdx];
+    std::vector<unsigned int>::iterator iter;
+
+    // For each higher res box fill in the cells that
+    // it covers
+    for (iter=dsChildren.begin(); iter!=dsChildren.end(); iter++)
       {
-      std::vector<unsigned int>& dsChildren = children[dataSetIdx];
-      std::vector<unsigned int>::iterator iter;
-
-      // For each higher res box fill in the cells that
-      // it covers
-      for (iter=dsChildren.begin(); iter!=dsChildren.end(); iter++)
+      vtkAMRBox ibox;;
+      int childGridIndex  = amr->GetCompositeIndex(levelIdx+1, *iter);
+      if(processMap[childGridIndex]<0)
         {
-        vtkAMRBox ibox;;
-        int childGridIndex  = amr->GetCompositeIndex(levelIdx+1, *iter);
-        if(processMap[childGridIndex]<0)
+        continue;
+        }
+      if (amr->GetAMRInfo()->GetCoarsenedAMRBox(levelIdx+1, *iter, ibox))
+        {
+        ibox.Intersect(box);
+        const int *loCorner=ibox.GetLoCorner();
+        int hi[3];
+        ibox.GetValidHiCorner(hi);
+        for( int iz=loCorner[2]; iz<=hi[2]; iz++ )
           {
-          continue;
-          }
-        if (amr->GetAMRInfo()->GetCoarsenedAMRBox(levelIdx+1, *iter, ibox))
-          {
-          ibox.Intersect(box);
-          const int *loCorner=ibox.GetLoCorner();
-          int hi[3];
-          ibox.GetValidHiCorner(hi);
-          for( int iz=loCorner[2]; iz<=hi[2]; iz++ )
+          for( int iy=loCorner[1]; iy<=hi[1]; iy++ )
             {
-            for( int iy=loCorner[1]; iy<=hi[1]; iy++ )
+            for( int ix=loCorner[0]; ix<=hi[0]; ix++ )
               {
-              for( int ix=loCorner[0]; ix<=hi[0]; ix++ )
-                {
-                vtkIdType id =  vtkAMRBox::GetCellLinearIndex(box,ix, iy, iz, grid->GetDimensions());
-                ghosts->SetValue(id, ghosts->GetValue(id) | vtkDataSetAttributes::REFINEDCELL);
-                } // END for x
-              } // END for y
-            } // END for z
-          }
-        } // Processing all higher boxes for a specific coarse grid
-      }
-
-    grid->GetCellData()->AddArray(ghosts);
-    ghosts->Delete();
+              vtkIdType id =  vtkAMRBox::GetCellLinearIndex(box,ix, iy, iz, grid->GetDimensions());
+              vis->SetValue(id, 0);
+              } // END for x
+            } // END for y
+          } // END for z
+        }
+      } // Processing all higher boxes for a specific coarse grid
     }
 }

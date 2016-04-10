@@ -31,7 +31,7 @@
 
 //--------------------------------------------------------------------
 
-static const char *PyVTKNamespace_Doc =
+const char *PyVTKNamespace_Doc =
   "A python module that wraps a C++ namespace.\n";
 
 //--------------------------------------------------------------------

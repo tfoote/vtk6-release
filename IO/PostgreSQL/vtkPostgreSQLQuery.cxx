@@ -606,8 +606,11 @@ void
 vtkPostgreSQLQuery::DeleteQueryResults()
 {
   this->Active = false;
-  delete this->QueryInternals;
-  this->QueryInternals = NULL;
+  if (this->QueryInternals)
+    {
+    delete this->QueryInternals;
+    this->QueryInternals = NULL;
+    }
 }
 
 // ----------------------------------------------------------------------

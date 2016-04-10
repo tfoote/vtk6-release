@@ -24,12 +24,14 @@
 #include "vtkObject.h"
 #include "vtkWeakPointer.h" // for render context
 
-class vtkOpenGLBufferObject;
-class vtkOpenGLHelper;
-class vtkOpenGLRenderWindow;
-class vtkOpenGLVertexArrayObject;
-class vtkShaderProgram;
 class vtkWindow;
+class vtkShaderProgram;
+class vtkOpenGLRenderWindow;
+namespace vtkgl
+{
+class VertexArrayObject;
+class CellBO;
+}
 
 #if GL_ES_VERSION_2_0 != 1 || GL_ES_VERSION_3_0 == 1
 class vtkPixelBufferObject;
@@ -101,10 +103,10 @@ public:
   enum
   {
     alpha=0,
+    alpha4,
     alpha8,
+    alpha12,
     alpha16,
-    alpha16f,
-    alpha32f,
     NumberOfAlphaFormats
   };
 
@@ -201,12 +203,6 @@ public:
   bool CreateDepthFromRaw(unsigned int width, unsigned int height,
                           int internalFormat, int rawType,
                           void *raw);
-
-  // Description:
-  // Create a texture buffer basically a 1D texture that can be
-  // very large for passing data into the fragment shader
-  bool CreateTextureBuffer(unsigned int numValues, int numComps,
-                           int dataType, vtkOpenGLBufferObject *bo);
 
 // 1D  textures are not supported in ES 2.0 or 3.0
 #if GL_ES_VERSION_2_0 != 1
@@ -312,10 +308,6 @@ public:
                 int vtktype, bool shaderSupportsTextureInt);
   bool Create3D(unsigned int width, unsigned int height, unsigned int depth,
                 int numComps, int vtktype, bool shaderSupportsTextureInt);
-
-  // Description:
-  // Get the data type for the texture as a vtk type int i.e. VTK_INT etc.
-  int GetVTKDataType();
 
   // Description:
   // Get the data type for the texture as GLenum type.
@@ -544,7 +536,7 @@ public:
   // signatures based on what you want to do
   // Copy the entire texture to the entire current viewport
   void CopyToFrameBuffer(vtkShaderProgram *program,
-                         vtkOpenGLVertexArrayObject *vao);
+                         vtkgl::VertexArrayObject *vao);
   // part of a texture to part of a viewport, scaling as needed
   void CopyToFrameBuffer(int srcXmin, int srcYmin,
                          int srcXmax, int srcYmax,
@@ -552,7 +544,7 @@ public:
                          int dstXmax, int dstYmax,
                          int dstSizeX, int dstSizeY,
                          vtkShaderProgram *program,
-                         vtkOpenGLVertexArrayObject *vao
+                         vtkgl::VertexArrayObject *vao
                          );
   // copy part of a texure to part of a viewport, no scalaing
   void CopyToFrameBuffer(int srcXmin, int srcYmin,
@@ -560,12 +552,12 @@ public:
                          int dstXmin, int dstYmin,
                          int dstSizeX, int dstSizeY,
                          vtkShaderProgram *program,
-                         vtkOpenGLVertexArrayObject *vao
+                         vtkgl::VertexArrayObject *vao
                          );
   // copy a texture to a quad using the provided tcoords and verts
   void CopyToFrameBuffer(float *tcoords, float *verts,
                          vtkShaderProgram *program,
-                         vtkOpenGLVertexArrayObject *vao
+                         vtkgl::VertexArrayObject *vao
                          );
 
 
@@ -646,10 +638,7 @@ protected:
   vtkTimeStamp SendParametersTime;
 
   // used for copying to framebuffer
-  vtkOpenGLHelper *ShaderProgram;
-
-  // for texturebuffers we hold on to the Buffer
-  vtkOpenGLBufferObject *BufferObject;
+  vtkgl::CellBO *ShaderProgram;
 
 private:
   vtkTextureObject(const vtkTextureObject&); // Not implemented.

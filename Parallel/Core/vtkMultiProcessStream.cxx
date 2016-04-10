@@ -693,7 +693,7 @@ vtkMultiProcessStream& vtkMultiProcessStream::operator >> (int &value)
     {
     vtkTypeInt64 value64;
     (*this) >> value64;
-    value = static_cast<int>(value64);
+    value = value64;
     return (*this);
     }
   assert(this->Internals->Data.front() == vtkInternals::int32_value);
@@ -825,7 +825,10 @@ void vtkMultiProcessStream::SetRawData(const std::vector<unsigned char>& data)
 void vtkMultiProcessStream::GetRawData(
     unsigned char*& data, unsigned int &size )
 {
-  delete [] data;
+  if( data != NULL )
+    {
+    delete [] data;
+    }
 
   size = this->Size()+1;
   data = new unsigned char[ size+1 ];

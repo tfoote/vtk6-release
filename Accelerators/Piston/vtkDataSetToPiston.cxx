@@ -37,7 +37,6 @@ vtkStandardNewMacro(vtkDataSetToPiston);
 //----------------------------------------------------------------------------
 vtkDataSetToPiston::vtkDataSetToPiston()
 {
-  VTK_LEGACY_BODY(vtkDataSetToPiston::vtkDataSetToPiston, "VTK 6.3");
 }
 
 //----------------------------------------------------------------------------

@@ -172,16 +172,14 @@ struct TextPropertyKey
   // Transform a text property into an unsigned long
   static unsigned int GetIdFromTextProperty(vtkTextProperty* textProperty)
   {
-    size_t id;
+    unsigned long id;
     vtkFreeTypeTools::GetInstance()->MapTextPropertyToId(textProperty, &id);
-    // Truncation on 64-bit machines! The id is a pointer.
     return static_cast<unsigned int>(id);
   }
 
   // Description:
   // Creates a TextPropertyKey.
-  TextPropertyKey(vtkTextProperty* textProperty, const StringType& text,
-                  int dpi)
+  TextPropertyKey(vtkTextProperty* textProperty, const StringType& text)
   {
     this->TextPropertyId = GetIdFromTextProperty(textProperty);
     this->FontSize = textProperty->GetFontSize();
@@ -192,7 +190,6 @@ struct TextPropertyKey
                     static_cast<unsigned char>(color[2] * 255),
                     static_cast<unsigned char>(textProperty->GetOpacity() * 255));
     this->Text = text;
-    this->DPI = dpi;
   }
 
   // Description:
@@ -206,8 +203,7 @@ struct TextPropertyKey
       this->Color[0] == other.Color[0] &&
       this->Color[1] == other.Color[1] &&
       this->Color[2] == other.Color[2] &&
-      this->Color[3] == other.Color[3] &&
-      this->DPI == other.DPI;
+      this->Color[3] == other.Color[3];
   }
 
   unsigned short FontSize;
@@ -215,7 +211,6 @@ struct TextPropertyKey
   // States in the function not to use more than 32 bits - int works fine here.
   unsigned int TextPropertyId;
   StringType Text;
-  int DPI;
 };
 
 typedef TextPropertyKey<vtkStdString> UTF8TextPropertyKey;

@@ -44,8 +44,6 @@
 #define VTK_HOOKEDARROW_GLYPH 11
 #define VTK_EDGEARROW_GLYPH 12
 
-#define VTK_MAX_CIRCLE_RESOLUTION 1024
-
 class vtkPoints;
 class vtkUnsignedCharArray;
 class vtkCellArray;
@@ -115,11 +113,6 @@ public:
   vtkGetMacro(RotationAngle,double);
 
   // Description:
-  // Specify the number of points that form the circular glyph.
-  vtkSetClampMacro(Resolution,int,3,VTK_MAX_CIRCLE_RESOLUTION);
-  vtkGetMacro(Resolution,int);
-
-  // Description:
   // Specify the type of glyph to generate.
   vtkSetClampMacro(GlyphType,int,VTK_NO_GLYPH,VTK_EDGEARROW_GLYPH);
   vtkGetMacro(GlyphType,int);
@@ -159,7 +152,6 @@ protected:
   int    Cross;
   int    GlyphType;
   double RotationAngle;
-  int    Resolution;
   int    OutputPointsPrecision;
 
   void TransformGlyph(vtkPoints *pts);

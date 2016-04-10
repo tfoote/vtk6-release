@@ -16,7 +16,6 @@
 #include "vtkSobelGradientMagnitudePass.h"
 #include "vtkObjectFactory.h"
 #include <cassert>
-
 #include "vtkRenderState.h"
 #include "vtkRenderer.h"
 #include "vtkFrameBufferObject.h"
@@ -24,10 +23,9 @@
 #include "vtkOpenGLRenderWindow.h"
 #include "vtkOpenGLShaderCache.h"
 #include "vtkOpenGLError.h"
-#include "vtkOpenGLVertexArrayObject.h"
 #include "vtkShaderProgram.h"
 
-#include "vtkOpenGLHelper.h"
+#include "vtkglVBOHelper.h"
 
 // to be able to dump intermediate passes into png files for debugging.
 // only for vtkSobelGradientMagnitudePass developers.
@@ -246,7 +244,7 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
     // has something changed that would require us to recreate the shaders?
     if (!this->Program1)
       {
-      this->Program1 = new vtkOpenGLHelper;
+      this->Program1 = new vtkgl::CellBO;
 
       // build the shader source code
       std::string VSSource = vtkTextureObjectVS;
@@ -255,23 +253,22 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
 
       // compile and bind it if needed
       vtkShaderProgram *newShader =
-        context->GetShaderCache()->ReadyShaderProgram(
-          VSSource.c_str(),
-          FSSource.c_str(),
-          GSSource.c_str());
+        context->GetShaderCache()->ReadyShader(VSSource.c_str(),
+                                              FSSource.c_str(),
+                                              GSSource.c_str());
 
       // if the shader changed reinitialize the VAO
       if (newShader != this->Program1->Program)
         {
         this->Program1->Program = newShader;
-        this->Program1->VAO->ShaderProgramChanged(); // reset the VAO as the shader has changed
+        this->Program1->vao.ShaderProgramChanged(); // reset the VAO as the shader has changed
         }
 
       this->Program1->ShaderSourceTime.Modified();
       }
     else
       {
-      context->GetShaderCache()->ReadyShaderProgram(this->Program1->Program);
+      context->GetShaderCache()->ReadyShader(this->Program1->Program);
       }
 
 #ifdef VTK_SOBEL_PASS_DEBUG
@@ -306,7 +303,7 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
 #endif
 
     this->FrameBufferObject->RenderQuad(0,w-1,0,h-1,
-      this->Program1->Program, this->Program1->VAO);
+      this->Program1->Program, &this->Program1->vao);
 
 #ifdef VTK_SOBEL_PASS_DEBUG
     cout << "sobel finish3" << endl;
@@ -381,7 +378,7 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
     // has something changed that would require us to recreate the shaders?
     if (!this->Program2)
       {
-      this->Program2 = new vtkOpenGLHelper;
+      this->Program2 = new vtkgl::CellBO;
 
       // build the shader source code
       std::string VSSource = vtkTextureObjectVS;
@@ -390,23 +387,22 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
 
       // compile and bind it if needed
       vtkShaderProgram *newShader =
-        context->GetShaderCache()->ReadyShaderProgram(
-          VSSource.c_str(),
-          FSSource.c_str(),
-          GSSource.c_str());
+        context->GetShaderCache()->ReadyShader(VSSource.c_str(),
+                                              FSSource.c_str(),
+                                              GSSource.c_str());
 
       // if the shader changed reinitialize the VAO
       if (newShader != this->Program2->Program)
         {
         this->Program2->Program = newShader;
-        this->Program2->VAO->ShaderProgramChanged(); // reset the VAO as the shader has changed
+        this->Program2->vao.ShaderProgramChanged(); // reset the VAO as the shader has changed
         }
 
       this->Program2->ShaderSourceTime.Modified();
       }
     else
       {
-      context->GetShaderCache()->ReadyShaderProgram(this->Program2->Program);
+      context->GetShaderCache()->ReadyShader(this->Program2->Program);
       }
 
 #ifdef VTK_SOBEL_PASS_DEBUG
@@ -464,8 +460,7 @@ void vtkSobelGradientMagnitudePass::Render(const vtkRenderState *s)
     this->Gy1->CopyToFrameBuffer(extraPixels, extraPixels,
                                   w-1-extraPixels,h-1-extraPixels,
                                   0, 0, width, height,
-                                  this->Program2->Program,
-                                  this->Program2->VAO);
+                                  this->Program2->Program, &this->Program2->vao);
 
     this->Gy1->Deactivate();
     this->Gx1->Deactivate();

@@ -12,7 +12,6 @@ vtk_module(vtkRenderingCore
     vtksys
   TEST_DEPENDS
     vtkIOLegacy
-    vtkIOParallel
     vtkIOXML
     vtkTestingCore
     vtkTestingRendering

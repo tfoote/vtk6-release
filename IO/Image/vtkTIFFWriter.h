@@ -34,10 +34,6 @@ public:
   vtkTypeMacro(vtkTIFFWriter,vtkImageWriter);
   virtual void PrintSelf(ostream& os, vtkIndent indent);
 
-  // Description:
-  // The main interface which triggers the writer to start.
-  virtual void Write();
-
 //BTX
   enum { // Compression types
     NoCompression,
@@ -69,17 +65,10 @@ protected:
 
   void* TIFFPtr;
   int Compression;
-  int Width;
-  int Height;
-  int Pages;
-  double XResolution;
-  double YResolution;
 
 private:
   vtkTIFFWriter(const vtkTIFFWriter&);  // Not implemented.
   void operator=(const vtkTIFFWriter&);  // Not implemented.
-
-  template<typename T> void WriteVolume(T *buffer);
 };
 
 #endif

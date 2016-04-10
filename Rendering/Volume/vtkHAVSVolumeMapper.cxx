@@ -185,7 +185,7 @@ public:
 
   ~vtkHAVSScalarHistogram()
   {
-    if (this->ScalarTable) { delete [] ScalarTable; }
+    this->Cleanup();
   }
 
   void DefineBuckets(unsigned int nBuckets)
@@ -226,6 +226,12 @@ public:
         }
       }
     return max;
+  }
+
+  void Cleanup()
+  {
+    if (this->ScalarTable) { delete [] ScalarTable; }
+    this->ScalarTable = NULL;
   }
 };
 

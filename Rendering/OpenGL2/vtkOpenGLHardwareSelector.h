@@ -64,8 +64,6 @@ protected:
   virtual void BeginRenderProp(vtkRenderWindow *);
   virtual void EndRenderProp(vtkRenderWindow *);
 
-  virtual void SavePixelBuffer(int passNo);
-
   // for internal state
   class vtkInternals;
   vtkInternals* Internals;

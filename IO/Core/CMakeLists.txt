@@ -17,7 +17,6 @@ SET(Module_SRCS
   vtkTextCodecFactory.cxx
   vtkUTF16TextCodec.cxx
   vtkUTF8TextCodec.cxx
-  vtkAbstractPolyDataReader.cxx
   vtkWriter.cxx
   vtkZLibDataCompressor.cxx
   vtkArrayDataReader.cxx
@@ -31,7 +30,6 @@ set_source_files_properties(
   vtkDataCompressor
   vtkTextCodec
   vtkWriter
-  vtkAbstractPolyDataReader
   ABSTRACT
   )
 

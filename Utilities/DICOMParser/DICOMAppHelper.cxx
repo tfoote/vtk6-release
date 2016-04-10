@@ -148,13 +148,34 @@ DICOMAppHelper::~DICOMAppHelper()
   //
   // Fix warning here.
   //
-  delete [] (static_cast<char*> (this->ImageData));
+  if (this->ImageData)
+    {
+    delete [] (static_cast<char*> (this->ImageData));
+    }
+  if (this->TransferSyntaxUID)
+    {
+    delete this->TransferSyntaxUID;
+    }
+  if (this->PhotometricInterpretation)
+    {
+    delete this->PhotometricInterpretation;
+    }
 
-  delete this->TransferSyntaxUID;
-  delete this->PhotometricInterpretation;
-  delete this->PatientName;
-  delete this->StudyUID;
-  delete this->StudyID;
+  if (this->PatientName)
+    {
+    delete this->PatientName;
+    }
+
+  if (this->StudyUID)
+    {
+    delete this->StudyUID;
+    }
+
+  if (this->StudyID)
+    {
+    delete this->StudyID;
+    }
+
   delete this->SeriesUIDCB;
   delete this->SliceNumberCB;
   delete this->SliceLocationCB;
@@ -461,8 +482,6 @@ void DICOMAppHelper::ArrayCallback(DICOMParser *parser,
         uival = DICOMFile::ReturnAsUnsignedShort(val, parser->GetDICOMFile()->GetPlatformIsBigEndian());
         HeaderFile << uival;
         break;
-      case DICOMParser::VR_UNKNOWN:
-      case DICOMParser::VR_AW:
       default:
         HeaderFile << val << dicom_stream::endl;
         break;
@@ -728,7 +747,10 @@ void DICOMAppHelper::TransferSyntaxCallback(DICOMParser *parser,
 #endif
     }
 
-  delete this->TransferSyntaxUID;
+  if (this->TransferSyntaxUID)
+    {
+    delete this->TransferSyntaxUID;
+    }
   this->TransferSyntaxUID = new dicom_stl::string(
     reinterpret_cast<char*>(val));
 
@@ -862,7 +884,10 @@ void DICOMAppHelper::PhotometricInterpretationCallback( DICOMParser *,
 #ifdef DEBUG_DICOM_APP_HELPER
   dicom_stream::cout << "Photometric Interpretation: " << (char*) val << dicom_stream::endl;
 #endif
-  delete this->PhotometricInterpretation;
+  if (this->PhotometricInterpretation)
+    {
+    delete this->PhotometricInterpretation;
+    }
 
   this->PhotometricInterpretation = new dicom_stl::string(
     reinterpret_cast<char*>(val));
@@ -905,7 +930,10 @@ void DICOMAppHelper::PixelDataCallback( DICOMParser *,
     dicom_stream::cout << "Slope and offset are not integer valued : ";
     dicom_stream::cout << this->RescaleSlope << ", " << this->RescaleOffset << dicom_stream::endl;
 #endif
-    delete [] (static_cast<char*> (this->ImageData));
+    if (this->ImageData)
+      {
+      delete [] (static_cast<char*> (this->ImageData));
+      }
     this->ImageData = new float[numPixels];
     floatOutputData = static_cast<float*> (this->ImageData);
 
@@ -948,7 +976,10 @@ void DICOMAppHelper::PixelDataCallback( DICOMParser *,
 
     if (ptrIncr == 1)
       {
-      delete [] (static_cast<char*> (this->ImageData));
+      if (this->ImageData)
+        {
+        delete [] (static_cast<char*> (this->ImageData));
+        }
       this->ImageData = new char[numPixels];
 
       char*  charOutputData =  static_cast<char*>  (this->ImageData);
@@ -970,7 +1001,10 @@ void DICOMAppHelper::PixelDataCallback( DICOMParser *,
       }
     else if (ptrIncr == 2)
       {
-      delete [] (static_cast<char*> (this->ImageData));
+      if (this->ImageData)
+        {
+        delete [] (static_cast<char*> (this->ImageData));
+        }
       this->ImageData = new short[numPixels];
       short* shortOutputData = static_cast<short*> (this->ImageData);
 
@@ -1154,7 +1188,7 @@ void DICOMAppHelper::GetSliceNumberFilenamePairs(const dicom_stl::string &series
 void DICOMAppHelper::GetSliceNumberFilenamePairs(dicom_stl::vector<dicom_stl::pair<int, dicom_stl::string> >& v, bool ascending)
 {
   // Default to using the first series
-  if (!this->Implementation->SeriesUIDMap.empty())
+  if (this->Implementation->SeriesUIDMap.size() > 0)
     {
     this->GetSliceNumberFilenamePairs( (*this->Implementation->SeriesUIDMap.begin()).first, v, ascending );
     }
@@ -1208,7 +1242,7 @@ void DICOMAppHelper::GetSliceLocationFilenamePairs(const dicom_stl::string &seri
 void DICOMAppHelper::GetSliceLocationFilenamePairs(dicom_stl::vector<dicom_stl::pair<float, dicom_stl::string> >& v, bool ascending)
 {
   // Default to using the first series
-  if (!this->Implementation->SeriesUIDMap.empty())
+  if (this->Implementation->SeriesUIDMap.size() > 0)
     {
     this->GetSliceLocationFilenamePairs( (*this->Implementation->SeriesUIDMap.begin()).first,
                                          v , ascending);
@@ -1285,7 +1319,7 @@ void DICOMAppHelper::GetImagePositionPatientFilenamePairs(const dicom_stl::strin
 void DICOMAppHelper::GetImagePositionPatientFilenamePairs(dicom_stl::vector<dicom_stl::pair<float, dicom_stl::string> >& v, bool ascending)
 {
   // Default to using the first series
-  if (!this->Implementation->SeriesUIDMap.empty())
+  if (this->Implementation->SeriesUIDMap.size() > 0)
     {
     this->GetImagePositionPatientFilenamePairs(
       (*this->Implementation->SeriesUIDMap.begin()).first, v, ascending);
@@ -1322,7 +1356,10 @@ void DICOMAppHelper::PatientNameCallback(DICOMParser *,
                                          unsigned char* val,
                                          quadbyte)
 {
-  delete this->PatientName;
+  if (this->PatientName)
+    {
+    delete this->PatientName;
+    }
 
   if (val)
     {
@@ -1341,7 +1378,10 @@ void DICOMAppHelper::StudyUIDCallback(DICOMParser *,
                                          unsigned char* val,
                                          quadbyte)
 {
-  delete this->StudyUID;
+  if (this->StudyUID)
+    {
+    delete this->StudyUID;
+    }
 
   this->StudyUID = new dicom_stl::string(reinterpret_cast<char*>(val));
 
@@ -1354,7 +1394,10 @@ void DICOMAppHelper::StudyIDCallback(DICOMParser *,
                                          unsigned char* val,
                                          quadbyte)
 {
-  delete this->StudyID;
+  if (this->StudyID)
+    {
+    delete this->StudyID;
+    }
 
   if (val)
     {

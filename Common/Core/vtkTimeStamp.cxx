@@ -20,7 +20,7 @@
 // We use the Schwarz Counter idiom to make sure that GlobalTimeStamp
 // is initialized before any other class uses it.
 
-#include "vtkAtomicTypes.h"
+#include "vtkAtomicInt.h"
 
 //-------------------------------------------------------------------------
 vtkTimeStamp* vtkTimeStamp::New()
@@ -33,9 +33,9 @@ vtkTimeStamp* vtkTimeStamp::New()
 void vtkTimeStamp::Modified()
 {
 #if VTK_SIZEOF_VOID_P == 8
-  static vtkAtomicInt64 GlobalTimeStamp(0);
+  static vtkAtomicInt<vtkTypeInt64> GlobalTimeStamp(0);
 #else
-  static vtkAtomicInt32 GlobalTimeStamp(0);
+  static vtkAtomicInt<vtkTypeInt32> GlobalTimeStamp(0);
 #endif
 
   this->ModifiedTime = (unsigned long)++GlobalTimeStamp;

@@ -239,7 +239,7 @@ vtkUnsignedCharArray *vtkScalarsToColors::MapScalars(vtkAbstractArray *scalars,
   // map scalars through lookup table only if needed
   if ((colorMode == VTK_COLOR_MODE_DEFAULT &&
        vtkUnsignedCharArray::SafeDownCast(dataArray) != NULL) ||
-      (colorMode == VTK_COLOR_MODE_DIRECT_SCALARS && dataArray))
+      colorMode == VTK_COLOR_MODE_DIRECT_SCALARS)
     {
     newColors = this->
       ConvertToRGBA(dataArray, scalars->GetNumberOfComponents(),

@@ -69,7 +69,7 @@ VTKTCL_EXPORT void vtkTclDeleteObjectFromHash(vtkObject *obj,
   vtkTclInterpStruct *is = vtkGetInterpStruct(as->Interp);
 
   // lookup the objects name
-  sprintf(temps,"%p",static_cast<void *>(obj));
+  sprintf(temps,"%p",obj);
   entry = Tcl_FindHashEntry(&is->PointerLookup,temps);
   if (entry)
     {
@@ -293,7 +293,7 @@ vtkTclGetObjectFromPointer(Tcl_Interp *interp, void *temp1,
     }
 
   /* first we must look up the pointer to see if it already exists */
-  sprintf(temps,"%p",static_cast<void *>(temp));
+  sprintf(temps,"%p",temp);
   if ((entry = Tcl_FindHashEntry(&is->PointerLookup,temps)))
     {
     if (is->DebugOn)

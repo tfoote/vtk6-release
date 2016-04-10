@@ -124,7 +124,10 @@ void vtkSCurveSpline::Compute ()
   // copy the independent variables. Note that if the spline
   // is closed the first and last point are assumed repeated -
   // so we add and extra point
-  delete [] this->Intervals;
+  if (this->Intervals)
+    {
+    delete [] this->Intervals;
+    }
 
   if ( !this->Closed )
     {
@@ -139,7 +142,10 @@ void vtkSCurveSpline::Compute ()
     //    work = new double[size];
 
     // allocate memory for coefficients
-    delete [] this->Coefficients;
+    if (this->Coefficients)
+      {
+      delete [] this->Coefficients;
+      }
     this->Coefficients = new double [3*size];
 
     // allocate memory for dependent variables
@@ -188,7 +194,10 @@ void vtkSCurveSpline::Compute ()
     //    work = new double[size];
 
     // allocate memory for coefficients
-    delete [] this->Coefficients;
+    if (this->Coefficients)
+      {
+      delete [] this->Coefficients;
+      }
     //this->Coefficients = new double [4*size];
     this->Coefficients = new double [3*size];
 

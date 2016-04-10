@@ -203,7 +203,10 @@ int vtkMNITransformReader::ReadLineAfterComments(
       }
     else if (*cp != '\0')
       {
-      delete [] this->Comments;
+      if (this->Comments)
+        {
+        delete [] this->Comments;
+        }
       this->Comments = new char[comments.length() + 1];
       strcpy(this->Comments, comments.c_str());
       return 1;
@@ -721,7 +724,7 @@ int vtkMNITransformReader::ReadGridTransform(
     return 0;
     }
 
-  char filename[VTK_MAXPATH];
+  char filename[256];
   if (!this->ParseStringValue(infile, linetext, cpp, filename))
     {
     return 0;

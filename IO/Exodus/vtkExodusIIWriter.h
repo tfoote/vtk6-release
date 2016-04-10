@@ -306,7 +306,6 @@ protected:
 
   int CreateBlockIdMetadata(vtkModelMetadata *em);
   int CreateBlockVariableMetadata (vtkModelMetadata* em);
-  int CreateSetsMetadata (vtkModelMetadata* em);
 
 //BTX
   void ConvertVariableNames (std::map<std::string, VariableInfo>& variableMap);
@@ -322,7 +321,6 @@ protected:
 //ETX
   vtkIdType GetNodeLocalId(vtkIdType id);
   vtkIdType GetElementLocalId(vtkIdType id);
-  int GetElementType(vtkIdType id);
 
   int WriteInitializationParameters ();
   int WriteInformationRecords ();

@@ -2,9 +2,9 @@ Description: Replace deprecated FFmpeg API
 Author: Andreas Cadhalpun <Andreas.Cadhalpun@googlemail.com>
 Last-Update: <2015-11-02>
 
---- a/CMake/vtkTestFFMPEG.cmake
-+++ b/CMake/vtkTestFFMPEG.cmake
-@@ -32,8 +32,8 @@
+--- vtk6-6.2.0+dfsg1.orig/CMake/vtkTestFFMPEG.cmake
++++ vtk6-6.2.0+dfsg1/CMake/vtkTestFFMPEG.cmake
+@@ -32,8 +32,8 @@ if(FFMPEG_INCLUDE_DIR)
  #include <${FFMEG_CODEC_HEADER_PATH}/avcodec.h>
  int main()
  {
@@ -15,9 +15,9 @@ Last-Update: <2015-11-02>
                0, 0);
    return 0;
  }\n")
---- a/IO/FFMPEG/vtkFFMPEGWriter.cxx
-+++ b/IO/FFMPEG/vtkFFMPEGWriter.cxx
-@@ -191,11 +191,11 @@
+--- vtk6-6.2.0+dfsg1.orig/IO/FFMPEG/vtkFFMPEGWriter.cxx
++++ vtk6-6.2.0+dfsg1/IO/FFMPEG/vtkFFMPEGWriter.cxx
+@@ -189,11 +189,11 @@ int vtkFFMPEGWriterInternal::Start()
    c->height = this->Dim[1];
    if (this->Writer->GetCompression())
      {
@@ -31,7 +31,7 @@ Last-Update: <2015-11-02>
      }
  
    //to do playback at actual recorded rate, this will need more work see also below
-@@ -274,13 +274,13 @@
+@@ -272,13 +272,13 @@ int vtkFFMPEGWriterInternal::Start()
  #endif
  
    //for the output of the writer's input...
@@ -47,7 +47,7 @@ Last-Update: <2015-11-02>
    unsigned char *rgb = (unsigned char *)av_malloc(sizeof(unsigned char) * RGBsize);
    if (!rgb)
      {
-@@ -288,10 +288,10 @@
+@@ -286,10 +286,10 @@ int vtkFFMPEGWriterInternal::Start()
      return 0;
      }
    //The rgb buffer should get deleted when this->rgbInput is.
@@ -60,7 +60,7 @@ Last-Update: <2015-11-02>
    if (!this->yuvOutput)
      {
      vtkGenericWarningMacro (<< "Could not make yuvOutput avframe." );
-@@ -349,12 +349,12 @@
+@@ -347,12 +347,12 @@ int vtkFFMPEGWriterInternal::Write(vtkIm
    //convert that to YUV for input to the codec
  #ifdef VTK_FFMPEG_HAS_IMG_CONVERT
    img_convert((AVPicture *)this->yuvOutput, cc->pix_fmt,
@@ -75,7 +75,7 @@ Last-Update: <2015-11-02>
      cc->width, cc->height, cc->pix_fmt,
      SWS_BICUBIC, NULL, NULL, NULL);
  
-@@ -447,14 +447,14 @@
+@@ -445,14 +445,14 @@ void vtkFFMPEGWriterInternal::End()
    if (this->yuvOutput)
      {
      av_free(this->yuvOutput->data[0]);

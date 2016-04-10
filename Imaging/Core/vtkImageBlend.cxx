@@ -546,9 +546,8 @@ static void vtkImageBlendCopyData(vtkImageData *inData, vtkImageData *outData,
 {
   int idxY, idxZ, maxY, maxZ;
   vtkIdType inIncX, inIncY, inIncZ;
-  vtkIdType outIncX, outIncY, outIncZ;
   int rowLength;
-  unsigned char *inPtr, *inPtr1, *outPtr,*outPtr1;
+  unsigned char *inPtr, *inPtr1, *outPtr;
 
   inPtr = static_cast<unsigned char *>(inData->GetScalarPointerForExtent(ext));
   outPtr =
@@ -556,7 +555,6 @@ static void vtkImageBlendCopyData(vtkImageData *inData, vtkImageData *outData,
 
   // Get increments to march through inData
   inData->GetIncrements(inIncX, inIncY, inIncZ);
-  outData->GetIncrements(outIncX, outIncY, outIncZ);
 
   // find the region to loop over
   rowLength = (ext[1] - ext[0]+1)*inIncX*inData->GetScalarSize();
@@ -565,18 +563,16 @@ static void vtkImageBlendCopyData(vtkImageData *inData, vtkImageData *outData,
 
   inIncY *= inData->GetScalarSize();
   inIncZ *= inData->GetScalarSize();
-  outIncY *= outData->GetScalarSize();
-  outIncZ *= outData->GetScalarSize();
+
   // Loop through outData pixels
   for (idxZ = 0; idxZ <= maxZ; idxZ++)
     {
     inPtr1 = inPtr + idxZ*inIncZ;
-    outPtr1 = outPtr + idxZ*outIncZ;
     for (idxY = 0; idxY <= maxY; idxY++)
       {
-      memcpy(outPtr1,inPtr1,rowLength);
+      memcpy(outPtr,inPtr1,rowLength);
       inPtr1 += inIncY;
-      outPtr1 += outIncY;
+      outPtr += rowLength;
       }
     }
 }

@@ -36,14 +36,13 @@
 #include "vtkRenderingVolumeOpenGL2Module.h" // For export macro
 #include "vtkProjectedTetrahedraMapper.h"
 
-#include "vtkOpenGLHelper.h" // used for ivars
+#include "vtkglVBOHelper.h" // used for ivars
 
 class vtkVisibilitySort;
 class vtkUnsignedCharArray;
 class vtkFloatArray;
 class vtkRenderWindow;
 class vtkOpenGLRenderWindow;
-class vtkOpenGLVertexBufferObject;
 
 class VTKRENDERINGVOLUMEOPENGL2_EXPORT vtkOpenGLProjectedTetrahedraMapper
   : public vtkProjectedTetrahedraMapper
@@ -93,10 +92,11 @@ protected:
   vtkTimeStamp ColorsMappedTime;
 
   // The VBO and its layout.
-  vtkOpenGLVertexBufferObject *VBO;
+  vtkgl::BufferObject VBO;
+  vtkgl::VBOLayout Layout;
 
   // Structures for the various cell types we render.
-  vtkOpenGLHelper Tris;
+  vtkgl::CellBO Tris;
 
   int GaveError;
 

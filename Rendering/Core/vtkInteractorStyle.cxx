@@ -420,14 +420,9 @@ void vtkInteractorStyle::StartState(int newstate)
     vtkRenderWindowInteractor *rwi = this->Interactor;
     rwi->GetRenderWindow()->SetDesiredUpdateRate(rwi->GetDesiredUpdateRate());
     this->InvokeEvent(vtkCommand::StartInteractionEvent, NULL);
-    if ( this->UseTimers &&
-         !(this->TimerId=rwi->CreateRepeatingTimer(this->TimerDuration)) )
+    if ( this->UseTimers && !(this->TimerId=rwi->CreateRepeatingTimer(this->TimerDuration)) )
       {
-      // vtkTestingInteractor cannot create timers
-      if (std::string(rwi->GetClassName()) != "vtkTestingInteractor")
-        {
-        vtkErrorMacro(<< "Timer start failed");
-        }
+      vtkErrorMacro(<< "Timer start failed");
       this->State = VTKIS_NONE;
       }
     }
@@ -442,10 +437,7 @@ void vtkInteractorStyle::StopState()
     vtkRenderWindowInteractor *rwi = this->Interactor;
     vtkRenderWindow *renwin = rwi->GetRenderWindow();
     renwin->SetDesiredUpdateRate(rwi->GetStillUpdateRate());
-    if (this->UseTimers &&
-        // vtkTestingInteractor cannot create timers
-        std::string(rwi->GetClassName()) != "vtkTestingInteractor" &&
-        !rwi->DestroyTimer(this->TimerId))
+    if (this->UseTimers && !rwi->DestroyTimer(this->TimerId))
       {
       vtkErrorMacro(<< "Timer stop failed");
       }

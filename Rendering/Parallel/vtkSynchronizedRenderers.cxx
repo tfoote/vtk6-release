@@ -30,7 +30,7 @@
 #include "vtkOpenGLRenderWindow.h"
 #include "vtkOpenGLError.h"
 
-#ifndef VTK_OPENGL2
+#ifndef VTKGL2
 # include "vtkgl.h"
 #endif
 
@@ -684,7 +684,7 @@ bool vtkSynchronizedRenderers::vtkRawImage::PushToFrameBuffer(vtkRenderer *ren)
 
   vtkOpenGLClearErrorMacro();
 
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
   // always draw the entire image on the entire viewport
   vtkOpenGLRenderWindow *renWin = vtkOpenGLRenderWindow::SafeDownCast(ren->GetVTKWindow());
   renWin->DrawPixels(this->GetWidth(), this->GetHeight(),

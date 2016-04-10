@@ -36,11 +36,13 @@ int TestAMRBoxEquality()
 {
   int rc = 0;
 
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
 
   vtkAMRBox A, B, C, A2D;
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
@@ -48,6 +50,7 @@ int TestAMRBoxEquality()
   Construct3DAMRBox( B, lo, hi );
   Construct2DAMRBox( A2D, lo, hi );
 
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 16;
   hi[0] = hi[1] = hi[2] = 32;
@@ -75,11 +78,13 @@ int TestAMRBoxEquality()
 int TestAMRBoxAssignmentOperator()
 {
   int rc = 0;
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
 
   vtkAMRBox A, B;
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
@@ -97,6 +102,7 @@ int TestAMRBoxAssignmentOperator()
 int TestAMRBoxCoarsenRefineOperators()
 {
   int rc = 0;
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
@@ -104,12 +110,14 @@ int TestAMRBoxCoarsenRefineOperators()
   vtkAMRBox A, A0, Ar;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
   Construct3DAMRBox( A, lo, hi);
 
   // Here is the refined AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 0.5;
   lo[0] = lo[1] = lo[2] = 16;
   hi[0] = hi[1] = hi[2] = 33;
@@ -147,6 +155,7 @@ int TestAMRBoxShiftOperator()
 {
   int rc = 0;
 
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
@@ -154,6 +163,7 @@ int TestAMRBoxShiftOperator()
   vtkAMRBox A, A0, Ashifted;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
@@ -165,6 +175,7 @@ int TestAMRBoxShiftOperator()
   shift[0] = shift[1] = shift[2] = 3;
 
   // Here is the shifted AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 11;
   hi[0] = hi[1] = hi[2] = 19;
@@ -196,6 +207,7 @@ int TestAMRBoxGrowShrinkOperators()
 {
   int rc = 0;
 
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
@@ -203,6 +215,7 @@ int TestAMRBoxGrowShrinkOperators()
   vtkAMRBox A, A0, Agrown;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
@@ -211,6 +224,7 @@ int TestAMRBoxGrowShrinkOperators()
   A0 = A;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 6;
   hi[0] = hi[1] = hi[2] = 18;
@@ -237,6 +251,7 @@ int TestAMRBoxIntersection()
 {
   int rc = 0;
 
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
@@ -244,6 +259,7 @@ int TestAMRBoxIntersection()
   vtkAMRBox A0, A, B, I;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;
@@ -267,6 +283,7 @@ int TestAMRBoxIntersection()
   B.Shift( 2,2,2 );
 
   // Here is the expected box after intersecting
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 10;
   hi[0] = hi[1] = hi[2] = 16;
@@ -295,6 +312,7 @@ int TestAMRBoxIntersection()
 int TestAMRBoxSerialization()
 {
   int rc = 0;
+  double X0[3];
   double h[3];
   int    lo[3];
   int    hi[3];
@@ -302,6 +320,7 @@ int TestAMRBoxSerialization()
   vtkAMRBox A;
 
   // Here is the initial AMR box
+  X0[0] = X0[1] = X0[2] = 0.0;
   h[0]  = h[1]  = h[2]  = 1.0;
   lo[0] = lo[1] = lo[2] = 8;
   hi[0] = hi[1] = hi[2] = 16;

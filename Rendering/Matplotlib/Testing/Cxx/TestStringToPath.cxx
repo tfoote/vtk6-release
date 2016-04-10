@@ -59,8 +59,8 @@ int TestStringToPath(int vtkNotUsed(argc), char *vtkNotUsed(argv)[])
   vtkNew<vtkTextProperty> tprop;
 
   vtkMathTextUtilities::GetInstance()->StringToPath(
-        "$\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$", path.GetPointer(),
-        tprop.GetPointer(), view->GetRenderWindow()->GetDPI());
+        "$\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$",
+        path.GetPointer(), tprop.GetPointer());
 
   test->SetPath(path.GetPointer());
 

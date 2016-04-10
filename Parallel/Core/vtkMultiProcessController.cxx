@@ -547,8 +547,11 @@ int vtkMultiProcessController::BroadcastProcessRMIs(
 
     this->ProcessRMI(0 /*we broadcast from rank 0*/, arg, argLength,rmiTag);
 
-    delete [] arg;
-    arg = NULL;
+    if( arg != NULL )
+      {
+      delete [] arg;
+      arg = NULL;
+      }
 
     // check for break
     if (this->BreakFlag)
@@ -715,8 +718,11 @@ int vtkMultiProcessController::ProcessRMIs(int reportErrors, int dont_loop)
       }
     this->ProcessRMI(triggerMessage[2], arg, triggerMessage[1],
       triggerMessage[0]);
-    delete [] arg;
-    arg = NULL;
+    if (arg)
+      {
+      delete [] arg;
+      arg = NULL;
+      }
 
     // check for break
     if (this->BreakFlag)

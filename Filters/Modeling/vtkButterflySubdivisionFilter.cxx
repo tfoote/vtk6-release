@@ -175,6 +175,7 @@ void vtkButterflySubdivisionFilter::GenerateLoopStencil(
 {
   vtkIdList *cellIds = vtkIdList::New();
   vtkCell *cell;
+  int j;
   vtkIdType startCell, nextCell, tp2, p;
   int shift[255];
   int processed = 0;
@@ -226,10 +227,10 @@ void vtkButterflySubdivisionFilter::GenerateLoopStencil(
 
   // Generate weights
 #define VTK_PI vtkMath::Pi()
-  vtkIdType K = stencilIds->GetNumberOfIds();
+  int K = stencilIds->GetNumberOfIds();
   if (K >= 5)
     {
-    for (vtkIdType j = 0; j < K; j++)
+    for (j = 0; j < K; j++)
       {
       weights[j] = (.25 +  cos (2.0 * VTK_PI * shift[j] / static_cast<double>(K))
                     + .5 * cos (4.0 * VTK_PI * shift[j] / static_cast<double>(K))) / static_cast<double>(K);

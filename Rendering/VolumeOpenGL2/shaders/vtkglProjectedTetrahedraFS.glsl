@@ -17,8 +17,6 @@
 // default precisions, or defining precisions to null
 //VTK::System::Dec
 
-//VTK::Output::Dec
-
 varying vec3 fcolor;
 varying float fdepth;
 varying float fattenuation;
@@ -32,9 +30,9 @@ void main()
   float opacity = 1.0 - exp(-1.0*fattenuation*fdepth);
 
 
-  gl_FragData[0] =  vec4(opacity*fcolor,opacity);
+  gl_FragColor =  vec4(opacity*fcolor,opacity);
 
-  if (gl_FragData[0].a <= 0.0)
+  if (gl_FragColor.a <= 0.0)
     {
     discard;
     }

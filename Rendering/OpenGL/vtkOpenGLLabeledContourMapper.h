@@ -17,8 +17,8 @@
 // vtkOpenGLLabeledContourMapper is an override for vtkLabeledContourMapper
 // that implements stenciling using the OpenGL API.
 
-#ifndef vtkOpenGLLabelContourMapper_h
-#define vtkOpenGLLabelContourMapper_h
+#ifndef __vtkOpenGLLabelContourMapper_h
+#define __vtkOpenGLLabelContourMapper_h
 
 #include "vtkRenderingOpenGLModule.h" // For export macro
 #include "vtkLabeledContourMapper.h"
@@ -40,6 +40,8 @@ protected:
 private:
   vtkOpenGLLabeledContourMapper(const vtkOpenGLLabeledContourMapper&);  // Not implemented.
   void operator=(const vtkOpenGLLabeledContourMapper&);  // Not implemented.
+
+  void DrawFullScreenQuad(vtkRenderer *ren);
 };
 
 #endif

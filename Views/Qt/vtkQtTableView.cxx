@@ -100,7 +100,10 @@ vtkQtTableView::vtkQtTableView()
 //----------------------------------------------------------------------------
 vtkQtTableView::~vtkQtTableView()
 {
-  delete this->TableView;
+  if(this->TableView)
+    {
+    delete this->TableView;
+    }
   delete this->TableAdapter;
   delete this->TableSorter;
   this->SetColumnName(0);

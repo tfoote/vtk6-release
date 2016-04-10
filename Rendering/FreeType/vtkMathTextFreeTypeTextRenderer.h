@@ -43,11 +43,6 @@ public:
 
   static vtkMathTextFreeTypeTextRenderer *New();
 
-  // Description:
-  // Test for availability of various backends
-  virtual bool FreeTypeIsSupported();
-  virtual bool MathTextIsSupported();
-
 protected:
   vtkMathTextFreeTypeTextRenderer();
   ~vtkMathTextFreeTypeTextRenderer();
@@ -78,9 +73,9 @@ protected:
                                      int targetWidth, int targetHeight, int dpi,
                                      int backend);
   bool StringToPathInternal(vtkTextProperty *tprop, const vtkStdString &str,
-                            vtkPath *path, int dpi, int backend);
+                            vtkPath *path, int backend);
   bool StringToPathInternal(vtkTextProperty *tprop, const vtkUnicodeString &str,
-                            vtkPath *path, int dpi, int backend);
+                            vtkPath *path, int backend);
   void SetScaleToPowerOfTwoInternal(bool scale);
 
 private:

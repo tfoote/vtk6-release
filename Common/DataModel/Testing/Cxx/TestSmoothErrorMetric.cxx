@@ -23,7 +23,6 @@
 
 //#define WRITE_GENERIC_RESULT
 
-#include "vtkSmartPointer.h"
 #include "vtkActor.h"
 #include "vtkDebugLeaks.h"
 #include "vtkPointData.h"
@@ -62,18 +61,14 @@
 int TestSmoothErrorMetric(int argc, char* argv[])
 {
   // Standard rendering classes
-  vtkSmartPointer<vtkRenderer> renderer =
-    vtkSmartPointer< vtkRenderer>::New();
-  vtkSmartPointer<vtkRenderWindow> renWin =
-    vtkSmartPointer< vtkRenderWindow>::New();
+  vtkRenderer *renderer = vtkRenderer::New();
+  vtkRenderWindow *renWin = vtkRenderWindow::New();
   renWin->AddRenderer(renderer);
-  vtkSmartPointer<vtkRenderWindowInteractor> iren =
-    vtkSmartPointer< vtkRenderWindowInteractor>::New();
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
   iren->SetRenderWindow(renWin);
 
   // Load the mesh geometry and data from a file
-  vtkSmartPointer<vtkXMLUnstructuredGridReader> reader =
-    vtkSmartPointer< vtkXMLUnstructuredGridReader>::New();
+  vtkXMLUnstructuredGridReader *reader = vtkXMLUnstructuredGridReader::New();
   char *cfname = vtkTestUtilities::ExpandDataFileName(argc, argv, "Data/quadraticTetra01.vtu");
 //  char *cfname = vtkTestUtilities::ExpandDataFileName(argc, argv, "Data/quadTet2.vtu");
 // char *cfname = vtkTestUtilities::ExpandDataFileName(argc, argv, "Data/Test2_Volume.vtu");
@@ -87,16 +82,17 @@ int TestSmoothErrorMetric(int argc, char* argv[])
   reader->Update();
 
   // Initialize the bridge
-  vtkSmartPointer<vtkBridgeDataSet> ds=
-    vtkSmartPointer<vtkBridgeDataSet>::New();
+  vtkBridgeDataSet *ds=vtkBridgeDataSet::New();
   ds->SetDataSet( reader->GetOutput() );
+  reader->Delete();
+
 
   // Set the smooth error metric thresholds:
   // 1. for the geometric error metric
-  vtkSmartPointer<vtkSmoothErrorMetric> smoothError=
-    vtkSmartPointer<vtkSmoothErrorMetric>::New();
+  vtkSmoothErrorMetric *smoothError=vtkSmoothErrorMetric::New();
   smoothError->SetAngleTolerance(179);
   ds->GetTessellator()->GetErrorMetrics()->AddItem(smoothError);
+  smoothError->Delete();
 
   // 2. for the attribute error metric
 //  vtkAttributesErrorMetric *attributesError=vtkAttributesErrorMetric::New();
@@ -113,8 +109,7 @@ int TestSmoothErrorMetric(int argc, char* argv[])
   ds->PrintSelf(cout,indent);
 
   // Create the filter
-  vtkSmartPointer<vtkGenericGeometryFilter> geom =
-    vtkSmartPointer< vtkGenericGeometryFilter>::New();
+  vtkGenericGeometryFilter *geom = vtkGenericGeometryFilter::New();
   geom->SetInputData(ds);
 
   geom->Update(); //So that we can call GetRange() on the scalars
@@ -122,18 +117,16 @@ int TestSmoothErrorMetric(int argc, char* argv[])
   assert(geom->GetOutput()!=0);
 
   // This creates a blue to red lut.
-  vtkSmartPointer<vtkLookupTable> lut =
-    vtkSmartPointer< vtkLookupTable>::New();
+  vtkLookupTable *lut = vtkLookupTable::New();
   lut->SetHueRange (0.667, 0.0);
 
-  vtkSmartPointer<vtkPolyDataMapper> mapper =
-    vtkSmartPointer< vtkPolyDataMapper>::New();
+  vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
+//  mapper->SetLookupTable(lut);
 
   mapper->ScalarVisibilityOff();
 
 #if 0
-  vtkSmartPointer<vtkPolyDataNormals> normalGenerator=
-    vtkSmartPointer<vtkPolyDataNormals>::New();
+  vtkPolyDataNormals *normalGenerator=vtkPolyDataNormals::New();
   normalGenerator->SetFeatureAngle(0.1);
   normalGenerator->SetSplitting(1);
   normalGenerator->SetConsistency(0);
@@ -158,15 +151,13 @@ int TestSmoothErrorMetric(int argc, char* argv[])
       }
     }
 
-  vtkSmartPointer<vtkActor> actor =
-    vtkSmartPointer< vtkActor>::New();
+  vtkActor *actor = vtkActor::New();
   actor->SetMapper(mapper);
   renderer->AddActor(actor);
 
 #ifdef WRITE_GENERIC_RESULT
   // Save the result of the filter in a file
-  vtkSmartPointer<vtkXMLPolyDataWriter> writer=
-    vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+  vtkXMLPolyDataWriter *writer=vtkXMLPolyDataWriter::New();
   writer->SetInputConnection(geom->GetOutputPort());
   writer->SetFileName("geometry.vtp");
   writer->SetDataModeToAscii();
@@ -183,6 +174,16 @@ int TestSmoothErrorMetric(int argc, char* argv[])
     {
     iren->Start();
     }
+
+  // Cleanup
+  renderer->Delete();
+  renWin->Delete();
+  iren->Delete();
+  mapper->Delete();
+  actor->Delete();
+  geom->Delete();
+  ds->Delete();
+  lut->Delete();
 
   return !retVal;
 }

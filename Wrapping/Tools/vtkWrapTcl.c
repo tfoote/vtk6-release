@@ -1127,11 +1127,6 @@ int main(int argc, char *argv[])
   if (options->HierarchyFileName)
     {
     hierarchyInfo = vtkParseHierarchy_ReadFile(options->HierarchyFileName);
-    if (hierarchyInfo)
-      {
-      /* resolve using declarations within the header files */
-      vtkWrap_ApplyUsingDeclarations(data, file_info, hierarchyInfo);
-      }
     }
 
   fprintf(fp,"// tcl wrapper for %s object\n//\n",data->Name);

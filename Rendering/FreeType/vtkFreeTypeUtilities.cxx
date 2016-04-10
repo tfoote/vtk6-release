@@ -33,8 +33,6 @@
 
 #include "fonts/vtkEmbeddedFonts.h"
 
-#include <limits>
-#include <cassert>
 #include <sys/stat.h>
 #ifndef _MSC_VER
 # include <stdint.h>
@@ -251,40 +249,35 @@ void vtkFreeTypeUtilities::MapTextPropertyToId(vtkTextProperty *tprop,
   // (the id will be mapped to a pointer, FTC_FaceID, so let's avoid NULL)
 
   *id = 1;
-  unsigned int bits = 1;
+  int bits = 1;
 
   // The font family is in 4 bits (= 5 bits so far)
   // (2 would be enough right now, but who knows, it might grow)
 
-  unsigned long fam = (tprop->GetFontFamily() - tprop->GetFontFamilyMinValue()) << bits;
+  int fam = (tprop->GetFontFamily() - tprop->GetFontFamilyMinValue()) << bits;
   bits += 4;
 
   // Bold is in 1 bit (= 6 bits so far)
 
-  unsigned long bold = (tprop->GetBold() ? 1 : 0) << bits;
+  int bold = (tprop->GetBold() ? 1 : 0) << bits;
   bits++;
 
   // Italic is in 1 bit (= 7 bits so far)
 
-  unsigned long italic = (tprop->GetItalic() ? 1 : 0) << bits;
+  int italic = (tprop->GetItalic() ? 1 : 0) << bits;
   bits++;
 
   // Orientation (in degrees)
   // We need 9 bits for 0 to 360. What do we need for more precisions:
   // - 1/10th degree: 12 bits (11.8)
-  long angle = vtkMath::Round(tprop->GetOrientation() * 10.0) % 3600;
-  if (angle < 0)
-    {
-    angle += 3600;
-    }
-  angle <<= bits;
+
+  int angle = (vtkMath::Round(tprop->GetOrientation() * 10.0) % 3600) << bits;
 
   // We really should not use more than 32 bits
-  unsigned long merged = (fam | bold | italic | angle);
-  assert(merged <= std::numeric_limits<vtkTypeUInt32>::max());
 
   // Now final id
-  *id |= merged;
+
+  *id |= fam | bold | italic | angle;
 }
 
 //----------------------------------------------------------------------------
@@ -533,11 +526,17 @@ void vtkFreeTypeUtilities::ReleaseCacheManager()
     this->CacheManager = NULL;
     }
 
-  delete this->ImageCache;
-  this->ImageCache = NULL;
+  if (this->ImageCache)
+    {
+    delete this->ImageCache;
+    this->ImageCache = NULL;
+    }
 
-  delete this->CMapCache;
-  this->CMapCache = NULL;
+  if (this->CMapCache)
+    {
+    delete this->CMapCache;
+    this->CMapCache = NULL;
+    }
 #endif
 }
 
@@ -1318,6 +1317,18 @@ int vtkFreeTypeUtilities::PopulateImageData(vtkTextProperty *tprop,
 }
 
 //----------------------------------------------------------------------------
+#ifndef VTK_LEGACY_REMOVE
+int vtkFreeTypeUtilities::RenderString(vtkTextProperty *tprop,
+                                       const char *str,
+                                       int, int,
+                                       vtkImageData *data)
+{
+  VTK_LEGACY_BODY(vtkFreeTypeUtilities::RenderString, "VTK 6.0");
+  return this->RenderString(tprop, str, data);
+}
+#endif
+
+//----------------------------------------------------------------------------
 int vtkFreeTypeUtilities::RenderString(vtkTextProperty *tprop,
                                        const char *str,
                                        vtkImageData *data)
@@ -1433,8 +1444,11 @@ void vtkFreeTypeUtilities::ReleaseEntry(int i)
     this->Entries[i]->TextProperty = NULL;
     }
 
-  delete this->Entries[i]->Font;
-  this->Entries[i]->Font = NULL;
+  if (this->Entries[i]->Font)
+    {
+    delete this->Entries[i]->Font;
+    this->Entries[i]->Font = NULL;
+    }
 
   delete this->Entries[i];
   this->Entries[i] = NULL;

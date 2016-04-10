@@ -38,6 +38,7 @@
 #include "vtkWedge.h"
 
 // Subclass of vtkNonLinearCell
+//#include "vtkExplicitCell.h"
 #include "vtkQuadraticEdge.h"
 #include "vtkQuadraticHexahedron.h"
 #include "vtkQuadraticPyramid.h"
@@ -60,7 +61,7 @@
 
 
 template <class TCell>
-int TestOneInterpolationDerivs(double eps = VTK_EPSILON)
+int TestOneInterpolationDerivs()
 {
   TCell *cell = TCell::New();
   int numPts = cell->GetNumberOfPoints();
@@ -77,7 +78,7 @@ int TestOneInterpolationDerivs(double eps = VTK_EPSILON)
       {
       sum += derivs[j];
       }
-    if( fabs(sum) > eps )
+    if( fabs(sum) > VTK_EPSILON )
       {
       ++r;
       }
@@ -92,7 +93,7 @@ int TestOneInterpolationDerivs(double eps = VTK_EPSILON)
     {
     sum += derivs[j];
     }
-  if( fabs(sum) > eps )
+  if( fabs(sum) > VTK_EPSILON )
     {
     ++r;
     }
@@ -123,13 +124,14 @@ int TestInterpolationDerivs(int, char *[])
   //r += TestOneInterpolationDerivs<vtkConvexPointSet>(); // not implemented
   r += TestOneInterpolationDerivs<vtkHexagonalPrism>();
   r += TestOneInterpolationDerivs<vtkHexahedron>();
-  r += TestOneInterpolationDerivs<vtkPentagonalPrism>(1.e-05);
+  r += TestOneInterpolationDerivs<vtkPentagonalPrism>();
   r += TestOneInterpolationDerivs<vtkPyramid>();
   //r += TestOneInterpolationDerivs<vtkTetra>();
   r += TestOneInterpolationDerivs<vtkVoxel>();
   r += TestOneInterpolationDerivs<vtkWedge>();
 
   // Subclasses of vtkNonLinearCell
+  //r += TestOneInterpolationDerivs<vtkExplicitCell>(); // not implemented
   r += TestOneInterpolationDerivs<vtkQuadraticEdge>();
   r += TestOneInterpolationDerivs<vtkQuadraticHexahedron>();
   r += TestOneInterpolationDerivs<vtkQuadraticPyramid>();

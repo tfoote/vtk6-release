@@ -218,50 +218,23 @@ int vtkImageDataToUniformGrid::Process(
 
   vtkNew<vtkUnsignedCharArray> blankingArray;
   blankingArray->DeepCopy(inScalars);
-  blankingArray->SetName(vtkDataSetAttributes::GhostArrayName());
 
-
-  unsigned char value1;
-  unsigned char value2;
-  if (association == vtkDataObject::FIELD_ASSOCIATION_CELLS)
+  if(this->Reverse)
     {
-    if (this->Reverse)
+    for(vtkIdType i=0;i<blankingArray->GetNumberOfTuples();i++)
       {
-      value1 = 0;
-      value2 = vtkDataSetAttributes::HIDDENCELL;
+      char value = blankingArray->GetValue(i) == 0 ? 1 : 0;
+      blankingArray->SetValue(i, value);
       }
-    else
-      {
-      value1 = vtkDataSetAttributes::HIDDENCELL;
-      value2 = 0;
-      }
-    }
-  else
-    {
-    if (this->Reverse)
-      {
-      value1 = 0;
-      value2 = vtkDataSetAttributes::HIDDENPOINT;
-      }
-    else
-      {
-      value1 = vtkDataSetAttributes::HIDDENPOINT;
-      value2 = 0;
-      }
-    }
-  for(vtkIdType i=0;i<blankingArray->GetNumberOfTuples();i++)
-    {
-    char value = blankingArray->GetValue(i) == 0 ? value1 : value2;
-    blankingArray->SetValue(i, value);
     }
 
   if(association == vtkDataObject::FIELD_ASSOCIATION_POINTS)
     {
-    output->GetPointData()->AddArray(blankingArray.GetPointer());
+    output->SetPointVisibilityArray(blankingArray.GetPointer());
     }
   else
     {
-    output->GetCellData()->AddArray(blankingArray.GetPointer());
+    output->SetCellVisibilityArray(blankingArray.GetPointer());
     }
 
   return VTK_OK;

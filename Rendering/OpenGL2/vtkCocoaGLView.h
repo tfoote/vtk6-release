@@ -18,20 +18,18 @@
 // This class is a subclass of Cocoa's NSView; it uses Objective-C++.
 // This class overrides several NSView methods.
 // To provide the usual VTK keyboard user interface, it overrides the
-// following methods: acceptsFirstResponder, keyDown:,
+// following methods from NSResponder: acceptsFirstResponder, keyDown:,
 // keyUp:, and flagsChanged:
 // To provide the usual VTK mouse user interface, it overrides the
-// following methods: mouseMoved:, mouseEntered:,
+// following methods from NSResponder: mouseMoved:, mouseEntered:,
 // mouseExited: scrollWheel:, mouseDown:, rightMouseDown:,
 // otherMouseDown:, mouseDragged:, rightMouseDragged:, otherMouseDragged:,
-// and updateTrackingAreas.
-// To be able to render and draw onscreen, it overrides drawRect:.
+// and resetCursorRects.
+// To be able to render and draw onscreen, it overrides drawRect:
+// from NSView.
 
-// Compatibility notes:
-// - this class was previously a subclass of NSOpenGLView,
+// Note that this class was previously a subclass of NSOpenGLView,
 // but starting with VTK 5.0 is now a subclass of NSView.
-// - starting with VTK 6.3 this class overrides the more modern
-// updateTrackingAreas instead of resetCursorRects.
 //
 // .SECTION See Also
 // vtkCocoaRenderWindow vtkCocoaRenderWindowInteractor
@@ -61,7 +59,8 @@
 {
   @private
   vtkCocoaRenderWindowRef _myVTKRenderWindow;
-  NSTrackingArea* _rolloverTrackingArea;
+  NSTrackingRectTag _rolloverTrackingRectTag;
+  BOOL _rolloverTrackingRectSet;
 }
 
 - (vtkCocoaRenderWindowRef)getVTKRenderWindow;

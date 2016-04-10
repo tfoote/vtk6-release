@@ -305,11 +305,15 @@ public:
   // Compute the interpolation functions/derivatives
   // (aka shape functions/derivatives)
   // No-ops at this level. Typically overridden in subclasses.
-  virtual void InterpolateFunctions(double vtkNotUsed(pcoords)[3], double* vtkNotUsed(weight))
+  virtual void InterpolateFunctions(double pcoords[3], double weights[3])
     {
+    (void)pcoords;
+    (void)weights;
     }
-  virtual void InterpolateDerivs(double vtkNotUsed(pcoords)[3], double* vtkNotUsed(derivs))
+  virtual void InterpolateDerivs(double pcoords[3], double derivs[3])
     {
+    (void)pcoords;
+    (void)derivs;
     }
 
   // left public for quick computational access

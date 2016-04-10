@@ -126,8 +126,6 @@ vtkStreamTracer::vtkStreamTracer()
                                vtkDataSetAttributes::VECTORS);
 
   this->HasMatchingPointAttributes = true;
-
-  this->SurfaceStreamlines = false;
 }
 
 vtkStreamTracer::~vtkStreamTracer()
@@ -702,24 +700,6 @@ void vtkStreamTracer::Integrate(vtkPointData *input0Data,
     this->GetIntegrator()->NewInstance();
   integrator->SetFunctionSet(func);
 
-  // Check Surface option
-  vtkInterpolatedVelocityField* surfaceFunc = NULL;
-  if (this->SurfaceStreamlines == true)
-    {
-    surfaceFunc = vtkInterpolatedVelocityField::SafeDownCast(func);
-    if (surfaceFunc == NULL)
-      {
-        vtkWarningMacro(<< "Surface Streamlines works only with Point Locator "
-                           "Interpolated Velocity Field, setting it off");
-        this->SetSurfaceStreamlines(false);
-      }
-    else
-      {
-      surfaceFunc->SetForceSurfaceTangentVector(true);
-      surfaceFunc->SetSurfaceDataset(true);
-      }
-    }
-
   // Since we do not know what the total number of points
   // will be, we do not allocate any. This is important for
   // cases where a lot of streamers are used at once. If we
@@ -832,8 +812,6 @@ void vtkStreamTracer::Integrate(vtkPointData *input0Data,
     numPts++;
     numPtsTotal++;
     vtkIdType nextPoint = outputPoints->InsertNextPoint(point1);
-    double lastInsertedPoint[3];
-    outputPoints->GetPoint(nextPoint, lastInsertedPoint);
     time->InsertNextValue(0.0);
 
     // We will always pass an arc-length step size to the integrator.
@@ -907,7 +885,6 @@ void vtkStreamTracer::Integrate(vtkPointData *input0Data,
       }
 
     double error = 0;
-
     // Integrate until the maximum propagation length is reached,
     // maximum number of steps is reached or until a boundary is encountered.
     // Begin Integration
@@ -974,21 +951,9 @@ void vtkStreamTracer::Integrate(vtkPointData *input0Data,
         }
 
       // This is the next starting point
-      if (this->SurfaceStreamlines && surfaceFunc != NULL)
+      for(i=0; i<3; i++)
         {
-        if (surfaceFunc->SnapPointOnCell(point2, point1) != 1)
-          {
-          retVal = OUT_OF_DOMAIN;
-          memcpy(lastPoint, point2, 3 * sizeof(double));
-          break;
-          }
-        }
-      else
-        {
-        for (i = 0; i < 3; i++)
-          {
-          point1[i] = point2[i];
-          }
+        point1[i] = point2[i];
         }
 
       // Interpolate the velocity at the next point
@@ -1017,64 +982,51 @@ void vtkStreamTracer::Integrate(vtkPointData *input0Data,
       inputPD = input->GetPointData();
       inVectors = input->GetAttributesAsFieldData(vecType)->GetArray(vecName);
 
+
+      // Point is valid. Insert it.
+      numPts++;
+      numPtsTotal++;
+      nextPoint = outputPoints->InsertNextPoint(point1);
+      time->InsertNextValue(accumTime);
+
       // Calculate cell length and speed to be used in unit conversions
       input->GetCell(func->GetLastCellId(), cell);
       cellLength = sqrt(static_cast<double>(cell->GetLength2()));
       speed = speed2;
-
-      // Check if conversion to float will produce a point in same place
-      float convertedPoint[3];
-      for (i = 0; i < 3; i++)
+      // Interpolate all point attributes on current point
+      func->GetLastWeights(weights);
+      InterpolatePoint(outputPD, inputPD, nextPoint, cell->PointIds, weights, this->HasMatchingPointAttributes);
+      if(vecType != vtkDataObject::POINT)
         {
-        convertedPoint[i] = point1[i];
+        velocityVectors->InsertNextTuple(velocity);
         }
-      if (lastInsertedPoint[0] != convertedPoint[0] ||
-          lastInsertedPoint[1] != convertedPoint[1] ||
-          lastInsertedPoint[2] != convertedPoint[2])
+      // Compute vorticity if required
+      // This can be used later for streamribbon generation.
+      if (this->ComputeVorticity)
         {
-        // Point is valid. Insert it.
-        numPts++;
-        numPtsTotal++;
-        nextPoint = outputPoints->InsertNextPoint(point1);
-        outputPoints->GetPoint(nextPoint, lastInsertedPoint);
-        time->InsertNextValue(accumTime);
-
-        // Interpolate all point attributes on current point
-        func->GetLastWeights(weights);
-        InterpolatePoint(outputPD, inputPD, nextPoint, cell->PointIds, weights, this->HasMatchingPointAttributes);
-
-        if(vecType != vtkDataObject::POINT)
+        if(vecType == vtkDataObject::POINT)
           {
-          velocityVectors->InsertNextTuple(velocity);
+          inVectors->GetTuples(cell->PointIds, cellVectors);
+          func->GetLastLocalCoordinates(pcoords);
+          vtkStreamTracer::CalculateVorticity(cell, pcoords, cellVectors, vort);
           }
-        // Compute vorticity if required
-        // This can be used later for streamribbon generation.
-        if (this->ComputeVorticity)
+        else
           {
-          if(vecType == vtkDataObject::POINT)
-            {
-            inVectors->GetTuples(cell->PointIds, cellVectors);
-            func->GetLastLocalCoordinates(pcoords);
-            vtkStreamTracer::CalculateVorticity(cell, pcoords, cellVectors, vort);
-            }
-          else
-            {
-            vort[0] = 0;
-            vort[1] = 0;
-            vort[2] = 0;
-            }
-          vorticity->InsertNextTuple(vort);
-          // rotation
-          // angular velocity = vorticity . unit tangent ( i.e. velocity/speed )
-          // rotation = sum ( angular velocity * stepSize )
-          omega = vtkMath::Dot(vort, velocity);
-          omega /= speed;
-          omega *= this->RotationScale;
-          index = angularVel->InsertNextValue(omega);
-          rotation->InsertNextValue(rotation->GetValue(index-1) +
-                                    (angularVel->GetValue(index-1) + omega)/2 *
-                                    (accumTime - time->GetValue(index-1)));
+          vort[0] = 0;
+          vort[1] = 0;
+          vort[2] = 0;
           }
+        vorticity->InsertNextTuple(vort);
+        // rotation
+        // angular velocity = vorticity . unit tangent ( i.e. velocity/speed )
+        // rotation = sum ( angular velocity * stepSize )
+        omega = vtkMath::Dot(vort, velocity);
+        omega /= speed;
+        omega *= this->RotationScale;
+        index = angularVel->InsertNextValue(omega);
+        rotation->InsertNextValue(rotation->GetValue(index-1) +
+                                  (angularVel->GetValue(index-1) + omega)/2 *
+                                  (accumTime - time->GetValue(index-1)));
         }
 
       // Never call conversion methods if speed == 0

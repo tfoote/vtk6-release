@@ -92,11 +92,6 @@ public:
                             vtkIdType yColumn,
                             vtkIdType densityColumn);
 
-  // Description:
-  // Set/get the visibility of the bags.
-  // True by default.
-  vtkSetMacro(BagVisible, bool);
-  vtkGetMacro(BagVisible, bool);
 
   // Description:
   // Set/get the vtkPen object that controls how this plot draws boundary lines.
@@ -116,7 +111,6 @@ protected:
 
   void UpdateTableCache(vtkDataArray*);
 
-  bool BagVisible;
   vtkPoints2D* MedianPoints;
   vtkPoints2D* Q3Points;
   vtkPen* LinePen;

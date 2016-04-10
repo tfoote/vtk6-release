@@ -12,8 +12,6 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
-#include "vtk_glew.h"
-
 #include "vtkCompositePolyDataMapper2.h"
 
 #include "vtkCellArray.h"
@@ -27,19 +25,13 @@
 #include "vtkMultiBlockDataSet.h"
 #include "vtkMultiPieceDataSet.h"
 #include "vtkObjectFactory.h"
-#include "vtkOpenGLBufferObject.h"
-#include "vtkOpenGLIndexBufferObject.h"
-#include "vtkOpenGLRenderWindow.h"
 #include "vtkOpenGLTexture.h"
-#include "vtkOpenGLVertexBufferObject.h"
 #include "vtkPointData.h"
 #include "vtkPolyData.h"
 #include "vtkProperty.h"
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
-#include "vtkLookupTable.h"
 #include "vtkShaderProgram.h"
-#include "vtkTextureObject.h"
 
 vtkStandardNewMacro(vtkCompositePolyDataMapper2);
 
@@ -68,28 +60,6 @@ void vtkCompositePolyDataMapper2::FreeStructures()
   this->EdgeIndexArray.resize(0);
   this->EdgeIndexOffsets.resize(0);
   this->RenderValues.resize(0);
-}
-
-void vtkCompositePolyDataMapper2::ReplaceShaderColor(
-  std::map<vtkShader::Type, vtkShader *> shaders,
-  vtkRenderer *ren, vtkActor *actor)
-{
-  std::string FSSource = shaders[vtkShader::Fragment]->GetSource();
-
-  vtkShaderProgram::Substitute(FSSource,"//VTK::Color::Dec",
-    "uniform bool OverridesColor;\n"
-    "//VTK::Color::Dec",false);
-
-  vtkShaderProgram::Substitute(FSSource,"//VTK::Color::Impl",
-    "//VTK::Color::Impl\n"
-    "  if (OverridesColor) {\n"
-    "    ambientColor = ambientColorUniform;\n"
-    "    diffuseColor = diffuseColorUniform; }\n",
-    false);
-
-  shaders[vtkShader::Fragment]->SetSource(FSSource);
-
-  this->Superclass::ReplaceShaderColor(shaders,ren,actor);
 }
 
 // ---------------------------------------------------------------------------
@@ -135,19 +105,6 @@ void vtkCompositePolyDataMapper2::Render(
           }
         }
       }
-
-    // check if this system is subject to the apple primID bug
-    // if so don't even try using the fast path, just go slow
-
-#ifdef __APPLE__
-    std::string vendor = (const char *)glGetString(GL_VENDOR);
-    if (vendor.find("ATI") != std::string::npos ||
-        vendor.find("AMD") != std::string::npos ||
-        vendor.find("amd") != std::string::npos)
-      {
-      this->UseGeneric = true;
-      }
-#endif
 
     // clear old structures if the render method changed
     if (lastUseGeneric != this->UseGeneric)
@@ -198,11 +155,8 @@ void vtkCompositePolyDataMapper2::Render(
         }
       }
 
-     if (this->CurrentInput)
-      {
-      // render using the composite data attributes
-      this->RenderPiece(ren, actor);
-      }
+    // render using the composite data attributes
+    this->RenderPiece(ren, actor);
 
     this->BlockState.Visibility.pop();
     this->BlockState.Opacity.pop();
@@ -312,7 +266,6 @@ void vtkCompositePolyDataMapper2::BuildRenderValues(
       rv.Visibility = vis;
       rv.Color = color;
       rv.PickId = my_flat_index;
-      rv.OverridesColor = (this->BlockState.AmbientColor.size() > 1);
       this->RenderValues.push_back(rv);
       }
 
@@ -335,7 +288,6 @@ void vtkCompositePolyDataMapper2::BuildRenderValues(
       rv.Visibility = vis;
       rv.Color = color;
       rv.PickId = my_flat_index;
-      rv.OverridesColor = (this->BlockState.AmbientColor.size() > 1);
       this->RenderValues.push_back(rv);
       }
     lastVertex = this->VertexOffsets[my_flat_index];
@@ -370,15 +322,17 @@ void vtkCompositePolyDataMapper2::RenderPieceDraw(
   vtkHardwareSelector* selector = ren->GetSelector();
   if (selector && this->PopulateSelectionSettings &&
       selector->GetFieldAssociation() == vtkDataObject::FIELD_ASSOCIATION_POINTS &&
-      selector->GetCurrentPass() >= vtkHardwareSelector::ID_LOW24)
+      selector->GetCurrentPass() > vtkHardwareSelector::ACTOR_PASS)
     {
     representation = VTK_POINTS;
     }
 
+  bool picking = (ren->GetIsPicking() || selector != NULL);
+
   // rebuild the render values if needed
   if (this->RenderValuesBuildTime < this->GetMTime() ||
       this->RenderValuesBuildTime < this->VBOBuildTime ||
-      this->RenderValuesBuildTime < this->SelectionStateChanged)
+      this->LastSelectionState || picking)
     {
     vtkCompositeDataSet *input = vtkCompositeDataSet::SafeDownCast(
       this->GetInputDataObject(0, 0));
@@ -397,15 +351,13 @@ void vtkCompositePolyDataMapper2::RenderPieceDraw(
     }
 
   // draw polygons
-  if (this->Tris.IBO->IndexCount)
+  if (this->Tris.indexCount)
     {
     // First we do the triangles, update the shader, set uniforms, etc.
-    this->UpdateShaders(this->Tris, ren, actor);
-    this->Tris.IBO->Bind();
+    this->UpdateShader(this->Tris, ren, actor);
+    this->Tris.ibo.Bind();
     GLenum mode = (representation == VTK_POINTS) ? GL_POINTS :
       (representation == VTK_WIREFRAME) ? GL_LINES : GL_TRIANGLES;
-    unsigned int modeDenom = (representation == VTK_POINTS) ? 1 :
-      (representation == VTK_WIREFRAME) ? 2 : 3;
 
     vtkProperty *ppty = actor->GetProperty();
     double aIntensity = this->DrawingEdges ? 1.0 : ppty->GetAmbient();
@@ -414,18 +366,14 @@ void vtkCompositePolyDataMapper2::RenderPieceDraw(
 
     std::vector<
       vtkCompositePolyDataMapper2::RenderValue>::iterator it;
-    // reset the offset so each composite starts at 0
-    this->PrimitiveIDOffset = 0;
     for (it = this->RenderValues.begin(); it != this->RenderValues.end(); it++)
       {
       if (it->Visibility)
         {
-        if (selector &&
-            selector->GetCurrentPass() ==
-              vtkHardwareSelector::COMPOSITE_INDEX_PASS)
+        if (selector)
           {
+          selector->BeginRenderProp();
           selector->RenderCompositeIndex(it->PickId);
-          prog->SetUniform3f("mapperIndex", selector->GetPropColorValue());
           }
         // override the opacity and color
         prog->SetUniformf("opacityUniform", it->Opacity);
@@ -439,21 +387,20 @@ void vtkCompositePolyDataMapper2::RenderPieceDraw(
           static_cast<float>(dColor[2] * dIntensity)};
         prog->SetUniform3f("ambientColorUniform", ambientColor);
         prog->SetUniform3f("diffuseColorUniform", diffuseColor);
-        prog->SetUniformi("PrimitiveIDOffset",
-          this->PrimitiveIDOffset);
-        prog->SetUniformi("OverridesColor", it->OverridesColor);
         glDrawRangeElements(mode,
           static_cast<GLuint>(it->StartVertex),
           static_cast<GLuint>(it->EndVertex),
           static_cast<GLsizei>(it->EndIndex - it->StartIndex + 1),
           GL_UNSIGNED_INT,
           reinterpret_cast<const GLvoid *>(it->StartIndex*sizeof(GLuint)));
+        if (selector)
+          {
+          selector->EndRenderProp();
+          }
         }
-      this->PrimitiveIDOffset +=
-        ((it->EndIndex - it->StartIndex + 1)/modeDenom);
       }
-
-    this->Tris.IBO->Release();
+    this->Tris.ibo.Release();
+    this->pickingAttributeIDOffset += (int)this->Tris.indexCount;
     }
 
 }
@@ -473,11 +420,11 @@ void vtkCompositePolyDataMapper2::RenderEdges(
   this->DrawingEdges = true;
 
   // draw polygons
-  if (this->TrisEdges.IBO->IndexCount)
+  if (this->TrisEdges.indexCount)
     {
     // First we do the triangles, update the shader, set uniforms, etc.
-    this->UpdateShaders(this->TrisEdges, ren, actor);
-    this->TrisEdges.IBO->Bind();
+    this->UpdateShader(this->TrisEdges, ren, actor);
+    this->TrisEdges.ibo.Bind();
     std::vector<
       vtkCompositePolyDataMapper2::RenderValue>::iterator it;
     for (it = this->RenderValues.begin(); it != this->RenderValues.end(); it++)
@@ -492,7 +439,7 @@ void vtkCompositePolyDataMapper2::RenderEdges(
           reinterpret_cast<const GLvoid *>(it->StartEdgeIndex*sizeof(GLuint)));
         }
       }
-    this->TrisEdges.IBO->Release();
+    this->TrisEdges.ibo.Release();
     }
 
   this->DrawingEdges = false;
@@ -507,89 +454,6 @@ void vtkCompositePolyDataMapper2::RenderEdges(
     */
 }
 
-//-----------------------------------------------------------------------------
-// Returns if we can use texture maps for scalar coloring. Note this doesn't say
-// we "will" use scalar coloring. It says, if we do use scalar coloring, we will
-// use a texture.
-// When rendering multiblock datasets, if any 2 blocks provide different
-// lookup tables for the scalars, then also we cannot use textures. This case can
-// be handled if required.
-int vtkCompositePolyDataMapper2::CanUseTextureMapForColoring(vtkDataObject*)
-{
-  if (!this->InterpolateScalarsBeforeMapping)
-    {
-    return 0; // user doesn't want us to use texture maps at all.
-    }
-
-  if (this->CanUseTextureMapForColoringSet)
-    {
-    return this->CanUseTextureMapForColoringValue;
-    }
-
-  vtkCompositeDataSet *cdInput = vtkCompositeDataSet::SafeDownCast(
-    this->GetInputDataObject(0, 0));
-
-  vtkSmartPointer<vtkDataObjectTreeIterator> iter =
-    vtkSmartPointer<vtkDataObjectTreeIterator>::New();
-  iter->SetDataSet(cdInput);
-  iter->SkipEmptyNodesOn();
-  iter->VisitOnlyLeavesOn();
-  int cellFlag=0;
-  this->CanUseTextureMapForColoringValue = 1;
-  vtkScalarsToColors *scalarsLookupTable = 0;
-  for (iter->InitTraversal();
-       !iter->IsDoneWithTraversal() &&
-          this->CanUseTextureMapForColoringValue == 1;
-       iter->GoToNextItem())
-    {
-    vtkDataObject *dso = iter->GetCurrentDataObject();
-    vtkPolyData *pd = vtkPolyData::SafeDownCast(dso);
-    vtkDataArray* scalars = vtkAbstractMapper::GetScalars(pd,
-      this->ScalarMode, this->ArrayAccessMode, this->ArrayId,
-      this->ArrayName, cellFlag);
-
-    if (scalars)
-      {
-      if (cellFlag)
-        {
-        this->CanUseTextureMapForColoringValue = 0;
-        }
-      if ((this->ColorMode == VTK_COLOR_MODE_DEFAULT &&
-           vtkUnsignedCharArray::SafeDownCast(scalars)) ||
-          this->ColorMode == VTK_COLOR_MODE_DIRECT_SCALARS)
-        {
-        // Don't use texture is direct coloring using RGB unsigned chars is
-        // requested.
-        this->CanUseTextureMapForColoringValue = 0;
-        }
-
-      if (scalarsLookupTable && scalars->GetLookupTable() &&
-          (scalarsLookupTable != scalars->GetLookupTable()))
-        {
-        // Two datasets are requesting different lookup tables to color with.
-        // We don't handle this case right now for composite datasets.
-        this->CanUseTextureMapForColoringValue = 0;
-        }
-      if (scalars->GetLookupTable())
-        {
-        scalarsLookupTable = scalars->GetLookupTable();
-        }
-      }
-    }
-
-  if ((scalarsLookupTable &&
-       scalarsLookupTable->GetIndexedLookup()) ||
-      (!scalarsLookupTable &&
-       this->LookupTable &&
-       this->LookupTable->GetIndexedLookup()))
-      {
-      this->CanUseTextureMapForColoringValue = 0;
-      }
-
-  this->CanUseTextureMapForColoringSet = true;
-  return this->CanUseTextureMapForColoringValue;
-}
-
 //-------------------------------------------------------------------------
 void vtkCompositePolyDataMapper2::BuildBufferObjects(
   vtkRenderer *ren,
@@ -599,7 +463,7 @@ void vtkCompositePolyDataMapper2::BuildBufferObjects(
     this->GetInputDataObject(0, 0));
 
   // render using the composite data attributes
-  this->VBO->VertexCount = 0;
+  this->Layout.VertexCount = 0;
 
   // compute the MaximumFlatIndex
   this->MaximumFlatIndex = 0;
@@ -615,11 +479,6 @@ void vtkCompositePolyDataMapper2::BuildBufferObjects(
   this->VertexOffsets.resize(this->MaximumFlatIndex+1);
   this->IndexOffsets.resize(this->MaximumFlatIndex+1);
   this->EdgeIndexOffsets.resize(this->MaximumFlatIndex+1);
-  this->CanUseTextureMapForColoringSet = false;
-
-  // create the cell scalar array adjusted for ogl Cells
-  std::vector<unsigned char> newColors;
-  std::vector<float> newNorms;
 
   unsigned int voffset = 0;
   for (iter->InitTraversal(); !iter->IsDoneWithTraversal(); iter->GoToNextItem())
@@ -627,62 +486,29 @@ void vtkCompositePolyDataMapper2::BuildBufferObjects(
     unsigned int fidx = iter->GetCurrentFlatIndex();
     vtkDataObject *dso = iter->GetCurrentDataObject();
     vtkPolyData *pd = vtkPolyData::SafeDownCast(dso);
-    this->AppendOneBufferObject(ren, act, pd, voffset, newColors, newNorms);
+    this->AppendOneBufferObject(ren, act, pd, voffset);
     this->VertexOffsets[fidx] =
-      static_cast<unsigned int>(this->VBO->VertexCount);
-    voffset = static_cast<unsigned int>(this->VBO->VertexCount);
+      static_cast<unsigned int>(this->Layout.VertexCount);
+    voffset = static_cast<unsigned int>(this->Layout.VertexCount);
     this->IndexOffsets[fidx] =
       static_cast<unsigned int>(this->IndexArray.size());
     this->EdgeIndexOffsets[fidx] =
       static_cast<unsigned int>(this->EdgeIndexArray.size());
     }
 
-  this->VBO->Upload(this->VBO->PackedVBO, vtkOpenGLBufferObject::ArrayBuffer);
-  this->VBO->PackedVBO.resize(0);
-  this->Tris.IBO->Upload(this->IndexArray,
-    vtkOpenGLBufferObject::ElementArrayBuffer);
-  this->Tris.IBO->IndexCount = this->IndexArray.size();
+  this->VBO.Upload(this->Layout.PackedVBO, vtkgl::BufferObject::ArrayBuffer);
+  this->Layout.PackedVBO.resize(0);
+  this->Tris.ibo.Upload(this->IndexArray,
+    vtkgl::BufferObject::ElementArrayBuffer);
+  this->Tris.indexCount = this->IndexArray.size();
   this->IndexArray.resize(0);
-  this->TrisEdges.IBO->Upload(this->EdgeIndexArray,
-    vtkOpenGLBufferObject::ElementArrayBuffer);
-  this->TrisEdges.IBO->IndexCount = this->EdgeIndexArray.size();
+  this->TrisEdges.ibo.Upload(this->EdgeIndexArray,
+    vtkgl::BufferObject::ElementArrayBuffer);
+  this->TrisEdges.indexCount = this->EdgeIndexArray.size();
   this->EdgeIndexArray.resize(0);
-
-  // allocate as needed
-  if (this->HaveCellScalars || this->HavePickScalars)
-    {
-    if (!this->CellScalarTexture)
-      {
-      this->CellScalarTexture = vtkTextureObject::New();
-      this->CellScalarBuffer = vtkOpenGLBufferObject::New();
-      }
-    this->CellScalarTexture->SetContext(
-      static_cast<vtkOpenGLRenderWindow*>(ren->GetVTKWindow()));
-    this->CellScalarBuffer->Upload(newColors,
-      vtkOpenGLBufferObject::TextureBuffer);
-    this->CellScalarTexture->CreateTextureBuffer(
-      static_cast<unsigned int>(newColors.size()/4),
-      4,
-      VTK_UNSIGNED_CHAR,
-      this->CellScalarBuffer);
-    }
-
-  if (this->HaveCellNormals)
-    {
-    if (!this->CellNormalTexture)
-      {
-      this->CellNormalTexture = vtkTextureObject::New();
-      this->CellNormalBuffer = vtkOpenGLBufferObject::New();
-      }
-    this->CellNormalTexture->SetContext(
-      static_cast<vtkOpenGLRenderWindow*>(ren->GetVTKWindow()));
-    this->CellNormalBuffer->Upload(newNorms,
-      vtkOpenGLBufferObject::TextureBuffer);
-    this->CellNormalTexture->CreateTextureBuffer(
-      static_cast<unsigned int>(newNorms.size()/4),
-      4, VTK_FLOAT,
-      this->CellNormalBuffer);
-    }
+  this->Points.indexCount = 0;
+  this->Lines.indexCount = 0;
+  this->TriStrips.indexCount = 0;
 }
 
 //-------------------------------------------------------------------------
@@ -690,17 +516,8 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
   vtkRenderer *ren,
   vtkActor *act,
   vtkPolyData *poly,
-  unsigned int voffset,
-  std::vector<unsigned char> &newColors,
-  std::vector<float> &newNorms
-  )
+  unsigned int voffset)
 {
-  // if there are no cells then skip this piece
-  if (poly->GetPolys()->GetNumberOfCells() == 0)
-    {
-    return;
-    }
-
   // Get rid of old texture color coordinates if any
   if ( this->ColorCoordinates )
     {
@@ -733,8 +550,7 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
     this->InternalColorTexture->SetInputData(this->ColorTextureMap);
     }
 
-  this->HaveCellScalars = false;
-  vtkDataArray *c = this->Colors;
+  bool cellScalars = false;
   if (this->ScalarVisibility)
     {
     // We must figure out how the scalars should be mapped to the polydata.
@@ -745,19 +561,18 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
          && this->ScalarMode != VTK_SCALAR_MODE_USE_POINT_FIELD_DATA
          && this->Colors)
       {
-      this->HaveCellScalars = true;
-      c = NULL;
+      cellScalars = true;
       }
     }
 
-  this->HaveCellNormals = false;
+  bool cellNormals = false;
   // Do we have cell normals?
   vtkDataArray *n =
     (act->GetProperty()->GetInterpolation() != VTK_FLAT) ? poly->GetPointData()->GetNormals() : NULL;
   if (n == NULL && poly->GetCellData()->GetNormals())
     {
-    this->HaveCellNormals = true;
-    n = NULL;
+    cellNormals = true;
+    n = poly->GetCellData()->GetNormals();
     }
 
   // if we have cell scalars then we have to
@@ -767,18 +582,12 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
   prims[1] =  poly->GetLines();
   prims[2] =  poly->GetPolys();
   prims[3] =  poly->GetStrips();
-
-  int representation = act->GetProperty()->GetRepresentation();
-  vtkHardwareSelector* selector = ren->GetSelector();
-  if (selector && this->PopulateSelectionSettings &&
-      selector->GetFieldAssociation() == vtkDataObject::FIELD_ASSOCIATION_POINTS &&
-      selector->GetCurrentPass() >= vtkHardwareSelector::ID_LOW24)
+  std::vector<unsigned int> cellPointMap;
+  std::vector<unsigned int> pointCellMap;
+  if (cellScalars || cellNormals)
     {
-    representation = VTK_POINTS;
+    vtkgl::CreateCellSupportArrays(poly, prims, cellPointMap, pointCellMap);
     }
-
-  this->AppendCellTextures(ren, act, prims, representation,
-    newColors, newNorms, poly);
 
   // do we have texture maps?
   bool haveTextures = (this->ColorTextureMap || act->GetTexture() || act->GetProperty()->GetNumberOfTextures());
@@ -800,30 +609,44 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
     }
 
   // Build the VBO
-  this->VBO->AppendVBO(poly->GetPoints(),
-            poly->GetPoints()->GetNumberOfPoints(),
+  AppendVBO(this->Layout, poly->GetPoints(),
+            cellPointMap.size() > 0 ? (unsigned int)cellPointMap.size()
+              : poly->GetPoints()->GetNumberOfPoints(),
             n, tcoords,
-            c ? (unsigned char *)c->GetVoidPointer(0) : NULL,
-            c ? c->GetNumberOfComponents() : 0);
+            this->Colors ? (unsigned char *)this->Colors->GetVoidPointer(0) : NULL,
+            this->Colors ? this->Colors->GetNumberOfComponents() : 0,
+            cellPointMap.size() > 0 ? &cellPointMap.front() : NULL,
+            pointCellMap.size() > 0 ? &pointCellMap.front() : NULL,
+            cellScalars, cellNormals);
 
   // now create the IBOs
+  int representation = act->GetProperty()->GetRepresentation();
+
+  vtkHardwareSelector* selector = ren->GetSelector();
+  if (selector && this->PopulateSelectionSettings &&
+      selector->GetFieldAssociation() == vtkDataObject::FIELD_ASSOCIATION_POINTS &&
+      selector->GetCurrentPass() > vtkHardwareSelector::ACTOR_PASS)
+    {
+    representation = VTK_POINTS;
+    }
+
   if (representation == VTK_POINTS)
     {
-    vtkOpenGLIndexBufferObject::AppendPointIndexBuffer(
-      this->IndexArray, prims[2], voffset);
+    vtkgl::AppendPointIndexBuffer(this->IndexArray, prims[2], voffset);
     }
   else // WIREFRAME OR SURFACE
     {
     if (representation == VTK_WIREFRAME)
       {
-      vtkOpenGLIndexBufferObject::AppendTriangleLineIndexBuffer(
+      vtkgl::AppendTriangleLineIndexBuffer(
         this->IndexArray, prims[2], voffset);
       }
    else // SURFACE
       {
-      vtkOpenGLIndexBufferObject::AppendTriangleIndexBuffer(this->IndexArray,
+      vtkgl::AppendTriangleIndexBuffer(this->IndexArray,
         prims[2],
         poly->GetPoints(),
+        cellPointMap,
         voffset);
       }
     }
@@ -834,8 +657,16 @@ void vtkCompositePolyDataMapper2::AppendOneBufferObject(
     (prop->GetEdgeVisibility() && prop->GetRepresentation() == VTK_SURFACE);
   if (draw_surface_with_edges)
     {
-    vtkOpenGLIndexBufferObject::AppendTriangleLineIndexBuffer(
+    vtkgl::AppendTriangleLineIndexBuffer(
       this->EdgeIndexArray, prims[2], voffset);
     }
 
+  // free up new cell arrays
+  if (cellScalars || cellNormals)
+    {
+    for (int primType = 0; primType < 4; primType++)
+      {
+      prims[primType]->UnRegister(this);
+      }
+    }
 }

@@ -21,7 +21,6 @@
 #include "vtkObject.h"
 
 #include <string> // For member variables.
-#include <vector> // For member variables.
 
 /**
  * @brief Vertex or Fragment shader, combined into a ShaderProgram.
@@ -50,19 +49,19 @@ public:
   void SetType(Type type);
 
   /** Get the shader type, typically Vertex or Fragment. */
-  Type GetType() const { return this->ShaderType; }
+  Type GetType() const { return ShaderType; }
 
   /** Set the shader source to the supplied string. */
   void SetSource(const std::string &source);
 
   /** Get the source for the shader. */
-  std::string GetSource() const { return this->Source; }
+  std::string GetSource() const { return Source; }
 
   /** Get the error message (empty if none) for the shader. */
-  std::string GetError() const { return this->Error; }
+  std::string GetError() const { return Error; }
 
   /** Get the handle of the shader. */
-  int GetHandle() const { return this->Handle; }
+  int GetHandle() const { return Handle; }
 
   /** Compile the shader.
    * @note A valid context must to current in order to compile the shader.

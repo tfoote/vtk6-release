@@ -3,8 +3,10 @@ Author: Anton Gladky <gladk@debian.org>
 Bug-Debian: http://bugs.debian.org/750183
 Last-Update: 2014-06-03
 
---- a/IO/SQL/vtkSQLiteDatabase.cxx
-+++ b/IO/SQL/vtkSQLiteDatabase.cxx
+Index: VTK-6.2.0/IO/SQL/vtkSQLiteDatabase.cxx
+===================================================================
+--- VTK-6.2.0.orig/IO/SQL/vtkSQLiteDatabase.cxx
++++ VTK-6.2.0/IO/SQL/vtkSQLiteDatabase.cxx
 @@ -29,7 +29,7 @@
  #include <vtksys/ios/fstream>
  #include <vtksys/ios/sstream>
@@ -14,7 +16,7 @@ Last-Update: 2014-06-03
  
  vtkStandardNewMacro(vtkSQLiteDatabase);
  
-@@ -307,15 +307,15 @@
+@@ -307,15 +307,15 @@ bool vtkSQLiteDatabase::Open(const char*
        }
      }
  
@@ -34,7 +36,7 @@ Last-Update: 2014-06-03
      return false;
      }
    else
-@@ -334,8 +334,8 @@
+@@ -334,8 +334,8 @@ void vtkSQLiteDatabase::Close()
      }
    else
      {
@@ -45,7 +47,7 @@ Last-Update: 2014-06-03
        {
        vtkWarningMacro(<< "Close(): SQLite returned result code " << result);
        }
-@@ -374,7 +374,7 @@
+@@ -374,7 +374,7 @@ vtkStringArray * vtkSQLiteDatabase::GetT
    if (!status)
      {
      vtkErrorMacro(<< "GetTables(): Database returned error: "
@@ -54,7 +56,7 @@ Last-Update: 2014-06-03
      query->Delete();
      return this->Tables;
      }
-@@ -403,7 +403,7 @@
+@@ -403,7 +403,7 @@ vtkStringArray * vtkSQLiteDatabase::GetR
    if (!status)
      {
      vtkErrorMacro(<< "GetRecord(" << table << "): Database returned error: "
@@ -63,7 +65,7 @@ Last-Update: 2014-06-03
      query->Delete();
      return NULL;
      }
-@@ -467,10 +467,10 @@
+@@ -467,10 +467,10 @@ bool vtkSQLiteDatabase::ParseURL(const c
  // ----------------------------------------------------------------------
  bool vtkSQLiteDatabase::HasError()
  {
@@ -76,8 +78,10 @@ Last-Update: 2014-06-03
 -  return vtk_sqlite3_errmsg(this->SQLiteInstance);
 +  return sqlite3_errmsg(this->SQLiteInstance);
  }
---- a/IO/SQL/vtkSQLiteQuery.cxx
-+++ b/IO/SQL/vtkSQLiteQuery.cxx
+Index: VTK-6.2.0/IO/SQL/vtkSQLiteQuery.cxx
+===================================================================
+--- VTK-6.2.0.orig/IO/SQL/vtkSQLiteQuery.cxx
++++ VTK-6.2.0/IO/SQL/vtkSQLiteQuery.cxx
 @@ -25,7 +25,7 @@
  #include "vtkVariant.h"
  #include "vtkVariantArray.h"
@@ -87,7 +91,7 @@ Last-Update: 2014-06-03
  
  #include <cassert>
  
-@@ -43,7 +43,7 @@
+@@ -43,7 +43,7 @@ vtkSQLiteQuery::vtkSQLiteQuery()
  {
    this->Statement = NULL;
    this->InitialFetch = true;
@@ -96,7 +100,7 @@ Last-Update: 2014-06-03
    this->LastErrorText = NULL;
    this->TransactionInProgress = false;
  }
-@@ -61,7 +61,7 @@
+@@ -61,7 +61,7 @@ vtkSQLiteQuery::~vtkSQLiteQuery()
      {
      if (this->Database != NULL)
        {
@@ -105,7 +109,7 @@ Last-Update: 2014-06-03
        this->Statement = NULL;
        }
      }
-@@ -128,8 +128,8 @@
+@@ -131,8 +131,8 @@ bool vtkSQLiteQuery::SetQuery(const char
    if (this->Statement)
      {
      vtkDebugMacro(<<"Finalizing old statement");
@@ -116,7 +120,7 @@ Last-Update: 2014-06-03
        {
        vtkWarningMacro(<<"SetQuery(): Finalize returned unexpected code "
                        << finalizeStatus);
-@@ -148,19 +148,19 @@
+@@ -151,19 +151,19 @@ bool vtkSQLiteQuery::SetQuery(const char
        return false;
        }
  
@@ -141,7 +145,7 @@ Last-Update: 2014-06-03
                      << this->GetLastErrorText()
                      << " on statement: '"
                      << this->Query << "'");
-@@ -191,31 +191,31 @@
+@@ -194,31 +194,31 @@ bool vtkSQLiteQuery::Execute()
      }
    else
      {
@@ -180,7 +184,7 @@ Last-Update: 2014-06-03
                    << this->GetLastErrorText());
      this->Active = false;
      return false;
-@@ -236,7 +236,7 @@
+@@ -239,7 +239,7 @@ int vtkSQLiteQuery::GetNumberOfFields()
      }
    else
      {
@@ -189,7 +193,7 @@ Last-Update: 2014-06-03
      }
  }
  
-@@ -256,7 +256,7 @@
+@@ -259,7 +259,7 @@ const char * vtkSQLiteQuery::GetFieldNam
      }
    else
      {
@@ -198,7 +202,7 @@ Last-Update: 2014-06-03
      }
  }
  
-@@ -276,22 +276,22 @@
+@@ -279,22 +279,22 @@ int vtkSQLiteQuery::GetFieldType(int col
      }
    else
      {
@@ -228,7 +232,7 @@ Last-Update: 2014-06-03
                      <<" from SQLite.");
        return VTK_VOID;
        }
-@@ -312,7 +312,7 @@
+@@ -315,7 +315,7 @@ bool vtkSQLiteQuery::NextRow()
      {
      vtkDebugMacro(<<"NextRow(): Initial fetch being handled.");
      this->InitialFetch = false;
@@ -237,7 +241,7 @@ Last-Update: 2014-06-03
        {
        return false;
        }
-@@ -323,12 +323,12 @@
+@@ -326,12 +326,12 @@ bool vtkSQLiteQuery::NextRow()
      }
    else
      {
@@ -253,7 +257,7 @@ Last-Update: 2014-06-03
        {
        return true;
        }
-@@ -336,8 +336,8 @@
+@@ -339,8 +339,8 @@ bool vtkSQLiteQuery::NextRow()
        {
        vtkSQLiteDatabase *dbContainer = vtkSQLiteDatabase::SafeDownCast( this->Database );
        assert(dbContainer != NULL);
@@ -264,7 +268,7 @@ Last-Update: 2014-06-03
        vtkErrorMacro(<<"NextRow(): Database returned error code "
                      << result << " with the following message: "
                      << this->GetLastErrorText());
-@@ -363,33 +363,33 @@
+@@ -366,33 +366,33 @@ vtkVariant vtkSQLiteQuery::DataValue(vtk
      }
    else
      {
@@ -309,7 +313,7 @@ Last-Update: 2014-06-03
        default:
          return vtkVariant();
        }
-@@ -420,11 +420,11 @@
+@@ -423,11 +423,11 @@ bool vtkSQLiteQuery::BeginTransaction()
    vtkSQLiteDatabase *dbContainer = vtkSQLiteDatabase::SafeDownCast( this->Database );
    assert(dbContainer != NULL);
  
@@ -324,7 +328,7 @@ Last-Update: 2014-06-03
      {
      this->TransactionInProgress = true;
      this->SetLastErrorText(NULL);
-@@ -448,7 +448,7 @@
+@@ -451,7 +451,7 @@ bool vtkSQLiteQuery::CommitTransaction()
  {
    if (this->Statement)
      {
@@ -333,7 +337,7 @@ Last-Update: 2014-06-03
      this->Statement = NULL;
      }
  
-@@ -460,11 +460,11 @@
+@@ -463,11 +463,11 @@ bool vtkSQLiteQuery::CommitTransaction()
  
    vtkSQLiteDatabase *dbContainer = vtkSQLiteDatabase::SafeDownCast( this->Database );
    assert(dbContainer != NULL);
@@ -348,7 +352,7 @@ Last-Update: 2014-06-03
      {
      this->TransactionInProgress = false;
      this->SetLastErrorText(NULL);
-@@ -496,11 +496,11 @@
+@@ -499,11 +499,11 @@ bool vtkSQLiteQuery::RollbackTransaction
  
    vtkSQLiteDatabase *dbContainer = vtkSQLiteDatabase::SafeDownCast( this->Database );
    assert(dbContainer != NULL);
@@ -363,7 +367,7 @@ Last-Update: 2014-06-03
      {
      this->TransactionInProgress = false;
      this->SetLastErrorText(NULL);
-@@ -644,11 +644,11 @@
+@@ -647,11 +647,11 @@ bool vtkSQLiteQuery::BindIntegerParamete
    if (this->Active)
      {
      this->Active = false;
@@ -378,7 +382,7 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_bind_int returned error: " << status;
-@@ -673,11 +673,11 @@
+@@ -676,11 +676,11 @@ bool vtkSQLiteQuery::BindInt64Parameter(
    if (this->Active)
      {
      this->Active = false;
@@ -393,7 +397,7 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_bind_int64 returned error: " << status;
-@@ -702,12 +702,12 @@
+@@ -705,12 +705,12 @@ bool vtkSQLiteQuery::BindDoubleParameter
    if (this->Active)
      {
      this->Active = false;
@@ -409,7 +413,7 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_bind_double returned error: " << status;
-@@ -731,12 +731,12 @@
+@@ -734,12 +734,12 @@ bool vtkSQLiteQuery::BindStringParameter
    if (this->Active)
      {
      this->Active = false;
@@ -425,7 +429,7 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_bind_text returned error: " << status;
-@@ -760,17 +760,17 @@
+@@ -763,17 +763,17 @@ bool vtkSQLiteQuery::BindBlobParameter(i
    if (this->Active)
      {
      this->Active = false;
@@ -447,7 +451,7 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_bind_blob returned error: " << status;
-@@ -794,12 +794,12 @@
+@@ -797,12 +797,12 @@ bool vtkSQLiteQuery::ClearParameterBindi
    if (this->Active)
      {
      this->Active = false;
@@ -463,8 +467,10 @@ Last-Update: 2014-06-03
      {
      vtksys_ios::ostringstream errormessage;
      errormessage << "sqlite_clear_bindings returned error: " << status;
---- a/IO/SQL/vtkSQLiteQuery.h
-+++ b/IO/SQL/vtkSQLiteQuery.h
+Index: VTK-6.2.0/IO/SQL/vtkSQLiteQuery.h
+===================================================================
+--- VTK-6.2.0.orig/IO/SQL/vtkSQLiteQuery.h
++++ VTK-6.2.0/IO/SQL/vtkSQLiteQuery.h
 @@ -47,7 +47,7 @@
  class vtkSQLiteDatabase;
  class vtkVariant;
@@ -474,7 +480,7 @@ Last-Update: 2014-06-03
  
  class VTKIOSQL_EXPORT vtkSQLiteQuery : public vtkSQLQuery
  {
-@@ -155,7 +155,7 @@
+@@ -155,7 +155,7 @@ private:
    vtkSQLiteQuery(const vtkSQLiteQuery &); // Not implemented.
    void operator=(const vtkSQLiteQuery &); // Not implemented.
  
@@ -483,16 +489,20 @@ Last-Update: 2014-06-03
    bool InitialFetch;
    int InitialFetchResult;
    char *LastErrorText;
---- a/ThirdParty/sqlite/CMakeLists.txt
-+++ b/ThirdParty/sqlite/CMakeLists.txt
+Index: VTK-6.2.0/ThirdParty/sqlite/CMakeLists.txt
+===================================================================
+--- VTK-6.2.0.orig/ThirdParty/sqlite/CMakeLists.txt
++++ VTK-6.2.0/ThirdParty/sqlite/CMakeLists.txt
 @@ -1,4 +1,3 @@
  set(vtksqlite_THIRD_PARTY 1)
 -set(vtksqlite_LIBRARIES vtksqlite)
 +set(vtksqlite_LIBRARIES sqlite3)
  vtk_module_export_info()
 -add_subdirectory(vtksqlite)
---- a/IO/SQL/vtkSQLiteDatabase.h
-+++ b/IO/SQL/vtkSQLiteDatabase.h
+Index: VTK-6.2.0/IO/SQL/vtkSQLiteDatabase.h
+===================================================================
+--- VTK-6.2.0.orig/IO/SQL/vtkSQLiteDatabase.h
++++ VTK-6.2.0/IO/SQL/vtkSQLiteDatabase.h
 @@ -49,7 +49,7 @@
  class vtkSQLQuery;
  class vtkSQLiteQuery;
@@ -502,7 +512,7 @@ Last-Update: 2014-06-03
  
  class VTKIOSQL_EXPORT vtkSQLiteDatabase : public vtkSQLDatabase
  {
-@@ -147,7 +147,7 @@
+@@ -147,7 +147,7 @@ protected:
    virtual bool ParseURL(const char* url);
  
  private:

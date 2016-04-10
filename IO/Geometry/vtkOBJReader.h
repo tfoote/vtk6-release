@@ -23,20 +23,27 @@
 #define vtkOBJReader_h
 
 #include "vtkIOGeometryModule.h" // For export macro
-#include "vtkAbstractPolyDataReader.h"
+#include "vtkPolyDataAlgorithm.h"
 
-class VTKIOGEOMETRY_EXPORT vtkOBJReader : public vtkAbstractPolyDataReader
+class VTKIOGEOMETRY_EXPORT vtkOBJReader : public vtkPolyDataAlgorithm
 {
 public:
   static vtkOBJReader *New();
-  vtkTypeMacro(vtkOBJReader,vtkAbstractPolyDataReader);
+  vtkTypeMacro(vtkOBJReader,vtkPolyDataAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
+
+  // Description:
+  // Specify file name of Wavefront .obj file.
+  vtkSetStringMacro(FileName);
+  vtkGetStringMacro(FileName);
 
 protected:
   vtkOBJReader();
   ~vtkOBJReader();
 
   int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
+
+  char *FileName;
 private:
   vtkOBJReader(const vtkOBJReader&);  // Not implemented.
   void operator=(const vtkOBJReader&);  // Not implemented.

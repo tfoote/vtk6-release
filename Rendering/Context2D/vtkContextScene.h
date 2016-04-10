@@ -26,7 +26,6 @@
 #include "vtkRenderingContext2DModule.h" // For export macro
 #include "vtkObject.h"
 #include "vtkWeakPointer.h" // Needed for weak pointer to the window.
-#include "vtkVector.h" // For vtkVector return type.
 
 class vtkContext2D;
 class vtkAbstractContextItem;
@@ -132,13 +131,6 @@ public:
   vtkSetMacro(ScaleTiles, bool);
   vtkGetMacro(ScaleTiles, bool);
   vtkBooleanMacro(ScaleTiles, bool);
-
-  // Description:
-  // The tile scale of the target vtkRenderWindow. Hardcoded pixel offsets, etc
-  // should properly account for these <x, y> scale factors. This will simply
-  // return vtkVector2i(1, 1) if ScaleTiles is false or if this->Renderer is
-  // NULL.
-  vtkVector2i GetLogicalTileScale();
 
   // Description:
   // This should not be necessary as the context view should take care of

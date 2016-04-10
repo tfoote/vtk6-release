@@ -15,12 +15,12 @@
 // .NAME vtkRIBProperty - RIP Property
 // .SECTION Description
 // vtkRIBProperty is a subclass of vtkProperty that allows the user to
-// specify named shaders for use with RenderMan. Both surface
-// and displacement shaders can be specified. Parameters
-// for the shaders can be declared and set.
+// specify named shaders for use with RenderMan. Both a surface shader
+// and displacement shader can be specified. Parameters for the shaders
+// can be declared and set.
 //
 // .SECTION See Also
-// vtkRIBExporter vtkRIBLight
+// vtkRIBExporter
 
 #ifndef vtkRIBProperty_h
 #define vtkRIBProperty_h
@@ -38,20 +38,6 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
   // Description:
-  // If true (default) the surface shader uses the usual shader parameters:
-  // Ka - Ambient amount
-  // Kd - Diffuse amount
-  // Ks - Specular amount
-  // Roughness
-  // SpecularColor
-  // Additional surface shader parameters can be added with the
-  // Set/AddSurfaceShaderParameter methods.
-  // If false, all surface shader parameters must be specified
-  vtkSetMacro(SurfaceShaderUsesDefaultParameters, bool);
-  vtkGetMacro(SurfaceShaderUsesDefaultParameters, bool);
-  vtkBooleanMacro(SurfaceShaderUsesDefaultParameters, bool);
-
-  // Description:
   // Specify the name of a surface shader.
   vtkSetStringMacro(SurfaceShader);
   vtkGetStringMacro(SurfaceShader);
@@ -63,8 +49,8 @@ public:
 
   // Description:
   // Specify declarations for variables..
-  void SetVariable (const char *variable, const char *declaration);
-  void AddVariable (const char *variable, const char *declaration);
+  void SetVariable (char *variable, char *declaration);
+  void AddVariable (char *variable, char *declaration);
 
   // Description:
   // Get variable declarations
@@ -72,25 +58,12 @@ public:
 
   // Description:
   // Specify parameter values for variables.
-  // DEPRECATED: use (Set/Add)SurfaceShaderParameter instead.
-  void SetParameter (const char *parameter, const char *value);
-  void AddParameter (const char *parameter, const char *value);
-
-  // Description:
-  // Specify parameter values for surface shader parameters
-  void SetSurfaceShaderParameter (const char *parameter, const char *value);
-  void AddSurfaceShaderParameter (const char *parameter, const char *value);
-
-  // Description:
-  // Specify parameter values for displacement shader parameters
-  void SetDisplacementShaderParameter (const char *parameter, const char *value);
-  void AddDisplacementShaderParameter (const char *parameter, const char *value);
+  void SetParameter (char *parameter, char *value);
+  void AddParameter (char *parameter, char *value);
 
   // Description:
   // Get parameters.
-  char *GetParameters (); // DEPRECATED: use GetSurfaceShaderParameters instead.
-  char *GetSurfaceShaderParameters ();
-  char *GetDisplacementShaderParameters ();
+  char *GetParameters ();
 
 protected:
   vtkRIBProperty();
@@ -101,10 +74,7 @@ protected:
   char *SurfaceShader;
   char *DisplacementShader;
   char *Declarations;
-  char *SurfaceShaderParameters;
-  char *DisplacementShaderParameters;
-  bool SurfaceShaderUsesDefaultParameters;
-
+  char *Parameters;
 private:
   vtkRIBProperty(const vtkRIBProperty&);  // Not implemented.
   void operator=(const vtkRIBProperty&);  // Not implemented.

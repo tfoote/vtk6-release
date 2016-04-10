@@ -395,7 +395,10 @@ int vtkGenericEnSightReader::DetermineEnSightVersion(int quiet)
             delete this->IS;
             this->IS = NULL;
 
-            if (!this->GeometryFileName || this->GeometryFileName[0] == '\0')
+            fileName = new char[strlen(this->GeometryFileName) + 1];
+            strcpy(fileName, this->GeometryFileName);
+
+            if (!fileName)
               {
               if (!quiet)
                 {
@@ -404,10 +407,6 @@ int vtkGenericEnSightReader::DetermineEnSightVersion(int quiet)
                 }
               return 0;
               }
-
-            fileName = new char[strlen(this->GeometryFileName) + 1];
-            strcpy(fileName, this->GeometryFileName);
-
             if (strrchr(fileName, '*') != NULL)
               {
               // RE-open case file; find right time set and fill in
@@ -517,10 +516,12 @@ int vtkGenericEnSightReader::DetermineEnSightVersion(int quiet)
             }
           } // geometry file name set
 
+        fileName = new char[strlen(this->GeometryFileName) + 1];
+        strcpy(fileName, this->GeometryFileName);
+
         delete this->IS;
         this->IS = NULL;
-
-        if (!this->GeometryFileName || this->GeometryFileName[0] == '\0')
+        if (!fileName)
           {
           if (!quiet)
             {
@@ -529,10 +530,6 @@ int vtkGenericEnSightReader::DetermineEnSightVersion(int quiet)
             }
           return 0;
           }
-
-        fileName = new char[strlen(this->GeometryFileName) + 1];
-        strcpy(fileName, this->GeometryFileName);
-
         if (strrchr(fileName, '*') != NULL)
           {
           // reopen case file; find right time set and fill in wildcards from
@@ -593,15 +590,12 @@ int vtkGenericEnSightReader::DetermineEnSightVersion(int quiet)
       } // not ensight gold
     } // if we found the format section in the case file
 
-  delete [] fileName;
+  if (fileName)
+    {
+    delete [] fileName;
+    }
 
   return -1;
-}
-
-//----------------------------------------------------------------------------
-void vtkGenericEnSightReader::ClearForNewCaseFileName()
-{
-  this->TranslationTable->PartIdMap.clear();
 }
 
 //----------------------------------------------------------------------------
@@ -616,7 +610,10 @@ void vtkGenericEnSightReader::SetCaseFileName(const char* fileName)
     {
     return;
     }
-  delete [] this->CaseFileName;
+  if (this->CaseFileName)
+    {
+    delete [] this->CaseFileName;
+    }
   if (fileName)
     {
     this->CaseFileName = new char[strlen(fileName)+1];
@@ -627,7 +624,6 @@ void vtkGenericEnSightReader::SetCaseFileName(const char* fileName)
     this->CaseFileName = NULL;
     }
 
-  this->ClearForNewCaseFileName();
   this->Modified();
   if (!this->CaseFileName)
     {
@@ -876,7 +872,10 @@ void vtkGenericEnSightReader::AddVariableDescription(const char* description)
     strcpy(newDescriptionList[i], this->VariableDescriptions[i]);
     delete [] this->VariableDescriptions[i];
     }
-  delete [] this->VariableDescriptions;
+  if (this->VariableDescriptions)
+    {
+    delete [] this->VariableDescriptions;
+    }
 
   // make room for new description
   this->VariableDescriptions = new char *[size+1];
@@ -1476,9 +1475,13 @@ char** vtkGenericEnSightReader::CreateStringArray(int numStrings)
 void vtkGenericEnSightReader::DestroyStringArray(int numStrings,
                                                  char** strings)
 {
-  for(int i=0; i < numStrings; ++i)
+  int i;
+  for(i=0; i < numStrings; ++i)
     {
-    delete [] strings[i];
+    if(strings[i])
+      {
+      delete [] strings[i];
+      }
     }
   delete[] strings;
 }

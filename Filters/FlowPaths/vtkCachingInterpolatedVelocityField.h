@@ -90,14 +90,12 @@ public:
     {this->SetVectorsSelection(fieldName);}
 
   // Description:
-  // Set LastCellId to c and LastCacheIndex datasetindex, cached from last evaluation.
-  // If c isn't -1 then the corresponding cell is stored in Cache->Cell.
-  // These values should be valid or an assertion will be triggered.
+  // Return the cell id cached from last evaluation.
   void SetLastCellInfo(vtkIdType c, int datasetindex);
 
   // Description:
-  // Set LastCellId to -1 and Cache to NULL so that the next
-  // search does not  start from the previous cell.
+  // Set the last cell id to -1 so that the next search does not
+  // start from the previous cell
   void ClearLastCellInfo();
 
   // Description:

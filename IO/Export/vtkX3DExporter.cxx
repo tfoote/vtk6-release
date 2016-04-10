@@ -91,13 +91,18 @@ vtkX3DExporter::vtkX3DExporter()
   this->OutputString = NULL;
   this->OutputStringLength = 0;
 }
-
 //----------------------------------------------------------------------------
 vtkX3DExporter::~vtkX3DExporter()
 {
   this->SetFileName(0);
-  delete [] this->OutputString;
+  if (this->OutputString)
+    {
+    delete [] this->OutputString;
+    this->OutputString = NULL;
+    this->OutputStringLength = 0;
+    }
 }
+
 
 //----------------------------------------------------------------------------
 void vtkX3DExporter::WriteData()

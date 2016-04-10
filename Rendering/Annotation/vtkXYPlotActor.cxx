@@ -299,8 +299,11 @@ vtkXYPlotActor::~vtkXYPlotActor()
     {
     for ( int i = 0; i < num; ++i )
       {
-      delete [] this->SelectedInputScalars[i];
-      this->SelectedInputScalars[i] = NULL;
+      if ( this->SelectedInputScalars[i] )
+        {
+        delete [] this->SelectedInputScalars[i];
+        this->SelectedInputScalars[i] = NULL;
+        }
       }
     delete [] this->SelectedInputScalars;
     this->SelectedInputScalars = NULL;
@@ -509,8 +512,11 @@ void vtkXYPlotActor::RemoveAllDataSetInputConnections()
 
   for ( idx = 0; idx < num; ++idx )
     {
-    delete [] this->SelectedInputScalars[idx];
-    this->SelectedInputScalars[idx] = NULL;
+    if ( this->SelectedInputScalars[idx] )
+      {
+      delete [] this->SelectedInputScalars[idx];
+      this->SelectedInputScalars[idx] = NULL;
+      }
     }
   this->SelectedInputScalarsComponent->Reset();
 
@@ -561,8 +567,11 @@ void vtkXYPlotActor::RemoveDataSetInputConnection( vtkAlgorithmOutput *in,
 
   // Do not bother reallocating the SelectedInputScalars
   // string array to make it smaller.
-  delete [] this->SelectedInputScalars[found];
-  this->SelectedInputScalars[found] = NULL;
+  if ( this->SelectedInputScalars[found] )
+    {
+    delete [] this->SelectedInputScalars[found];
+    this->SelectedInputScalars[found] = NULL;
+    }
   for ( int idx = found+1; idx < num; ++idx )
     {
     this->SelectedInputScalars[idx-1] = this->SelectedInputScalars[idx];
@@ -1106,6 +1115,8 @@ int vtkXYPlotActor::RenderOpaqueGeometry( vtkViewport* viewport )
         this->TitleActor->GetPositionCoordinate()
           ->SetValue( this->TitlePosition[0], this->TitlePosition[1] );
         }
+
+      this->TitleActor->SetProperty( this->GetProperty() );
       }
 
     //Border and box - may adjust spacing based on font size relationship

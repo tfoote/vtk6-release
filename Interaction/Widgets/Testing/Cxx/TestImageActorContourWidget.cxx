@@ -78,7 +78,7 @@
 #include "vtkRenderWindow.h"
 #include "vtkProperty.h"
 
-static char TestImageActorContourWidgetLog[] =
+char TestImageActorContourWidgetLog[] =
 "# StreamVersion 1\n"
 "ConfigureEvent 0 499 0 0 0 0 0\n"
 "RenderEvent 0 499 0 0 0 0 0\n"

@@ -74,6 +74,7 @@ set(Module_SRCS
   vtkStreamerBase.cxx
   vtkCenterOfMass.cxx
 
+  vtkGhostArray.cxx
   vtkImageAppend.cxx
   vtkStructuredGridAppend.cxx
   vtkAppendCompositeDataLeaves.cxx

@@ -34,7 +34,7 @@ vtkContourValues::~vtkContourValues()
 // Set the ith contour value.
 void vtkContourValues::SetValue(int i, double value)
 {
-  vtkIdType numContours=this->Contours->GetMaxId()+1;
+  int numContours=this->Contours->GetMaxId()+1;
   i = (i < 0 ? 0 : i);
 
   if ( i >= numContours || value != this->Contours->GetValue(i) )
@@ -64,9 +64,9 @@ double *vtkContourValues::GetValues()
 // allocated memory of size GetNumberOfContours().
 void vtkContourValues::GetValues(double *contourValues)
 {
-  vtkIdType numContours=this->Contours->GetMaxId()+1;
+  int i, numContours=this->Contours->GetMaxId()+1;
 
-  for ( vtkIdType i=0; i < numContours; i++ )
+  for ( i=0; i < numContours; i++ )
     {
     contourValues[i] = this->Contours->GetValue(i);
     }
@@ -77,9 +77,9 @@ void vtkContourValues::GetValues(double *contourValues)
 // will automatically increase list size as needed.
 void vtkContourValues::SetNumberOfContours(const int number)
 {
-  vtkIdType    currentNumber = this->Contours->GetMaxId()+1;
-  vtkIdType    n = ( number < 0 ? 0 : number);
-  vtkIdType    i;
+  int    currentNumber = this->Contours->GetMaxId()+1;
+  int    n = ( number < 0 ? 0 : number);
+  int    i;
   double  *oldValues = NULL;
 
   if ( n != currentNumber )
@@ -101,7 +101,7 @@ void vtkContourValues::SetNumberOfContours(const int number)
     // Copy them back in since the array may have been re-allocated
     if ( currentNumber > 0 )
       {
-      vtkIdType limit = (currentNumber < n)?(currentNumber):(n);
+      int limit = (currentNumber < n)?(currentNumber):(n);
       for ( i = 0; i < limit; i++ )
         {
         this->Contours->SetValue( i, oldValues[i] );
@@ -166,10 +166,10 @@ void vtkContourValues::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
 
-  vtkIdType numContours=this->Contours->GetMaxId() + 1;
+  int i, numContours=this->Contours->GetMaxId() + 1;
 
   os << indent << "Contour Values: \n";
-  for ( vtkIdType i=0; i < numContours; i++)
+  for ( i=0; i < numContours; i++)
     {
     os << indent << "  Value " << i << ": " << this->Contours->GetValue(i) << "\n";
     }

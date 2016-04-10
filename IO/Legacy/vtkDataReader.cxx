@@ -27,7 +27,6 @@
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
 #include "vtkIntArray.h"
-#include "vtkLegacyReaderVersion.h"
 #include "vtkLongArray.h"
 #include "vtkLookupTable.h"
 #include "vtkObjectFactory.h"
@@ -122,8 +121,6 @@ vtkDataReader::vtkDataReader()
   this->ReadAllColorScalars = 0;
   this->ReadAllTCoords = 0;
   this->ReadAllFields = 0;
-  this->FileMajorVersion = 0;
-  this->FileMinorVersion = 0;
 
   this->SetNumberOfInputPorts(0);
   this->SetNumberOfOutputPorts(1);
@@ -145,7 +142,10 @@ vtkDataReader::~vtkDataReader()
 
   this->SetInputArray(0);
   this->InitializeCharacteristics();
-  delete this->IS;
+  if ( this->IS )
+    {
+    delete this->IS;
+    }
 }
 
 void vtkDataReader::SetInputString(const char *in)
@@ -462,8 +462,7 @@ int vtkDataReader::ReadHeader()
     this->SetErrorCode( vtkErrorCode::PrematureEndOfFileError );
     return 0;
     }
-  const int VERSION_PREFIX_LENGTH = 22;
-  if ( strncmp ("# vtk DataFile Version", line, VERSION_PREFIX_LENGTH) )
+  if ( strncmp ("# vtk DataFile Version", line, 20) )
     {
     vtkErrorMacro(<< "Unrecognized file type: "<< line << " for file: "
                   << (this->FileName?this->FileName:"(Null FileName)"));
@@ -471,25 +470,6 @@ int vtkDataReader::ReadHeader()
     this->SetErrorCode( vtkErrorCode::UnrecognizedFileTypeError );
     return 0;
     }
-  if (sscanf (line + VERSION_PREFIX_LENGTH,
-              "%d.%d", &this->FileMajorVersion, &this->FileMinorVersion) != 2)
-    {
-    vtkWarningMacro(<< "Cannot read file version: " << line << " for file: "
-                    << (this->FileName?this->FileName:"(Null FileName)"));
-    this->FileMajorVersion = 0;
-    this->FileMinorVersion = 0;
-    }
-  if (this->FileMajorVersion > vtkLegacyReaderMajorVersion ||
-      (this->FileMajorVersion == vtkLegacyReaderMajorVersion &&
-       this->FileMinorVersion > vtkLegacyReaderMinorVersion))
-    {
-    // newer file than the reader version
-    vtkWarningMacro(
-      << "Reading file version: " << this->FileMajorVersion
-      << "." << this->FileMinorVersion << " with older reader version "
-      << vtkLegacyReaderMajorVersion << "." << vtkLegacyReaderMinorVersion);
-    }
-
   //
   // read title
   //
@@ -722,7 +702,7 @@ int vtkDataReader::ReadCellData(vtkDataSet *ds, int numCells)
     else if ( ! strncmp(line, "field", 5) )
       {
       vtkFieldData *f;
-      if ( ! (f=this->ReadFieldData(CELL_DATA)) )
+      if ( ! (f=this->ReadFieldData()) )
         {
         return 0;
         }
@@ -881,7 +861,7 @@ int vtkDataReader::ReadPointData(vtkDataSet *ds, int numPts)
     else if ( ! strncmp(line, "field", 5) )
       {
       vtkFieldData *f;
-      if ( ! (f=this->ReadFieldData(POINT_DATA)) )
+      if ( ! (f=this->ReadFieldData()) )
         {
         return 0;
         }
@@ -2767,38 +2747,7 @@ int vtkDataReader::ReadCells(int size, int *data,
   return 1;
 }
 
-void vtkDataReader::ConvertGhostLevelsToGhostType(
-  FieldType fieldType, vtkAbstractArray *data) const
-{
-  vtkUnsignedCharArray* ucData = vtkUnsignedCharArray::SafeDownCast(data);
-  const char* name = data->GetName();
-  int numComp = data->GetNumberOfComponents();
-  if (this->FileMajorVersion < 4 && ucData &&
-      numComp == 1 && (fieldType == CELL_DATA || fieldType == POINT_DATA) &&
-      !strcmp(name, "vtkGhostLevels"))
-    {
-    // convert ghost levels to ghost type
-    unsigned char* ghosts = ucData->GetPointer(0);
-    // only CELL_DATA or POINT_DATA are possible at this point.
-    unsigned char newValue = vtkDataSetAttributes::DUPLICATEPOINT;
-    if (fieldType == CELL_DATA)
-      {
-      newValue = vtkDataSetAttributes::DUPLICATECELL;
-      }
-    vtkIdType numTuples = ucData->GetNumberOfTuples();
-    for (int i = 0; i < numTuples; ++i)
-      {
-      if (ghosts[i] > 0)
-        {
-        ghosts[i] = newValue;
-        }
-      }
-    data->SetName(vtkDataSetAttributes::GhostArrayName());
-    }
-}
-
-
-vtkFieldData *vtkDataReader::ReadFieldData(FieldType fieldType)
+vtkFieldData *vtkDataReader::ReadFieldData()
 {
   int i, numArrays=0, skipField=0;
   vtkFieldData *f;
@@ -2838,10 +2787,9 @@ vtkFieldData *vtkDataReader::ReadFieldData(FieldType fieldType)
     data = this->ReadArray(type, numTuples, numComp);
     if ( data != NULL )
       {
+      data->SetName(name);
       if ( ! skipField  || this->ReadAllFields )
         {
-        data->SetName(name);
-        this->ConvertGhostLevelsToGhostType(fieldType, data);
         f->AddArray(data);
         }
       data->Delete();

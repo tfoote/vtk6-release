@@ -32,8 +32,6 @@
 
 #include <vtksys/ios/sstream>
 
-#include "vtk_glew.h"
-
 vtkStandardNewMacro(vtkEGLRenderWindow);
 
 vtkEGLRenderWindow::vtkEGLRenderWindow()

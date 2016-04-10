@@ -47,8 +47,11 @@ vtkPLYWriter::~vtkPLYWriter()
     {
     this->LookupTable->Delete();
     }
-  delete [] this->ArrayName;
-  delete [] this->FileName;
+  if ( this->ArrayName )
+    {
+    delete [] this->ArrayName;
+    }
+  delete[] this->FileName;
 }
 
 typedef struct _plyVertex {

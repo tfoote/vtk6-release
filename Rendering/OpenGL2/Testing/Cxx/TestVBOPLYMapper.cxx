@@ -80,11 +80,11 @@ int TestVBOPLYMapper(int argc, char *argv[])
   cerr << "first render time: " << firstRender << endl;
 
   timer->StartTimer();
-  int numRenders = 8;
+  int numRenders = 85;
   for (int i = 0; i < numRenders; ++i)
     {
-    renderer->GetActiveCamera()->Azimuth(10);
-    renderer->GetActiveCamera()->Elevation(10);
+    renderer->GetActiveCamera()->Azimuth(1);
+    renderer->GetActiveCamera()->Elevation(1);
     renderWindow->Render();
     }
   timer->StopTimer();

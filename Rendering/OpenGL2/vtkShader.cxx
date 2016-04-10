@@ -50,28 +50,14 @@ bool vtkShader::Compile()
     }
 
   // Ensure we delete the previous shader if necessary.
-  if (this->Handle != 0)
+  if (Handle != 0)
     {
-    glDeleteShader(static_cast<GLuint>(this->Handle));
-    this->Handle = 0;
+    glDeleteShader(static_cast<GLuint>(Handle));
+    Handle = 0;
     }
 
-  GLenum type = GL_VERTEX_SHADER;
-  switch (this->ShaderType)
-    {
-#ifdef GL_GEOMETRY_SHADER
-    case vtkShader::Geometry:
-      type = GL_GEOMETRY_SHADER;
-      break;
-#endif
-    case vtkShader::Fragment:
-      type = GL_FRAGMENT_SHADER;
-      break;
-    case vtkShader::Vertex:
-    default:
-      type = GL_VERTEX_SHADER;
-      break;
-    }
+  GLenum type = ShaderType == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+  // TODO: handle geometry shaders if supported
 
   GLuint handle = glCreateShader(type);
   const GLchar *source = static_cast<const GLchar *>(this->Source.c_str());

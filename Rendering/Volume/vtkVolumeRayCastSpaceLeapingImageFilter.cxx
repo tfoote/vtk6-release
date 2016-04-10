@@ -65,8 +65,16 @@ vtkVolumeRayCastSpaceLeapingImageFilter::vtkVolumeRayCastSpaceLeapingImageFilter
 vtkVolumeRayCastSpaceLeapingImageFilter::~vtkVolumeRayCastSpaceLeapingImageFilter()
 {
   this->SetCurrentScalars(NULL);
-  delete [] this->MinNonZeroScalarIndex;
-  delete [] this->MinNonZeroGradientMagnitudeIndex;
+  if (this->MinNonZeroScalarIndex)
+    {
+    delete [] this->MinNonZeroScalarIndex;
+    this->MinNonZeroScalarIndex = NULL;
+    }
+  if (this->MinNonZeroGradientMagnitudeIndex)
+    {
+    delete [] this->MinNonZeroGradientMagnitudeIndex;
+    this->MinNonZeroGradientMagnitudeIndex = NULL;
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -148,8 +156,7 @@ vtkVolumeRayCastSpaceLeapingImageFilterClearOutput(vtkDataArray *scalars,
   vtkIdType outInc0, outInc1, outInc2;
   outData->GetContinuousIncrements(scalars,
                                    outExt, outInc0, outInc1, outInc2);
-  outInc1 *= 3;
-  outInc2 *= 3;
+
   // A. Initialize the arrays with a blank flag.
 
   int i,j,k;
@@ -771,9 +778,6 @@ void vtkVolumeRayCastSpaceLeapingImageFilter
   outData->GetContinuousIncrements(this->CurrentScalars,
                                    outExt, outInc0, outInc1, outInc2);
 
-  outInc1 *= 3;
-  outInc2 *= 3;
-
   // Now process the flags
 
   unsigned short *tmpPtr = static_cast< unsigned short * >(
@@ -1038,10 +1042,16 @@ void vtkVolumeRayCastSpaceLeapingImageFilter
   const int nComponents = this->GetNumberOfIndependentComponents();
 
   // Initialize these arrays.
-  delete [] this->MinNonZeroScalarIndex;
-  this->MinNonZeroScalarIndex = NULL;
-  delete [] this->MinNonZeroGradientMagnitudeIndex;
-  this->MinNonZeroGradientMagnitudeIndex = NULL;
+  if (this->MinNonZeroScalarIndex)
+    {
+    delete [] this->MinNonZeroScalarIndex;
+    this->MinNonZeroScalarIndex = NULL;
+    }
+  if (this->MinNonZeroGradientMagnitudeIndex)
+    {
+    delete [] this->MinNonZeroGradientMagnitudeIndex;
+    this->MinNonZeroGradientMagnitudeIndex = NULL;
+    }
 
   // Update the flags now
   int i;

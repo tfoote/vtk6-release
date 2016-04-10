@@ -247,7 +247,6 @@ public:
   // Description:
   //   Set or get a pointer to a list of the number of nodes in each node set.
   //   We use your pointer, and free the memory when the object is freed.
-  void SetNodeSetSize(int *);
   int *GetNodeSetSize() const {return this->NodeSetSize;}
 
   // Description:
@@ -264,7 +263,6 @@ public:
   //   nodes in the node set.
   //   Length of list is number of node sets.
   //   We use your pointer, and free the memory when the object is freed.
-  void SetNodeSetNumberOfDistributionFactors(int *);
   int *GetNodeSetNumberOfDistributionFactors() const
     {return this->NodeSetNumberOfDistributionFactors;}
 
@@ -278,7 +276,6 @@ public:
 
   // Description:
   //   Get the total number of nodes in all node sets
-  vtkSetMacro(SumNodesPerNodeSet, int);
   int GetSumNodesPerNodeSet() const {return this->SumNodesPerNodeSet;}
 
   // Description:
@@ -365,7 +362,6 @@ public:
 
   // Description:
   //   Get the total number of sides in all side sets
-  vtkSetMacro(SumSidesPerSideSet, int);
   int GetSumSidesPerSideSet() const {return this->SumSidesPerSideSet;}
 
   // Description:

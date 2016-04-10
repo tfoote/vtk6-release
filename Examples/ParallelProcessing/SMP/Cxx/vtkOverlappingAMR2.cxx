@@ -207,7 +207,7 @@ void vtkOverlappingAMR2::Audit()
   for(iter->GoToFirstItem(); !iter->IsDoneWithTraversal(); iter->GoToNextItem())
     {
     vtkUniformGrid* grid = vtkUniformGrid::SafeDownCast(iter->GetCurrentDataObject());
-    bool hasGhost  = grid->HasAnyGhostCells();
+    bool hasGhost  = grid->GetCellData()->GetArray("vtkGhostLevels")!=NULL;
 
     unsigned int level = iter->GetCurrentLevel();
     unsigned int id = iter->GetCurrentIndex();

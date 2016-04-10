@@ -94,8 +94,7 @@ public:
   // is provided to overcome an issue with the Python interpreter with handling
   // of DOS line endings.
   // This will initialize Python if not already initialized.
-  // Returns 0 on success or -1 if a python exception was raised.
-  static int RunSimpleString(const char* script);
+  static void RunSimpleString(const char* script);
 
   // Description:
   // Prepends the path to the sys.path variable. If Python has been

@@ -20,14 +20,12 @@
 #include "vtkDataArray.h"
 #include "vtkDataArraySelection.h"
 #include "vtkDataSet.h"
-#include "vtkInformation.h"
-#include "vtkInformationVector.h"
 #include "vtkPointData.h"
-#include "vtkStreamingDemandDrivenPipeline.h"
-#include "vtkUnsignedCharArray.h"
 #include "vtkXMLDataElement.h"
 #include "vtkXMLDataParser.h"
-
+#include "vtkInformationVector.h"
+#include "vtkInformation.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
 
 #include <cassert>
 
@@ -272,12 +270,8 @@ void vtkXMLDataReader::SetupOutputData()
     for (int i = 0; i < ePointData->GetNumberOfNestedElements(); i++)
       {
       vtkXMLDataElement* eNested = ePointData->GetNestedElement(i);
-      if (pointData->HasArray(eNested->GetAttribute("Name")))
-        {
-        vtkErrorMacro("Duplicate array names.");
-        this->DataError = 1;
-        }
-      if (this->PointDataArrayIsEnabled(eNested))
+      if (this->PointDataArrayIsEnabled(eNested) &&
+        !pointData->HasArray(eNested->GetAttribute("Name")))
         {
         this->NumberOfPointArrays++;
         vtkAbstractArray* array = this->CreateArray(eNested);
@@ -302,12 +296,8 @@ void vtkXMLDataReader::SetupOutputData()
     for (int i = 0; i < eCellData->GetNumberOfNestedElements(); i++)
       {
       vtkXMLDataElement* eNested = eCellData->GetNestedElement(i);
-      if (cellData->HasArray(eNested->GetAttribute("Name")))
-        {
-        vtkErrorMacro("Duplicate array names.");
-        this->DataError = 1;
-        }
-      if (this->CellDataArrayIsEnabled(eNested))
+      if (this->CellDataArrayIsEnabled(eNested) &&
+        !cellData->HasArray(eNested->GetAttribute("Name")))
         {
         this->NumberOfCellArrays++;
         vtkAbstractArray* array = this->CreateArray(eNested);
@@ -534,8 +524,7 @@ int vtkXMLDataReader::ReadArrayForPoints(vtkXMLDataElement* da,
 {
   vtkIdType components = outArray->GetNumberOfComponents();
   vtkIdType numberOfTuples = this->GetNumberOfPoints();
-  return this->ReadArrayValues(
-    da, 0, outArray,0, numberOfTuples*components, POINT_DATA);
+  return this->ReadArrayValues(da, 0, outArray,0, numberOfTuples*components);
 }
 
 //----------------------------------------------------------------------------
@@ -544,8 +533,7 @@ int vtkXMLDataReader::ReadArrayForCells(vtkXMLDataElement* da,
 {
   vtkIdType components = outArray->GetNumberOfComponents();
   vtkIdType numberOfTuples = this->GetNumberOfCells();
-  return this->ReadArrayValues(
-    da, 0, outArray,0, numberOfTuples*components, CELL_DATA);
+  return this->ReadArrayValues(da, 0, outArray,0, numberOfTuples*components);
 }
 
 //----------------------------------------------------------------------------
@@ -684,42 +672,9 @@ int vtkXMLDataReaderReadArrayValues(
 }
 
 //----------------------------------------------------------------------------
-void vtkXMLDataReader::ConvertGhostLevelsToGhostType(
-  FieldType fieldType, vtkAbstractArray* data, vtkIdType startIndex,
-  vtkIdType numValues)
-{
-  vtkUnsignedCharArray* ucData = vtkUnsignedCharArray::SafeDownCast(data);
-  int numComp = data->GetNumberOfComponents();
-  const char* name = data->GetName();
-  if (this->GetFileMajorVersion() < 2 && ucData &&
-      numComp == 1 && name && !strcmp(name, "vtkGhostLevels"))
-    {
-    // convert ghost levels to ghost type
-    unsigned char* ghosts = ucData->GetPointer(0);
-    // only CELL_DATA or POINT_DATA are possible at this point.
-    unsigned char newValue = vtkDataSetAttributes::DUPLICATEPOINT;
-    if (fieldType == CELL_DATA)
-      {
-      newValue = vtkDataSetAttributes::DUPLICATECELL;
-      }
-    for (int i = startIndex; i < numValues; ++i)
-      {
-      if (ghosts[i] > 0)
-        {
-        ghosts[i] = newValue;
-        }
-      }
-    data->SetName(vtkDataSetAttributes::GhostArrayName());
-    }
-}
-
-
-
-//----------------------------------------------------------------------------
-int vtkXMLDataReader::ReadArrayValues(
-  vtkXMLDataElement* da, vtkIdType arrayIndex,
+int vtkXMLDataReader::ReadArrayValues(vtkXMLDataElement* da, vtkIdType arrayIndex,
   vtkAbstractArray* array, vtkIdType startIndex,
-  vtkIdType numValues, FieldType fieldType)
+  vtkIdType numValues)
 {
   // Skip real read if aborting.
   if (this->AbortExecute)
@@ -742,8 +697,6 @@ int vtkXMLDataReader::ReadArrayValues(
     {
     iter->Delete();
     }
-
-  this->ConvertGhostLevelsToGhostType(fieldType, array, startIndex, numValues);
   // Marking the array modified is essential, since otherwise, when reading
   // multiple time-steps, the array does not realize that its contents may have
   // changed and does not recompute the array ranges.

@@ -59,7 +59,7 @@
 #include "vtkRenderPassCollection.h"
 #include "vtkSequencePass.h"
 
-static vtkProp * prop = NULL;
+vtkProp * prop = NULL;
 
 const char TestValuePassesEventLog[] =
   "# StreamVersion 1\n"

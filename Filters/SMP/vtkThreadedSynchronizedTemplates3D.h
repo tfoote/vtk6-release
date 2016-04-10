@@ -25,8 +25,8 @@
 // .SECTION See Also
 // vtkContourFilter vtkThreadedSynchronizedTemplates2D
 
-#ifndef vtkThreadedSynchronizedTemplates3D_h
-#define vtkThreadedSynchronizedTemplates3D_h
+#ifndef __vtkThreadedSynchronizedTemplates3D_h
+#define __vtkThreadedSynchronizedTemplates3D_h
 
 #include "vtkFiltersSMPModule.h" // For export macro
 #include "vtkMultiBlockDataSetAlgorithm.h"

@@ -132,17 +132,17 @@ void vtkLoopSubdivisionFilter::GenerateEvenStencil (vtkIdType p1,
   vtkIdList *ptIds = vtkIdList::New();
   vtkCell *cell;
 
-  int i;
-  vtkIdType j;
-  vtkIdType startCell, nextCell;
+  int i, j;
+  int numCellsInLoop;
+  int startCell, nextCell;
   vtkIdType p, p2;
   vtkIdType bp1, bp2;
-  vtkIdType K;
+  int K;
   double beta, cosSQ;
 
   // Get the cells that use this point
   polys->GetPointCells (p1, cellIds);
-  vtkIdType numCellsInLoop = cellIds->GetNumberOfIds();
+  numCellsInLoop = cellIds->GetNumberOfIds();
   if (numCellsInLoop < 1)
       {
       vtkWarningMacro("numCellsInLoop < 1: " << numCellsInLoop);

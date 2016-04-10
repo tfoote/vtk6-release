@@ -88,13 +88,10 @@ static void vtkSynchronizedTemplates3DInitializeOutput(
 {
   vtkPoints *newPts;
   vtkCellArray *newPolys;
+  long estimatedSize;
 
-  const vtkIdType numCells = static_cast<vtkIdType>(ext[1]-ext[0]+1) *
-                             static_cast<vtkIdType>(ext[3]-ext[2]+1) *
-                             static_cast<vtkIdType>(ext[5]-ext[4]+1);
-
-  vtkIdType estimatedSize = (vtkIdType) pow (static_cast<double>(numCells),
-                                             .75);
+  estimatedSize = (int) pow ((double)
+      ((ext[1]-ext[0]+1)*(ext[3]-ext[2]+1)*(ext[5]-ext[4]+1)), .75);
   if (estimatedSize < 1024)
     {
     estimatedSize = 1024;
@@ -152,7 +149,7 @@ static void vtkSynchronizedTemplates3DInitializeOutput(
 // Calculate the gradient using central difference.
 template <class T>
 void vtkSTComputePointGradient(int i, int j, int k, T *s, int *inExt,
-                               vtkIdType xInc, vtkIdType yInc, vtkIdType zInc,
+                               int xInc, int yInc, int zInc,
                                double *spacing, double n[3])
 {
   double sp, sm;
@@ -258,36 +255,35 @@ void ContourImage(vtkSynchronizedTemplates3D *self, int* exExt,
                   vtkDataArray *inScalars, bool outputTriangles)
 {
   int *inExt = data->GetExtent();
-  vtkIdType xdim = exExt[1] - exExt[0] + 1;
-  vtkIdType ydim = exExt[3] - exExt[2] + 1;
+  int xdim = exExt[1] - exExt[0] + 1;
+  int ydim = exExt[3] - exExt[2] + 1;
   double *values = self->GetValues();
   int numContours = self->GetNumberOfContours();
   T *inPtrX, *inPtrY, *inPtrZ;
   T *s0, *s1, *s2, *s3;
   int xMin, xMax, yMin, yMax, zMin, zMax;
-  vtkIdType xInc, yInc, zInc;
+  int xInc, yInc, zInc;
   double *origin = data->GetOrigin();
   double *spacing = data->GetSpacing();
-  vtkIdType *isect1Ptr, *isect2Ptr;
+  int *isect1Ptr, *isect2Ptr;
   double y, z, t;
   int i, j, k;
-  vtkIdType zstep, yisectstep;
-  vtkIdType offsets[12];
+  int zstep, yisectstep;
+  int offsets[12];
   int ComputeNormals = self->GetComputeNormals();
   int ComputeGradients = self->GetComputeGradients();
   int ComputeScalars = self->GetComputeScalars();
   int NeedGradients = ComputeGradients || ComputeNormals;
   double n[3], n0[3], n1[3];
-  vtkIdType jj, g0;
+  int jj, g0;
   int *tablePtr;
-  vtkIdType idx;
-  int vidx;
+  int idx, vidx;
   double x[3], xz[3];
-  vtkIdType v0, v1, v2, v3;
+  int v0, v1, v2, v3;
   vtkIdType ptIds[3];
   double value;
   // We need to know the edgePointId's for interpolating attributes.
-  vtkIdType edgePtId, inCellId, outCellId;
+  int edgePtId, inCellId, outCellId;
   vtkPointData *inPD = data->GetPointData();
   vtkCellData *inCD = data->GetCellData();
   vtkPointData *outPD = output->GetPointData();
@@ -353,7 +349,7 @@ void ContourImage(vtkSynchronizedTemplates3D *self, int* exExt,
   offsets[11] = zstep*3;
 
   // allocate storage array
-  vtkIdType *isect1 = new vtkIdType [xdim*ydim*3*2];
+  int *isect1 = new int [xdim*ydim*3*2];
   // set impossible edges to -1
   for (i = 0; i < ydim; i++)
     {
@@ -730,7 +726,6 @@ void vtkSynchronizedTemplates3D::ThreadedExecute(vtkImageData *data,
     {
     vtkErrorMacro("Scalars have " << numComps << " components. "
                   "ArrayComponent must be smaller than " << numComps);
-
     return;
     }
 

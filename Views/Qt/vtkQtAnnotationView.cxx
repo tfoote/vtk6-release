@@ -80,7 +80,10 @@ vtkQtAnnotationView::vtkQtAnnotationView()
 //----------------------------------------------------------------------------
 vtkQtAnnotationView::~vtkQtAnnotationView()
 {
-  delete this->View;
+  if(this->View)
+    {
+    delete this->View;
+    }
   delete this->Adapter;
 }
 

@@ -114,11 +114,10 @@ int vtkXMLUnstructuredDataWriter::ProcessRequest(vtkInformation* request,
     {
     this->SetErrorCode(vtkErrorCode::NoError);
 
-    if(!this->Stream && !this->FileName && !this->WriteToOutputString)
+    if(!this->Stream && !this->FileName)
       {
       this->SetErrorCode(vtkErrorCode::NoFileNameError);
-      vtkErrorMacro("The FileName or Stream must be set first or "
-        "the output must be written to a string.");
+      vtkErrorMacro("The FileName or Stream must be set first.");
       return 0;
       }
 
@@ -152,15 +151,6 @@ int vtkXMLUnstructuredDataWriter::ProcessRequest(vtkInformation* request,
         this->NumberOfPieces = numPieces;
         return 0;
         }
-
-      if (this->GetInputAsDataSet() != NULL &&
-          (this->GetInputAsDataSet()->GetPointGhostArray() != NULL &&
-           this->GetInputAsDataSet()->GetCellGhostArray() != NULL))
-        {
-        // use the current version for the file.
-        this->UsePreviousVersion = false;
-        }
-
       // Write the file.
       if (!this->StartFile())
         {
@@ -550,7 +540,7 @@ void vtkXMLUnstructuredDataWriter::WriteAppendedPieceData(int index)
   this->SetProgressRange(progressRange, 2, fractions);
 
   // Write the point specification array.
-  // Since we are writing the point let save the Modified Time of vtkPoints:
+  // Since we are writting the point let save the Modified Time of vtkPoints:
   this->WritePointsAppendedData(input->GetPoints(), this->CurrentTimeIndex,
                                 &this->PointsOM->GetPiece(index));
 }

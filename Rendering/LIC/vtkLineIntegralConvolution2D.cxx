@@ -993,7 +993,11 @@ vtkLineIntegralConvolution2D::vtkLineIntegralConvolution2D()
 // ----------------------------------------------------------------------------
 vtkLineIntegralConvolution2D::~vtkLineIntegralConvolution2D()
 {
-  delete this->Comm;
+  if (this->Comm)
+    {
+    delete this->Comm;
+    this->Comm = NULL;
+    }
   this->SetContext(NULL);
   this->SetVTShader(NULL);
   this->SetLIC0Shader(NULL);

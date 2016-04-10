@@ -73,6 +73,7 @@ vtkBiDimensionalRepresentation2D::vtkBiDimensionalRepresentation2D() : vtkBiDime
   this->TextMapper->SetInput("0.0");
   this->TextActor = vtkActor2D::New();
   this->TextActor->SetMapper(this->TextMapper);
+  this->TextActor->VisibilityOff();
 }
 
 //----------------------------------------------------------------------
@@ -722,16 +723,15 @@ void vtkBiDimensionalRepresentation2D::BuildRepresentation()
       minX = static_cast<int>(p4[0]);
       minY = static_cast<int>(p4[1]);
       }
-    this->TextMapper->GetTextProperty()->SetJustificationToCentered();
+    int textSize[2];
+    this->TextMapper->GetSize(this->Renderer, textSize);
     if (this->ShowLabelAboveWidget)
       {
-      this->TextActor->SetPosition(maxX, maxY + 9);
-      this->TextMapper->GetTextProperty()->SetVerticalJustificationToBottom();
+      this->TextActor->SetPosition(maxX - textSize[0]/2, maxY+9);
       }
     else
       {
-      this->TextActor->SetPosition(minX, minY - 9);
-      this->TextMapper->GetTextProperty()->SetVerticalJustificationToTop();
+      this->TextActor->SetPosition(minX - textSize[0]/2, minY-(textSize[1]+9));
       }
 
     this->BuildTime.Modified();

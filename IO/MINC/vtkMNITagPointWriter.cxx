@@ -558,5 +558,8 @@ void vtkMNITagPointWriter::CloseFile(ostream *fp)
 {
   vtkDebugMacro(<<"Closing file\n");
 
-  delete fp;
+  if ( fp != NULL )
+    {
+    delete fp;
+    }
 }

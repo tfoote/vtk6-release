@@ -91,7 +91,7 @@ vtkImageImport::vtkImageImport()
 //----------------------------------------------------------------------------
 vtkImageImport::~vtkImageImport()
 {
-  if (!this->SaveUserArray)
+  if ((this->ImportVoidPointer) && (!this->SaveUserArray))
     {
     delete [] static_cast<char *>(this->ImportVoidPointer);
     }

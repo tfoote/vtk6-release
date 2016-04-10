@@ -205,7 +205,7 @@ void MyMain( vtkMultiProcessController *controller, void *arg )
     app->AddInputData(outputCopy);
     outputCopy->Delete();
     app->Update();
-    outputCopy->RemoveGhostCells();
+    outputCopy->RemoveGhostCells(1);
     renWindow->Render();
 
     *(args->retVal) =

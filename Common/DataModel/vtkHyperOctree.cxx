@@ -86,7 +86,7 @@ public:
   virtual void SetAttributes(vtkDataSetAttributes *attributes)=0;
 
   // Description:
-  // Returns the actual memory size in kibibytes (1024 bytes).
+  // Returns the actual memory size in kilobytes.
   // Ignores the attribute array.
   virtual unsigned int GetActualMemorySize() = 0;
 
@@ -344,8 +344,8 @@ public:
   virtual vtkHyperOctreeCursor *Clone()
     {
       vtkCompactHyperOctreeCursor<D> *result=this->NewInstance();
-      assert("post: results_exists" && result!=0);
       result->Tree=this->Tree;
+      assert("post: results_exists" && result!=0);
       assert("post: same_tree" && result->SameTree(this));
       return result;
     }
@@ -917,7 +917,7 @@ public:
 
   //---------------------------------------------------------------------------
   // Description:
-  // Return memory used in kibibytes (1024 bytes).
+  // Return memory used in kilobytes.
   // Ignore the attribute array because its size is added by the data set.
   unsigned int GetActualMemorySize()
   {

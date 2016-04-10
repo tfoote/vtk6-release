@@ -37,16 +37,6 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
   // Description:
-  // Get/Set the number of pieces that are being written in parallel.
-  vtkSetMacro(NumberOfPieces, int);
-  vtkGetMacro(NumberOfPieces, int);
-
-  // Description:
-  // Get/Set the range of pieces assigned to this writer.
-  vtkSetMacro(StartPiece, int);
-  vtkGetMacro(StartPiece, int);
-
-  // Description:
   // Controller used to communicate data type of blocks.
   // By default, the global controller is used. If you want another
   // controller to be used, set it with this.
@@ -60,11 +50,6 @@ public:
   // is set to flag only on process 0 and all other processes have
   // WriteMetaFile set to 0 by default.
   virtual void SetWriteMetaFile(int flag);
-
-  // See the vtkAlgorithm for a desciption of what these do
-  int ProcessRequest(vtkInformation*,
-                     vtkInformationVector**,
-                     vtkInformationVector*);
 
 //BTX
 protected:
@@ -118,11 +103,6 @@ protected:
   // Utility function to remove any already written files
   // in case writer failed.
   virtual void RemoveWrittenFiles(const char* subDirectory);
-
-  // Description:
-  // Piece information.
-  int StartPiece;
-  int NumberOfPieces;
 
 private:
   vtkXMLPMultiBlockDataWriter(const vtkXMLPMultiBlockDataWriter&); // Not implemented.

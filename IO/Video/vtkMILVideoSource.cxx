@@ -80,8 +80,11 @@ vtkMILVideoSource::~vtkMILVideoSource()
 {
   this->vtkMILVideoSource::ReleaseSystemResources();
 
-  delete [] this->MILDigitizerDCF;
-  this->MILDigitizerDCF = NULL;
+  if (this->MILDigitizerDCF != NULL)
+    {
+    delete [] this->MILDigitizerDCF;
+    this->MILDigitizerDCF = NULL;
+    }
 
   this->SetMILSystemType(0);
 }

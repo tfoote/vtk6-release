@@ -443,7 +443,7 @@ public:
     };
 
 protected:
-  // For windows
+  // Functions.
   bool RetrieveCPUFeatures();
   bool RetrieveCPUIdentity();
   bool RetrieveCPUCacheDetails();
@@ -457,7 +457,6 @@ protected:
   bool RetrieveClassicalCPUIdentity();
   bool RetrieveExtendedCPUIdentity();
 
-  // Processor information
   Manufacturer  ChipManufacturer;
   CPUFeatures   Features;
   ID            ChipID;
@@ -465,11 +464,11 @@ protected:
   unsigned int  NumberOfLogicalCPU;
   unsigned int  NumberOfPhysicalCPU;
 
-  int CPUCount(); // For windows
+  int CPUCount();
   unsigned char LogicalCPUPerPhysicalCPU();
-  unsigned char GetAPICId(); // For windows
+  unsigned char GetAPICId();
   bool IsHyperThreadingSupported();
-  static LongLong GetCyclesDifference(DELAY_FUNC, unsigned int); // For windows
+  static LongLong GetCyclesDifference(DELAY_FUNC, unsigned int);
 
   // For Linux and Cygwin, /proc/cpuinfo formats are slightly different
   bool RetreiveInformationFromCpuInfoFile();
@@ -1234,7 +1233,6 @@ void StacktraceSignalHandler(
 
         case ILL_ILLTRP:
           oss << "illegal trap";
-          break;
 
         case ILL_PRVOPC:
           oss << "privileged opcode";
@@ -1824,7 +1822,6 @@ const char * SystemInformationImplementation::GetVendorID()
       return "Motorola";
     case HP:
       return "Hewlett-Packard";
-    case UnknownManufacturer:
     default:
       return "Unknown Manufacturer";
     }
@@ -3066,12 +3063,6 @@ bool SystemInformationImplementation::RetrieveClassicalCPUIdentity()
     case NSC:
       this->ChipID.ProcessorName = "Cx486SLC \\ DLC \\ Cx486S A-Step";
       break;
-
-    case Sun:
-    case IBM:
-    case Motorola:
-    case HP:
-    case UnknownManufacturer:
     default:
       this->ChipID.ProcessorName = "Unknown family"; // We cannot identify the processor.
       return false;
@@ -3762,9 +3753,9 @@ bool SystemInformationImplementation::QueryWindowsMemory()
   }
 #  define MEM_VAL(value) ull##value
 # endif
-  tv = ms.MEM_VAL(TotalPageFile);
+  tv = ms.MEM_VAL(TotalVirtual);
   tp = ms.MEM_VAL(TotalPhys);
-  av = ms.MEM_VAL(AvailPageFile);
+  av = ms.MEM_VAL(AvailVirtual);
   ap = ms.MEM_VAL(AvailPhys);
   this->TotalVirtualMemory = tv>>10>>10;
   this->TotalPhysicalMemory = tp>>10>>10;
@@ -5077,11 +5068,7 @@ bool SystemInformationImplementation::QueryOSInformation()
   osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFOEXW);
 #ifdef KWSYS_WINDOWS_DEPRECATED_GetVersionEx
 # pragma warning (push)
-# ifdef __INTEL_COMPILER
-#  pragma warning (disable:1478)
-# else
-#  pragma warning (disable:4996)
-# endif
+# pragma warning (disable:4996)
 #endif
   bOsVersionInfoEx = GetVersionExW ((OSVERSIONINFOW*)&osvi);
   if (!bOsVersionInfoEx)

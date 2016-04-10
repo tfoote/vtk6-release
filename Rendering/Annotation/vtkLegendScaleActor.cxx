@@ -192,13 +192,6 @@ void vtkLegendScaleActor::ReleaseGraphicsResources(vtkWindow *w)
   this->TopAxis->ReleaseGraphicsResources(w);
   this->LeftAxis->ReleaseGraphicsResources(w);
   this->BottomAxis->ReleaseGraphicsResources(w);
-
-  this->LegendActor->ReleaseGraphicsResources(w);
-
-  for (int i=0; i<6; i++)
-    {
-    this->LabelActors[i]->ReleaseGraphicsResources(w);
-    }
 }
 
 //----------------------------------------------------------------------

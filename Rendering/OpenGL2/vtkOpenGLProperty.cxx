@@ -15,7 +15,7 @@
 #include "vtkOpenGLRenderer.h"
 #include "vtkOpenGLProperty.h"
 
-#include "vtkOpenGLHelper.h"
+#include "vtkglVBOHelper.h"
 
 #include "vtkObjectFactory.h"
 #include "vtkOpenGLTexture.h"

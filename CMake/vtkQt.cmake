@@ -1,4 +1,5 @@
 set(VTK_QT_VERSION "4" CACHE STRING "Expected Qt version")
+mark_as_advanced(VTK_QT_VERSION)
 
 set_property(CACHE VTK_QT_VERSION PROPERTY STRINGS 4 5)
 

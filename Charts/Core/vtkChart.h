@@ -53,8 +53,7 @@ public:
     BAR,
     STACKED,
     BAG,
-    FUNCTIONALBAG,
-    AREA};
+    FUNCTIONALBAG};
 
   // Description:
   // Enum of valid chart action types.

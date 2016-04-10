@@ -64,7 +64,7 @@ static string vtkTestingGetArgOrEnvOrDefault(
   int argc = static_cast<int>(argv.size());
   for (int i = 0; i < argc; i++)
     {
-    if ((i < (argc - 1)) && (argName == argv[i]))
+    if (argName == argv[i] && i < (argc - 1))
       {
       argValue = argv[i + 1];
       }
@@ -334,14 +334,6 @@ int vtkTesting::LookForFile(const char* newFileName)
     return 1;
     }
 }
-
-//-----------------------------------------------------------------------------
-void vtkTesting::SetFrontBuffer(int frontBuffer)
-{
-  vtkWarningMacro("SetFrontBuffer method is deprecated and has no effet anymore.");
-  this->FrontBuffer = frontBuffer;
-}
-
 //-----------------------------------------------------------------------------
 int vtkTesting::RegressionTest(vtkAlgorithm* imageSource, double thresh)
 {
@@ -386,7 +378,6 @@ int vtkTesting::RegressionTest(double thresh, ostream &os)
     {
     if ("-FrontBuffer" == this->Args[i])
       {
-      vtkWarningMacro("-FrontBuffer option is deprecated and has no effet anymore.");
       this->FrontBufferOn();
       }
     else if ("-NoRerender" == this->Args[i])
@@ -395,25 +386,21 @@ int vtkTesting::RegressionTest(double thresh, ostream &os)
       }
     }
 
-  std::ostringstream out1;
   // perform and extra render to make sure it is displayed
-  this->RenderWindow->Render();
-  rtW2if->ReadFrontBufferOff();
-  rtW2if->Update();
-  int res = this->RegressionTest(rtW2if.Get(), thresh, out1);
-  if (res == FAILED)
+  if (!this->FrontBuffer)
     {
-      std::ostringstream out2;
-      // tell it to read front buffer
-      rtW2if->ReadFrontBufferOn();
-      rtW2if->Update();
-      res = this->RegressionTest(rtW2if.Get(), thresh, out2);
-      os << out2.str();
+    this->RenderWindow->Render();
+    // tell it to read the back buffer
+    rtW2if->ReadFrontBufferOff();
     }
   else
     {
-    os << out1.str();
+    // read the front buffer
+    rtW2if->ReadFrontBufferOn();
     }
+
+  rtW2if->Update();
+  int res = this->RegressionTest(rtW2if.Get(), thresh, os);
   return res;
 }
 //-----------------------------------------------------------------------------
@@ -671,7 +658,7 @@ int vtkTesting::RegressionTest(vtkAlgorithm* imageSource,
     }
 
 
-  os << "Failed Image Test ( " << validName << " ) : " << minError << endl;
+  os << "Failed Image Test : " << minError << endl;
   if (errIndex >= 0)
     {
     newFileName = IncrementFileName(this->ValidImageFileName, errIndex);
@@ -767,13 +754,58 @@ int vtkTesting::Test(int argc, char *argv[], vtkRenderWindow *rw,
     return DO_INTERACTOR;
     }
 
+  testing->FrontBufferOff();
+  for (int i = 0; i < argc; ++i)
+    {
+    if (strcmp("-FrontBuffer", argv[i]) == 0)
+      {
+      testing->FrontBufferOn();
+      }
+    }
+
   if (testing->IsValidImageSpecified())
     {
     testing->SetRenderWindow(rw);
 
     std::ostringstream out1;
-    return testing->RegressionTestAndCaptureOutput(thresh, cout);
+    int res = testing->RegressionTestAndCaptureOutput(thresh, out1);
+    double diff1 = testing->GetImageDifference();
+    bool write_out1 = true;
+
+    // Typically, the image testing is done using the back buffer
+    // to avoid accidentally capturing overlapping window artifacts
+    // in the image when using the front buffer. However, some graphics
+    // drivers do not have up to date contents in the back buffer,
+    // causing "failed" tests even though, upon visual inspection, the
+    // front buffer looks perfectly valid... So:
+    //
+    // If the test failed using the back buffer, re-test using the
+    // front buffer. This way, more tests pass on dashboards run with
+    // the Intel HD built-in graphics drivers.
+    //
+    if (res == vtkTesting::FAILED && testing->GetFrontBuffer() == 0)
+      {
+      testing->FrontBufferOn();
+
+      std::ostringstream out2;
+      res = testing->RegressionTestAndCaptureOutput(thresh, out2);
+      double diff2 = testing->GetImageDifference();
+
+      if (diff2 < diff1)
+        {
+        cout << out2.str();
+        write_out1 = false;
+        }
+      }
+
+    if (write_out1)
+      {
+      cout << out1.str();
+      }
+
+    return res;
     }
+
   return NOT_RUN;
 }
 //-----------------------------------------------------------------------------

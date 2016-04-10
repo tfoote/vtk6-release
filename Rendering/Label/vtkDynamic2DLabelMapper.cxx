@@ -89,9 +89,21 @@ vtkDynamic2DLabelMapper::vtkDynamic2DLabelMapper()
 //----------------------------------------------------------------------------
 vtkDynamic2DLabelMapper::~vtkDynamic2DLabelMapper()
 {
-  delete[] this->LabelWidth;
-  delete[] this->LabelHeight;
-  delete[] this->Cutoff;
+  if (this->LabelWidth)
+    {
+    delete[] this->LabelWidth;
+    this->LabelWidth = NULL;
+    }
+  if (this->LabelHeight)
+    {
+    delete[] this->LabelHeight;
+    this->LabelHeight = NULL;
+    }
+  if (this->Cutoff)
+    {
+    delete[] this->Cutoff;
+    this->Cutoff = NULL;
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -477,7 +489,10 @@ void vtkDynamic2DLabelMapper::RenderOpaqueGeometry(vtkViewport *viewport,
       }
 
     // Calculate label widths / heights
-    delete[] this->LabelWidth;
+    if (this->LabelWidth != NULL)
+      {
+      delete[] this->LabelWidth;
+      }
     this->LabelWidth = new float[this->NumberOfLabels];
     for (i = 0; i < this->NumberOfLabels; i++)
       {
@@ -485,7 +500,10 @@ void vtkDynamic2DLabelMapper::RenderOpaqueGeometry(vtkViewport *viewport,
                             widthPadding;
       }
 
-    delete[] this->LabelHeight;
+    if (this->LabelHeight != NULL)
+      {
+      delete[] this->LabelHeight;
+      }
     this->LabelHeight = new float[this->NumberOfLabels];
     for (i = 0; i < this->NumberOfLabels; i++)
       {
@@ -494,7 +512,10 @@ void vtkDynamic2DLabelMapper::RenderOpaqueGeometry(vtkViewport *viewport,
       }
 
     // Determine cutoff scales of each point
-    delete[] this->Cutoff;
+    if (this->Cutoff != NULL)
+      {
+      delete[] this->Cutoff;
+      }
     this->Cutoff = new float[this->NumberOfLabels];
 
     vtkTimerLog* timer = vtkTimerLog::New();

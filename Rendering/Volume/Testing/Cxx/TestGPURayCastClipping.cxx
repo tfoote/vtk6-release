@@ -15,12 +15,12 @@
 // This test covers cropping on volume datasets.
 
 #include <vtkActor.h>
-#include <vtkCamera.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkCommand.h>
 #include <vtkGPUVolumeRayCastMapper.h>
 #include <vtkImageData.h>
 #include <vtkNew.h>
+#include <vtkOutlineFilter.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkPlane.h>
 #include <vtkPlaneCollection.h>
@@ -40,6 +40,8 @@ int TestGPURayCastClipping(int argc, char *argv[])
 {
   double scalarRange[2];
 
+  vtkNew<vtkActor> outlineActor;
+  vtkNew<vtkPolyDataMapper> outlineMapper;
   vtkNew<vtkGPUVolumeRayCastMapper> volumeMapper;
 
   vtkNew<vtkXMLImageDataReader> reader;
@@ -49,6 +51,12 @@ int TestGPURayCastClipping(int argc, char *argv[])
   reader->SetFileName(volumeFile);
   reader->Update();
   volumeMapper->SetInputConnection(reader->GetOutputPort());
+
+  // Add outline filter
+  vtkNew<vtkOutlineFilter> outlineFilter;
+  outlineFilter->SetInputConnection(reader->GetOutputPort());
+  outlineMapper->SetInputConnection(outlineFilter->GetOutputPort());
+  outlineActor->SetMapper(outlineMapper.GetPointer());
 
   volumeMapper->GetInput()->GetScalarRange(scalarRange);
   volumeMapper->SetBlendModeToComposite();
@@ -76,18 +84,18 @@ int TestGPURayCastClipping(int argc, char *argv[])
   vtkSmartPointer<vtkColorTransferFunction> colorTransferFunction =
     volumeProperty->GetRGBTransferFunction(0);
   colorTransferFunction->RemoveAllPoints();
-  colorTransferFunction->AddRGBPoint(scalarRange[0], 0.1, 0.5, 1.0);
-  colorTransferFunction->AddRGBPoint(scalarRange[1], 1.0, 0.5, 0.1);
+  colorTransferFunction->AddRGBPoint(scalarRange[0], 0.0, 0.0, 0.0);
+  colorTransferFunction->AddRGBPoint(scalarRange[1], 1.0, 1.0, 1.0);
 
   // Test cropping now
   double* bounds = reader->GetOutput()->GetBounds();
   vtkNew<vtkPlane> clipPlane1;
   clipPlane1->SetOrigin(0.45 * (bounds[0] + bounds[1]), 0.0, 0.0);
-  clipPlane1->SetNormal(0.8, 0.0, 0.0);
+  clipPlane1->SetNormal(1.0, 0.0, 0.0);
 
   vtkNew<vtkPlane> clipPlane2;
-  clipPlane2->SetOrigin(0.0, 0.35 * (bounds[2] + bounds[3]), 0.0);
-  clipPlane2->SetNormal(0.2, -0.2, 0.0);
+  clipPlane2->SetOrigin(0.55 * (bounds[0] + bounds[1]), 0.0, 0.0);
+  clipPlane2->SetNormal(-1.0, 0.0, 0.0);
 
   vtkNew<vtkPlaneCollection> clipPlaneCollection;
   clipPlaneCollection->AddItem(clipPlane1.GetPointer());
@@ -100,7 +108,7 @@ int TestGPURayCastClipping(int argc, char *argv[])
   volume->SetProperty(volumeProperty.GetPointer());
 
   ren->AddViewProp(volume.GetPointer());
-  ren->GetActiveCamera()->Azimuth(-40);
+  ren->AddActor(outlineActor.GetPointer());
   ren->ResetCamera();
   renWin->Render();
   iren->Initialize();

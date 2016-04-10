@@ -71,11 +71,6 @@ void vtkPStructuredGridConnectivity::Initialize()
 //------------------------------------------------------------------------------
 void vtkPStructuredGridConnectivity::SetNumberOfGrids( const unsigned int N )
 {
-  if (N == 0)
-    {
-    vtkErrorMacro("Number of grids cannot be 0.");
-    return;
-    }
   this->Superclass::SetNumberOfGrids( N );
   this->GridRanks.resize( N,-1 );
 }
@@ -900,7 +895,7 @@ void vtkPStructuredGridConnectivity::SerializeDataArray(
           static_cast<int*>(dataArray->GetVoidPointer(0)), size );
       break;
     default:
-      vtkErrorMacro("Cannot serialize data array of type"<<dataArray->GetDataType());
+      vtkErrorMacro("Cannot serialize data array of this type");
     }
 }
 

@@ -20,7 +20,7 @@ import tempfile
 try:
     import argparse
 except ImportError:
-    from vtk.util import _argparse as argparse
+    import _argparse as argparse
 
 tagMatcherType = re.compile('^(.+)\t(\S+)\t/\^(.*)\$/;"\t(.*)\n')
 

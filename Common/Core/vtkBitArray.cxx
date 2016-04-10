@@ -61,7 +61,7 @@ vtkBitArray::vtkBitArray()
 //----------------------------------------------------------------------------
 vtkBitArray::~vtkBitArray()
 {
-  if (!this->SaveUserArray)
+  if ((this->Array) && (!this->SaveUserArray))
     {
     delete [] this->Array;
     }
@@ -131,7 +131,7 @@ int vtkBitArray::Allocate(vtkIdType sz, vtkIdType vtkNotUsed(ext))
 {
   if ( sz > this->Size )
     {
-    if (!this->SaveUserArray)
+    if (( this->Array != NULL ) && (!this->SaveUserArray))
       {
       delete [] this->Array;
       }
@@ -153,7 +153,7 @@ int vtkBitArray::Allocate(vtkIdType sz, vtkIdType vtkNotUsed(ext))
 // Release storage and reset array to initial state.
 void vtkBitArray::Initialize()
 {
-  if (!this->SaveUserArray)
+  if (( this->Array != NULL ) && (!this->SaveUserArray))
     {
     delete [] this->Array;
     }
@@ -191,7 +191,7 @@ void vtkBitArray::DeepCopy(vtkDataArray *ia)
 
   if ( this != ia )
     {
-    if (!this->SaveUserArray)
+    if ((this->Array) && (!this->SaveUserArray))
       {
       delete [] this->Array;
       }

@@ -127,17 +127,6 @@ void vtkImageStencilData::CopyInformationFromPipeline(vtkInformation*meta_data)
 }
 
 //----------------------------------------------------------------------------
-void vtkImageStencilData::CopyInformationToPipeline(vtkInformation* info)
-{
-  // Let the superclass copy information to the pipeline
-  this->Superclass::CopyInformationToPipeline(info);
-
-  // Copy the origin and spacing to the pipeline
-  info->Set(vtkDataObject::SPACING(), this->Spacing, 3);
-  info->Set(vtkDataObject::ORIGIN(), this->Origin, 3);
-}
-
-//----------------------------------------------------------------------------
 void vtkImageStencilData::CopyOriginAndSpacingFromPipeline(
   vtkInformation* meta_data)
 {

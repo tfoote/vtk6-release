@@ -16,6 +16,7 @@ vtk_module(vtkRenderingOpenGL
     vtkIOExport
     vtkIOLegacy
     vtkIOXML
+    vtkRenderingFreeTypeOpenGL
     vtkRenderingImage
     vtkRenderingLOD
     vtkImagingGeneral

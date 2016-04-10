@@ -45,7 +45,7 @@ template <class T>
 void vtkBlankStructuredGridExecute(vtkBlankStructuredGrid *vtkNotUsed(self),
                                    T *dptr, int numPts, int numComp,
                                    int comp, double min, double max,
-                                   vtkUnsignedCharArray *ghosts)
+                                   vtkUnsignedCharArray *blanking)
 {
   T compValue;
   dptr += comp;
@@ -53,12 +53,14 @@ void vtkBlankStructuredGridExecute(vtkBlankStructuredGrid *vtkNotUsed(self),
   for ( int ptId=0; ptId < numPts; ptId++, dptr+=numComp)
     {
     compValue = *dptr;
-    unsigned char value = 0;
-    if(compValue >= min && compValue <= max)
+    if ( compValue >= min && compValue <= max )
       {
-      value |= vtkDataSetAttributes::HIDDENPOINT;
+      blanking->SetValue(ptId,0); //make it invisible
       }
-    ghosts->SetValue(ptId, value);
+    else
+      {
+      blanking->SetValue(ptId,1);
+      }
     }
 }
 
@@ -116,21 +118,24 @@ int vtkBlankStructuredGrid::RequestData(
   // Loop over the data array setting anything within the data range specified
   // to be blanked.
   //
-  vtkUnsignedCharArray *ghosts = vtkUnsignedCharArray::New();
-  ghosts->SetNumberOfValues(numPts);
-  ghosts->SetName(vtkDataSetAttributes::GhostArrayName());
-  switch(dataArray->GetDataType())
+  vtkUnsignedCharArray *blanking = vtkUnsignedCharArray::New();
+  blanking->SetNumberOfValues(numPts);
+
+  // call templated function
+  switch (dataArray->GetDataType())
     {
     vtkTemplateMacro(
       vtkBlankStructuredGridExecute(this, static_cast<VTK_TT *>(dptr), numPts,
                                     numComp, this->Component,
                                     this->MinBlankingValue,
-                                    this->MaxBlankingValue, ghosts));
+                                    this->MaxBlankingValue, blanking));
     default:
       break;
     }
-  output->GetPointData()->AddArray(ghosts);
-  ghosts->Delete();
+
+  // Clean up and get out
+  output->SetPointVisibilityArray(blanking);
+  blanking->Delete();
 
   return 1;
 }

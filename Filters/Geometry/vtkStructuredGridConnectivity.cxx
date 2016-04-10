@@ -16,6 +16,7 @@
 
 // VTK includes
 #include "vtkObjectFactory.h"
+#include "vtkGhostArray.h"
 #include "vtkStructuredData.h"
 #include "vtkStructuredExtent.h"
 #include "vtkIdList.h"
@@ -323,16 +324,18 @@ void vtkStructuredGridConnectivity::MarkCellProperty(
   assert( "pre: node ghostfields should not be NULL" &&
            (nodeGhostFields != NULL) );
 
-  pfield = 0;
+  vtkGhostArray::Reset(pfield);
 
   for( int i=0; i < numNodes; ++i )
     {
-    if(nodeGhostFields[i] & vtkDataSetAttributes::DUPLICATEPOINT)
+    if( vtkGhostArray::IsPropertySet(nodeGhostFields[i], vtkGhostArray::GHOST))
       {
-      pfield |= vtkDataSetAttributes::DUPLICATECELL;
+      vtkGhostArray::SetProperty(pfield,vtkGhostArray::DUPLICATE);
       return;
       }
     } // END for all nodes
+
+  vtkGhostArray::SetProperty( pfield,vtkGhostArray::INTERIOR );
 }
 
 //------------------------------------------------------------------------------
@@ -340,25 +343,27 @@ void vtkStructuredGridConnectivity::MarkNodeProperty(
     const int gridID, const int i, const int j, const int k,
     int ext[6], int realExtent[6], unsigned char &p )
 {
-  p = 0;
+  vtkGhostArray::Reset( p );
 
   // Check if the node is an interior a node, i.e., it is not on any boundary
   // shared or real boundary and not in a ghost region. Interior nodes can only
   // be internal nodes!
-  if( ! this->IsNodeInterior( i,j,k, realExtent) )
+  if( this->IsNodeInterior( i,j,k, realExtent) )
+    {
+    vtkGhostArray::SetProperty( p, vtkGhostArray::INTERNAL );
+    }
+  else
     {
     // If the node is on the boundary of the computational domain mark it
     if( this->IsNodeOnBoundary(i,j,k) )
       {
-      // BOUNDARY might be used in the future
-      //vtkGhostArray::SetProperty( p, vtkGhostArray::BOUNDARY );
+      vtkGhostArray::SetProperty( p, vtkGhostArray::BOUNDARY );
       }
 
     // Check if the node is also on a shared boundary or if it is a ghost node
     if(this->IsNodeOnSharedBoundary(gridID,realExtent,i,j,k))
       {
-      // SHARED might be used in the future
-      //vtkGhostArray::SetProperty( p, vtkGhostArray::SHARED );
+      vtkGhostArray::SetProperty( p, vtkGhostArray::SHARED );
 
       // For shared nodes we must check for ownership
       vtkIdList *neiList = vtkIdList::New();
@@ -383,8 +388,7 @@ void vtkStructuredGridConnectivity::MarkNodeProperty(
           if( this->IsNodeWithinExtent(i,j,k,neiRealExtent) &&
               gridID > neiList->GetId( nei ) )
             {
-            // this was originally vtkGhostArray::IGNORE
-            p |= vtkDataSetAttributes::HIDDENPOINT;
+            vtkGhostArray::SetProperty(p,vtkGhostArray::IGNORE );
             break;
             }
           } // END for all neis
@@ -393,7 +397,9 @@ void vtkStructuredGridConnectivity::MarkNodeProperty(
       }// END if node is on a shared boundary
     else if( this->IsGhostNode(ext,realExtent,i,j,k) )
       {
-      p |= vtkDataSetAttributes::DUPLICATEPOINT;
+      vtkGhostArray::SetProperty( p, vtkGhostArray::GHOST );
+      // Ghost nodes are always ignored!
+      vtkGhostArray::SetProperty( p, vtkGhostArray::IGNORE );
       }
     }
 }
@@ -1150,17 +1156,9 @@ void vtkStructuredGridConnectivity::CreateGhostedMaskArrays(const int gridID)
   int numCells = vtkStructuredData::GetNumberOfCells(
       ghostedExtent,this->DataDescription );
 
-  // STEP 3: Allocated the ghosted node and cell arrays and initialize them
+  // STEP 3: Allocated the ghosted node and cell arrays
   this->GhostedPointGhostArray[gridID]->Allocate( numNodes );
   this->GhostedCellGhostArray[gridID]->Allocate( numCells );
-
-  // Initialize the arrays
-  unsigned char* pnodes =
-    this->GhostedPointGhostArray[gridID]->WritePointer(0, numNodes);
-  memset(pnodes, 0, numNodes);
-  unsigned char* pcells =
-    this->GhostedCellGhostArray[gridID]->WritePointer(0, numCells);
-  memset(pcells, 0, numCells);
 
   // STEP 4: Loop through the ghosted extent and mark the nodes in the ghosted
   // extent accordingly. If the node exists in the grown extent
@@ -1184,22 +1182,19 @@ void vtkStructuredGridConnectivity::CreateGhostedMaskArrays(const int gridID)
           vtkIdType srcidx =
               vtkStructuredData::ComputePointIdForExtent(
                           gridExtent,ijk,this->DataDescription);
-          if(this->GridPointGhostArrays[gridID])
-            {
-            p = this->GridPointGhostArrays[gridID]->GetValue( srcidx );
-            this->GhostedPointGhostArray[gridID]->SetValue(idx, p);
-            }
+          p = this->GridPointGhostArrays[gridID]->GetValue( srcidx );
+          this->GhostedPointGhostArray[gridID]->SetValue(idx, p);
           }
         else
           {
-          p = 0;
+          vtkGhostArray::Reset( p );
 
           if( this->IsNodeOnBoundary(i,j,k) )
             {
-            // We might use BOUNDARY in the future
-            //vtkGhostArray::SetProperty( p,vtkGhostArray::BOUNDARY );
+            vtkGhostArray::SetProperty( p,vtkGhostArray::BOUNDARY );
             }
-          p |= vtkDataSetAttributes::DUPLICATEPOINT;
+          vtkGhostArray::SetProperty( p, vtkGhostArray::GHOST );
+          vtkGhostArray::SetProperty( p, vtkGhostArray::IGNORE );
           this->GhostedPointGhostArray[gridID]->SetValue(idx,p);
           }
         } // END for all k

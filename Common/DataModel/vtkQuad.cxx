@@ -87,7 +87,6 @@ int vtkQuad::EvaluatePosition(double x[3], double* closestPoint,
 
   subId = 0;
   pcoords[0] = pcoords[1] = params[0] = params[1] = 0.5;
-  pcoords[2] = 0.0;
 
   // Get normal for quadrilateral
   //

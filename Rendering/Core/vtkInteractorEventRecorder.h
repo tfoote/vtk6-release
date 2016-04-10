@@ -88,9 +88,6 @@ protected:
   // file to read/write from
   char *FileName;
 
-  //listens to delete events
-  vtkCallbackCommand* DeleteEventCallbackCommand;
-
   // control whether to read from string
   int ReadFromInputString;
   char *InputString;
@@ -102,8 +99,6 @@ protected:
   //methods for processing events
   static void ProcessCharEvent(vtkObject* object, unsigned long event,
                                void* clientdata, void* calldata);
-  static void ProcessDeleteEvent(vtkObject* object, unsigned long event,
-                                 void* clientdata, void* calldata);
   static void ProcessEvents(vtkObject* object, unsigned long event,
                             void* clientdata, void* calldata);
 

@@ -102,7 +102,7 @@ vtkVariantArray::vtkVariantArray()
 //----------------------------------------------------------------------------
 vtkVariantArray::~vtkVariantArray()
 {
-  if (!this->SaveUserArray)
+  if ((this->Array) && (!this->SaveUserArray))
     {
     delete [] this->Array;
     }
@@ -120,7 +120,7 @@ int vtkVariantArray::Allocate(vtkIdType sz, vtkIdType)
 {
   if(sz > this->Size)
     {
-    if(!this->SaveUserArray)
+    if(this->Array && !this->SaveUserArray)
       {
       delete [] this->Array;
       }
@@ -143,7 +143,7 @@ int vtkVariantArray::Allocate(vtkIdType sz, vtkIdType)
 //----------------------------------------------------------------------------
 void vtkVariantArray::Initialize()
 {
-  if(!this->SaveUserArray)
+  if(this->Array && !this->SaveUserArray)
     {
     delete [] this->Array;
     }
@@ -443,7 +443,7 @@ void vtkVariantArray::DeepCopy(vtkAbstractArray *aa)
     }
 
   // Free our previous memory.
-  if(!this->SaveUserArray)
+  if(this->Array && !this->SaveUserArray)
     {
     delete [] this->Array;
     }
@@ -454,7 +454,7 @@ void vtkVariantArray::DeepCopy(vtkAbstractArray *aa)
   this->SaveUserArray = 0;
   this->Array = new vtkVariant[this->Size];
 
-  for (int i = 0; i < (this->MaxId+1); ++i)
+  for (int i = 0; i < this->Size; ++i)
     {
     this->Array[i] = va->Array[i];
     }
@@ -597,7 +597,7 @@ unsigned long vtkVariantArray::GetActualMemorySize()
   totalSize = numPrims*sizeof(vtkVariant);
 
   return static_cast<unsigned long>(
-    ceil(static_cast<double>(totalSize) / 1024.0)); // kibibytes
+    ceil(static_cast<double>(totalSize) / 1024.0)); // kilobytes
 }
 
 //----------------------------------------------------------------------------
@@ -639,10 +639,7 @@ void vtkVariantArray::InsertValue(vtkIdType id, vtkVariant value)
 {
   if ( id >= this->Size )
     {
-    if (!this->ResizeAndExtend(id+1))
-      {
-      return;
-      }
+    this->ResizeAndExtend(id+1);
     }
   this->Array[id] = value;
   if ( id > this->MaxId )

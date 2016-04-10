@@ -741,7 +741,7 @@ static double vtkRBFDRr(double r, double &dUdr)
 // the standard 2D thin plate spline basis function
 static double vtkRBFr2logr(double r)
 {
-  if (r != 0.0)
+  if (r)
     {
     return r*r*log(r);
     }

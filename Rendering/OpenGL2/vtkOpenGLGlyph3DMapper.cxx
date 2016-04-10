@@ -128,8 +128,11 @@ vtkOpenGLGlyph3DMapper::vtkOpenGLGlyph3DMapper()
 vtkOpenGLGlyph3DMapper::~vtkOpenGLGlyph3DMapper()
 {
   this->ColorMapper->Delete();
-
-  delete this->GlyphValues;
+  if (this->GlyphValues)
+    {
+    delete this->GlyphValues;
+    this->GlyphValues = NULL;
+    }
 
   if (this->LastWindow)
     {

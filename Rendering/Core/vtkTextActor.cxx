@@ -29,7 +29,6 @@
 #include "vtkMath.h"
 #include "vtkTextRenderer.h"
 #include "vtkRenderer.h"
-#include "vtkRenderWindow.h"
 
 #include <algorithm>
 
@@ -102,7 +101,6 @@ vtkTextActor::vtkTextActor()
   this->InputRendered = false;
 
   this->FormerOrientation = 0.0;
-  this->RenderedDPI = 0;
 
   this->TextRenderer = vtkTextRenderer::GetInstance();
   if (!this->TextRenderer)
@@ -119,7 +117,10 @@ vtkTextActor::~vtkTextActor()
   this->SetTextProperty(NULL);
   this->ScaledTextProperty->Delete();
   this->ScaledTextProperty = NULL;
-  delete [] this->Input;
+  if(this->Input)
+    {
+    delete [] this->Input;
+    }
   this->Rectangle->Delete();
   this->Rectangle = 0;
   this->RectanglePoints->Delete();
@@ -177,8 +178,7 @@ int vtkTextActor::SetConstrainedFontSize(vtkViewport* viewport,
                                           int targetWidth,
                                           int targetHeight)
 {
-  return this->SetConstrainedFontSize(this, viewport, targetWidth,
-                                      targetHeight);
+  return this->SetConstrainedFontSize(this, viewport, targetWidth, targetHeight);
 }
 
 
@@ -333,43 +333,26 @@ void vtkTextActor::SetNonLinearFontScale(double exp, int tgt)
 }
 
 // ----------------------------------------------------------------------------
-bool vtkTextActor::RenderImage(vtkTextProperty *tprop, vtkViewport *vp)
+bool vtkTextActor::RenderImage(vtkTextProperty *tprop, vtkViewport *)
 {
   vtkStdString text;
   if (this->Input && this->Input[0])
     {
     text = this->Input;
     }
-
-  vtkWindow *win = vp->GetVTKWindow();
-  if (!win)
-    {
-    vtkErrorMacro(<<"No render window available: cannot determine DPI.");
-    return false;
-    }
-
-  return this->TextRenderer->RenderString(tprop, text, this->ImageData,
-                                          NULL, win->GetDPI());
+  return this->TextRenderer->RenderString(tprop, text, this->ImageData);
 }
 
 // ----------------------------------------------------------------------------
-bool vtkTextActor::GetImageBoundingBox(vtkTextProperty *tprop, vtkViewport *vp,
-                                       int bbox[4])
+bool vtkTextActor::GetImageBoundingBox(vtkTextProperty *tprop, vtkViewport *,
+                                  int bbox[4])
 {
   vtkStdString text;
   if (this->Input && this->Input[0])
     {
     text = this->Input;
     }
-
-  vtkWindow *win = vp->GetVTKWindow();
-  if (!win)
-    {
-    vtkErrorMacro(<<"No render window available: cannot determine DPI.");
-    return false;
-    }
-
-  return this->TextRenderer->GetBoundingBox(tprop, text, bbox, win->GetDPI());
+  return this->TextRenderer->GetBoundingBox(tprop, text, bbox);
 }
 
 // ----------------------------------------------------------------------------
@@ -377,7 +360,9 @@ void vtkTextActor::SetInput(const char* str)
 {
   if(!str)
     {
-    str = "";
+      vtkErrorMacro(
+        <<"vtkTextActor::SetInput was passed an uninitialized string");
+    return;
     }
   if(this->Input)
     {
@@ -449,7 +434,7 @@ void vtkTextActor::ReleaseGraphicsResources(vtkWindow *win)
 // ----------------------------------------------------------------------------
 int vtkTextActor::RenderOverlay(vtkViewport *viewport)
 {
-  if (!this->Visibility || !this->Input || !this->Input[0])
+  if (!this->Visibility)
     {
     return 0;
     }
@@ -738,16 +723,9 @@ void vtkTextActor::ComputeScaledFont(vtkViewport *viewport)
           }
         int max_height = static_cast<int>(this->MaximumLineHeight * size[1]);
 
-        vtkWindow *win = viewport->GetVTKWindow();
-        if (!win)
-          {
-          vtkErrorMacro(<<"No render window available: cannot determine DPI.");
-          return;
-          }
-
         int fsize = this->TextRenderer->GetConstrainedFontSize(
           this->Input, this->ScaledTextProperty, size[0],
-          (size[1] < max_height ? size[1] : max_height), win->GetDPI());
+          (size[1] < max_height ? size[1] : max_height));
 
         if (fsize == -1)
           {
@@ -887,17 +865,9 @@ int vtkTextActor::UpdateRectangle(vtkViewport* viewport)
     this->ComputeScaledFont(viewport);
     }
 
-  vtkWindow *win = viewport->GetVTKWindow();
-  if (!win)
-    {
-    vtkErrorMacro(<<"No render window available: cannot determine DPI.");
-    return 0;
-    }
-
   //check if we need to render the string
   if(this->ScaledTextProperty->GetMTime() > this->BuildTime ||
-    !this->InputRendered || this->GetMTime() > this->BuildTime ||
-     this->RenderedDPI != win->GetDPI())
+    !this->InputRendered || this->GetMTime() > this->BuildTime)
     {
     if(!this->RenderImage(this->ScaledTextProperty, viewport))
       {
@@ -914,7 +884,6 @@ int vtkTextActor::UpdateRectangle(vtkViewport* viewport)
     this->Texture->SetInputData(this->ImageData);
     this->Texture->Modified();
     this->InputRendered = true;
-    this->RenderedDPI = win->GetDPI();
     this->BuildTime.Modified();
     }
   return 1;
@@ -933,19 +902,14 @@ void vtkTextActor::SpecifiedToDisplay(double *pos, vtkViewport *vport,
   {
   case VTK_WORLD:
     vport->WorldToView(pos[0], pos[1], pos[2]);
-    VTK_FALLTHROUGH;
   case VTK_VIEW:
     vport->ViewToNormalizedViewport(pos[0], pos[1], pos[2]);
-    VTK_FALLTHROUGH;
   case VTK_NORMALIZED_VIEWPORT:
     vport->NormalizedViewportToViewport(pos[0], pos[1]);
-    VTK_FALLTHROUGH;
   case VTK_VIEWPORT:
     vport->ViewportToNormalizedDisplay(pos[0], pos[1]);
-    VTK_FALLTHROUGH;
   case VTK_NORMALIZED_DISPLAY:
     vport->NormalizedDisplayToDisplay(pos[0], pos[1]);
-    VTK_FALLTHROUGH;
   case VTK_DISPLAY:
     break;
   }

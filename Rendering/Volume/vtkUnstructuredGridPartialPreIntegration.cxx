@@ -273,7 +273,7 @@ inline void vtkPartialPreIntegrationTransferFunction::GetColor(double x,
       c[3] = 0.0;
     return;
     }
-  while ((i < size-1) && (this->ControlPoints[i] < x))
+  while (this->ControlPoints[i] < x && i < size-1)
     {
     i++;
     }
@@ -310,7 +310,10 @@ vtkUnstructuredGridPartialPreIntegration::vtkUnstructuredGridPartialPreIntegrati
 //-----------------------------------------------------------------------------
 vtkUnstructuredGridPartialPreIntegration::~vtkUnstructuredGridPartialPreIntegration()
 {
-  delete[] this->TransferFunctions;
+  if (this->TransferFunctions)
+    {
+    delete[] this->TransferFunctions;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -362,7 +365,10 @@ void vtkUnstructuredGridPartialPreIntegration::Initialize(
     return;
     }
 
-  delete[] this->TransferFunctions;
+  if (this->TransferFunctions)
+    {
+    delete[] this->TransferFunctions;
+    }
 
   this->NumIndependentComponents = numcomponents;
   this->TransferFunctions

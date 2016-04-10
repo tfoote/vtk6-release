@@ -47,29 +47,22 @@ public:
         this->TextureObject = 0;
         }
 
-      delete[] this->Table;
+      if (this->Table)
+        {
+        delete[] this->Table;
+        this->Table=0;
+        }
     }
 
-  // Activate texture.
+  // Bind texture.
   //--------------------------------------------------------------------------
-  void Activate()
+  void Bind()
     {
     if (!this->TextureObject)
       {
       return;
       }
     this->TextureObject->Activate();
-    }
-
-  // Deactivate texture.
-  //--------------------------------------------------------------------------
-  void Deactivate()
-    {
-    if (!this->TextureObject)
-      {
-      return;
-      }
-    this->TextureObject->Deactivate();
     }
 
   // Update opacity tranfer function texture.
@@ -161,6 +154,7 @@ public:
                                               VTK_FLOAT,
                                               this->Table);
       this->LastInterpolation = filterValue;
+      this->TextureObject->Activate();
       this->BuildTime.Modified();
       }
 

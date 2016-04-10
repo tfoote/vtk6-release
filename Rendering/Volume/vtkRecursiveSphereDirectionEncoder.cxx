@@ -33,8 +33,14 @@ vtkRecursiveSphereDirectionEncoder::vtkRecursiveSphereDirectionEncoder()
 // Destruct a vtkRecursiveSphereDirectionEncoder - free up any memory used
 vtkRecursiveSphereDirectionEncoder::~vtkRecursiveSphereDirectionEncoder()
 {
-  delete [] this->IndexTable;
-  delete [] this->DecodedNormal;
+  if ( this->IndexTable )
+    {
+    delete [] this->IndexTable;
+    }
+  if ( this->DecodedNormal )
+    {
+    delete [] this->DecodedNormal;
+    }
 }
 
 
@@ -154,8 +160,14 @@ void vtkRecursiveSphereDirectionEncoder::InitializeIndexTable( void )
   int     limit;
 
   // Free up any memory previously used
-  delete [] this->IndexTable;
-  delete [] this->DecodedNormal;
+  if ( this->IndexTable )
+    {
+    delete [] this->IndexTable;
+    }
+  if ( this->DecodedNormal )
+    {
+    delete [] this->DecodedNormal;
+    }
 
   this->OuterSize = (int)(pow( 2.0, (double) this->RecursionDepth ) + 1);
   this->InnerSize = this->OuterSize - 1;

@@ -185,10 +185,6 @@ int vtkParticleReader::RequestInformation(
     }
 
   this->OpenFile();
-  if (!this->File || this->File->fail())
-    {
-    return 0;
-    }
   int ft = this->FileType;
   if ( ft == FILE_TYPE_IS_UNKNOWN )
     {

@@ -555,11 +555,6 @@ double* vtkLegendBoxActor::GetEntryColor(int i)
 // resources to release.
 void vtkLegendBoxActor::ReleaseGraphicsResources(vtkWindow *win)
 {
-  if ( this->BackgroundActor )
-     {
-     this->BackgroundActor->ReleaseGraphicsResources(win);
-     }
-
   if ( this->BorderActor )
      {
      this->BorderActor->ReleaseGraphicsResources(win);
@@ -675,6 +670,7 @@ int vtkLegendBoxActor::RenderOpaqueGeometry(vtkViewport *viewport)
     //Find the longest string and symbol width ratio
     int length, maxLength;
     int maxTextMapper = 0;
+    char *str;
     int tempi[2], fontSize;
     double sf, twr, swr;
     double *bounds;
@@ -683,13 +679,16 @@ int vtkLegendBoxActor::RenderOpaqueGeometry(vtkViewport *viewport)
 
     for (swr=0.0, maxLength=i=0; i<this->NumberOfEntries; i++)
       {
-      this->TextMapper[i]->GetTextProperty()->SetFontSize(12);
-      length = this->TextMapper[i]->GetWidth(viewport);
-      if ( length > maxLength )
+      str = this->TextMapper[i]->GetInput();
+      if ( str ) //if there is a string
         {
-        maxLength = length;
-        maxTextMapper = i;
-        }
+        length = static_cast<int>(strlen(str));
+        if ( length > maxLength )
+          {
+          maxLength = length;
+          maxTextMapper = i;
+          }
+        }//if string
 
       if ( this->Symbol[i] ) //if there is a symbol
         {
@@ -818,9 +817,7 @@ int vtkLegendBoxActor::RenderOpaqueGeometry(vtkViewport *viewport)
       posY = p2[1] - this->Padding - (double)i*size[1] - 0.5*size[1];
       this->TextActor[i]->SetPosition(posX,posY);
       this->TextMapper[i]->GetTextProperty()->SetFontSize(fontSize);
-      this->TextMapper[i]->GetTextProperty()->SetVerticalJustification(
-            VTK_TEXT_CENTERED);
-      this->TextMapper[i]->GetTextProperty()->SetJustification(VTK_TEXT_LEFT);
+      this->TextActor[i]->GetProperty()->DeepCopy(this->GetProperty());
       this->Colors->GetTuple(i, color);
       if ( color[0] >= 0.0 && color[1] >= 0.0 && color[2] >= 0.0 )
         {

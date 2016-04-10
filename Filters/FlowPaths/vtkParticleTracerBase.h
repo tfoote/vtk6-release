@@ -77,12 +77,8 @@ namespace vtkParticleTracerBaseNamespace
     float         angularVel;
     float         time;
     float         speed;
-    // once the partice is added, PointId is valid and is the tuple location
-    // in ProtoPD.
-    vtkIdType     PointId;
-    // if PointId is negative then in parallel this particle was just
-    // received and we need to get the tuple value from vtkPParticleTracerBase::Tail.
-    vtkIdType     TailPointId;
+
+    vtkIdType     PointId; //once the partice is added, PointId is valid
   } ParticleInformation;
 
   typedef std::vector<ParticleInformation>  ParticleVector;
@@ -224,9 +220,6 @@ public:
 
  protected:
   vtkSmartPointer<vtkPolyData> Output; //managed by child classes
-  // Description:
-  // ProtoPD is used just to keep track of the input array names and number of components
-  // for copy allocating from other vtkPointDatas where the data is really stored
   vtkSmartPointer<vtkPointData> ProtoPD;
   vtkIdType UniqueIdCounter;// global Id counter used to give particles a stamp
   vtkParticleTracerBaseNamespace::ParticleDataList  ParticleHistories;
@@ -333,9 +326,8 @@ public:
 
   // Description : Perform a GatherV operation on a vector of particles
   // this is used during classification of seed points and also between iterations
-  // of the main loop as particles leave each processor domain. Returns true
-  // if particles moved between processes and false otherwise.
-  virtual bool UpdateParticleListFromOtherProcesses(){return false;}
+  // of the main loop as particles leave each processor domain
+  virtual void UpdateParticleListFromOtherProcesses(){}
 
   // Description : The main loop performing Runge-Kutta integration of a single
   // particle between the two times supplied.
@@ -409,8 +401,6 @@ public:
   virtual void InitializeExtraPointDataArrays(vtkPointData* vtkNotUsed(outputPD)) {}
 
   virtual void AppendToExtraPointDataArrays(vtkParticleTracerBaseNamespace::ParticleInformation &) {}
-
-  vtkTemporalInterpolatedVelocityField* GetInterpolator();
 private:
   // Description:
   // Hide this because we require a new interpolator type
@@ -422,7 +412,7 @@ private:
   // These routines manage the collection and sending after each main iteration.
   // RetryWithPush adds a small push to a particle along it's current velocity
   // vector, this helps get over cracks in dynamic/rotating meshes. This is a
-  // first order integration though so it may introduce a bit extra error compared
+  // firsr order integration though so it may introduce a bit extra error compared
   // to the integrator that is used.
   bool RetryWithPush(
     vtkParticleTracerBaseNamespace::ParticleInformation &info, double* point1,double delT, int subSteps);
@@ -468,6 +458,7 @@ private:
 
   // The main lists which are held during operation- between time step updates
   vtkParticleTracerBaseNamespace::ParticleVector    LocalSeeds;
+
 
   // The velocity interpolator
   vtkSmartPointer<vtkTemporalInterpolatedVelocityField>  Interpolator;

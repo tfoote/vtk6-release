@@ -46,12 +46,25 @@ void vtkNewickTreeWriter::WriteData()
   this->NodeNameArray =
     input->GetVertexData()->GetAbstractArray(this->NodeNameArrayName.c_str());
 
-  ostream *fp = this->OpenVTKFile();
-  if(!fp)
-  {
-    vtkErrorMacro("Falied to open output stream");
+  ostream *fp;
+  if( !(fp=this->OpenVTKFile()) )
+    {
+    if(fp)
+      {
+      if(this->FileName)
+        {
+        vtkErrorMacro("Problem opening file: "
+                      << this->FileName);
+        this->CloseVTKFile(fp);
+        }
+      else
+        {
+        this->CloseVTKFile(fp);
+        vtkErrorMacro("The FileName was not set correctly");
+        }
+      }
     return;
-  }
+    }
 
   this->WriteVertex(fp, input, input->GetRoot());
 

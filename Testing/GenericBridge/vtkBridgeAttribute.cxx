@@ -140,7 +140,7 @@ vtkIdType vtkBridgeAttribute::GetSize()
 
 //-----------------------------------------------------------------------------
 // Description:
-// Size in kibibytes (1024 bytes) taken by the attribute.
+// Size in kilobytes taken by the attribute.
 unsigned long vtkBridgeAttribute::GetActualMemorySize()
 {
   return this->Data->GetArray(this->AttributeNumber)->GetActualMemorySize();
@@ -472,7 +472,10 @@ vtkBridgeAttribute::~vtkBridgeAttribute()
       this->Cd->Delete();
       }
     }
-  delete[] this->InternalTuple;
+  if(this->InternalTuple!=0)
+    {
+    delete[] this->InternalTuple;
+    }
 }
 
 //-----------------------------------------------------------------------------

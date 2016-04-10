@@ -266,7 +266,10 @@ bool vtkPostgreSQLDatabase::Open( const char* password )
     }
   if ( password && this->Password != password )
     {
-    delete [] this->Password;
+    if ( this->Password )
+      {
+      delete [] this->Password;
+      }
     this->Password = password ? vtksys::SystemTools::DuplicateString( password ) : 0;
     }
   if ( this->Password && strlen( this->Password ) > 0 )

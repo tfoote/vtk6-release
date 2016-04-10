@@ -9,6 +9,7 @@ vtk_module(vtkRenderingLabel
     vtkIOXML
     vtkTestingCore
     vtkTestingRendering
+    vtkRenderingFreeType${VTK_RENDERING_BACKEND}
     vtkRendering${VTK_RENDERING_BACKEND}
     vtkInteractionStyle
   KIT

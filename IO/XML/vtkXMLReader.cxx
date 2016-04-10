@@ -24,7 +24,6 @@
 #include "vtkXMLDataElement.h"
 #include "vtkXMLDataParser.h"
 #include "vtkXMLFileReadTester.h"
-#include "vtkXMLReaderVersion.h"
 #include "vtkZLibDataCompressor.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
@@ -189,7 +188,7 @@ vtkDataSet* vtkXMLReader::GetOutputAsDataSet(int index)
 // functionality that can be safely ignored by older readers.
 int vtkXMLReader::CanReadFileVersion(int major, int vtkNotUsed(minor))
 {
-  return (major > vtkXMLReaderMajorVersion) ? 0 : 1;
+  return (major > 1) ? 0 : 1;
 }
 
 //----------------------------------------------------------------------------
@@ -244,8 +243,11 @@ int vtkXMLReader::OpenVTKFile()
   if (!this->FileStream || !(*this->FileStream))
     {
     vtkErrorMacro("Error opening file " << this->FileName);
-    delete this->FileStream;
-    this->FileStream = 0;
+    if (this->FileStream)
+      {
+      delete this->FileStream;
+      this->FileStream = 0;
+      }
     return 0;
     }
 
@@ -281,8 +283,11 @@ int vtkXMLReader::OpenVTKString()
   if(!this->StringStream || !(*this->StringStream))
     {
     vtkErrorMacro("Error opening string stream");
-    delete this->StringStream;
-    this->StringStream = 0;
+    if(this->StringStream)
+      {
+      delete this->StringStream;
+      this->StringStream = 0;
+      }
     return 0;
     }
 
@@ -631,9 +636,9 @@ int vtkXMLReader::ReadVTKFile(vtkXMLDataElement* eVTKFile)
   const char* version = eVTKFile->GetAttribute("version");
   if (version && !this->CanReadFileVersionString(version))
     {
-    vtkWarningMacro("File version: " << version << " is higher than "
-                    "this reader supports " << vtkXMLReaderMajorVersion << "."
-                    << vtkXMLReaderMinorVersion);
+    vtkErrorMacro("File version: " << version << " is is higher than "
+                  "this reader supports. Cannot read file.");
+    return 0;
     }
 
   ::ReadStringVersion(version, this->FileMajorVersion, this->FileMinorVersion);
@@ -839,7 +844,18 @@ int vtkXMLReader::CanReadFile(const char* name)
     {
     if (this->CanReadFileWithDataType(tester->GetFileDataType()))
       {
-      result = 1;
+      const char* version = tester->GetFileVersion();
+      if (version)
+        {
+        if (this->CanReadFileVersionString(version))
+          {
+          result = 3;
+          }
+        }
+      else
+        {
+        result = 3;
+        }
       }
     }
 

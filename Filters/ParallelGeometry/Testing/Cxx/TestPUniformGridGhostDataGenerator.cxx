@@ -56,6 +56,15 @@ int NumberOfPartitions;
 
 //------------------------------------------------------------------------------
 namespace Logger {
+  void Print( const std::string &msg)
+  {
+    if( Controller->GetLocalProcessId() == 0 )
+      {
+      std::cout << msg;
+      std::cout.flush();
+      }
+    Controller->Barrier();
+  }
 
   void Println(const std::string &msg )
   {

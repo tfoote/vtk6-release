@@ -37,7 +37,11 @@ class vtkTextureObject;
 class vtkPixelBufferObject;
 class vtkOpenGLRenderWindow;
 class vtkShaderProgram;
-class vtkOpenGLVertexArrayObject;
+namespace vtkgl
+{
+class VertexArrayObject;
+}
+
 
 class VTKRENDERINGOPENGL2_EXPORT vtkFrameBufferObject : public vtkObject
 {
@@ -76,7 +80,7 @@ public:
   // \pre increasing_y: minY<=maxY
   // \pre valid_maxY: maxY<LastSize[1]
   void RenderQuad(int minX, int maxX, int minY, int maxY,
-    vtkShaderProgram *program, vtkOpenGLVertexArrayObject *vao);
+    vtkShaderProgram *program, vtkgl::VertexArrayObject *vao);
 
   // Description:
   // Make the draw frame buffer active (uses FRAMEBUFFER).

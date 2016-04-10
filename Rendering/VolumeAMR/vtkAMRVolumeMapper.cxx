@@ -249,6 +249,16 @@ int vtkAMRVolumeMapper::GetRequestedRenderMode()
   return this->InternalMapper->GetRequestedRenderMode();
 }
 //----------------------------------------------------------------------------
+void vtkAMRVolumeMapper::SetInteractiveUpdateRate(double rate)
+{
+  this->InternalMapper->SetInteractiveUpdateRate(rate);
+}
+//----------------------------------------------------------------------------
+double vtkAMRVolumeMapper::GetInteractiveUpdateRate()
+{
+  return this->InternalMapper->GetInteractiveUpdateRate();
+}
+//----------------------------------------------------------------------------
 void vtkAMRVolumeMapper::SetInterpolationMode(int mode)
 {
   this->InternalMapper->SetInterpolationMode(mode);
@@ -269,10 +279,8 @@ void vtkAMRVolumeMapper::Render(vtkRenderer *ren, vtkVolume *vol)
   // Hack - Make sure the camera is in the right mode for moving the focal point
   ren->GetActiveCamera()->SetFreezeFocalPoint(this->FreezeFocalPoint);
   // If there is no grid initially we need to see if we can create one
-  // The grid is not created if it is an interactive render; meaning the desired
-  // time is less than the previous time to draw
-  if (!(this->Grid && (1.0 / ren->GetRenderWindow()->GetDesiredUpdateRate()
-                       < this->InternalMapper->GetTimeToDraw())))
+  if (!(this->Grid && (ren->GetRenderWindow()->GetDesiredUpdateRate()
+                       >= this->InternalMapper->GetInteractiveUpdateRate())))
     {
     if (!this->HasMetaData)
       {

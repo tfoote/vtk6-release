@@ -46,15 +46,6 @@ class vtkTable;
 class VTKIOLEGACY_EXPORT vtkDataReader : public vtkAlgorithm
 {
 public:
-  enum FieldType
-  {
-    POINT_DATA,
-    CELL_DATA,
-    FIELD_DATA,
-  };
-
-
-
   static vtkDataReader *New();
   vtkTypeMacro(vtkDataReader,vtkAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
@@ -292,13 +283,7 @@ public:
   // Description:
   // Helper functions for reading data.
   vtkAbstractArray *ReadArray(const char *dataType, int numTuples, int numComp);
-  vtkFieldData *ReadFieldData(FieldType fieldType = FIELD_DATA);
-
-  // Description:
-  // Return major and minor version of the file.
-  // Returns version 3.0 if the version cannot be read from file.
-  vtkGetMacro(FileMajorVersion, int);
-  vtkGetMacro(FileMinorVersion, int);
+  vtkFieldData *ReadFieldData();
 
 //BTX
   // Description:
@@ -421,8 +406,6 @@ protected:
   int ReadAllColorScalars;
   int ReadAllTCoords;
   int ReadAllFields;
-  int FileMajorVersion;
-  int FileMinorVersion;
 
   void InitializeCharacteristics();
   int CharacterizeFile(); //read entire file, storing important characteristics
@@ -452,9 +435,6 @@ protected:
 private:
   vtkDataReader(const vtkDataReader&);  // Not implemented.
   void operator=(const vtkDataReader&);  // Not implemented.
-
-  void ConvertGhostLevelsToGhostType(
-    FieldType fieldType, vtkAbstractArray *data) const;
 };
 
 #endif

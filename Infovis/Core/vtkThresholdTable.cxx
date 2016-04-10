@@ -49,19 +49,14 @@ void vtkThresholdTable::PrintSelf(ostream& os, vtkIndent indent)
     {
     case ACCEPT_LESS_THAN:
       os << "Accept less than";
-      break;
     case ACCEPT_GREATER_THAN:
       os << "Accept greater than";
-      break;
     case ACCEPT_BETWEEN:
       os << "Accept between";
-      break;
     case ACCEPT_OUTSIDE:
       os << "Accept outside";
-      break;
     default:
       os << "Undefined";
-      break;
     }
   os << endl;
 }

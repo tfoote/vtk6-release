@@ -91,13 +91,16 @@ int vtkFeatureEdges::RequestData(
   vtkIdType p1, p2, newId;
   vtkPointData *pd=input->GetPointData(), *outPD=output->GetPointData();
   vtkCellData *cd=input->GetCellData(), *outCD=output->GetCellData();
-  unsigned char* ghosts=0;
+  unsigned char* ghostLevels=0;
+  unsigned char  updateLevel = static_cast<unsigned char>(
+    outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_NUMBER_OF_GHOST_LEVELS()));
+
   vtkDebugMacro(<<"Executing feature edges");
 
   vtkDataArray* temp = 0;
   if (cd)
     {
-    temp = cd->GetArray(vtkDataSetAttributes::GhostArrayName());
+    temp = cd->GetArray("vtkGhostLevels");
     }
   if ( (!temp) || (temp->GetDataType() != VTK_UNSIGNED_CHAR)
        || (temp->GetNumberOfComponents() != 1))
@@ -106,7 +109,7 @@ int vtkFeatureEdges::RequestData(
     }
   else
     {
-    ghosts = static_cast<vtkUnsignedCharArray *>(temp)->GetPointer(0);
+    ghostLevels = static_cast<vtkUnsignedCharArray *>(temp)->GetPointer(0);
     }
 
   //  Check input
@@ -242,8 +245,7 @@ int vtkFeatureEdges::RequestData(
 
       if ( this->BoundaryEdges && numNei < 1 )
         {
-        if (ghosts &&
-            ghosts[cellId] & vtkDataSetAttributes::DUPLICATECELL)
+        if (ghostLevels && ghostLevels[cellId] > updateLevel)
           {
           continue;
           }
@@ -266,8 +268,7 @@ int vtkFeatureEdges::RequestData(
           }
         if ( j >= numNei )
           {
-          if (ghosts &&
-              ghosts[cellId]  & vtkDataSetAttributes::DUPLICATECELL)
+          if (ghostLevels && ghostLevels[cellId] > updateLevel)
             {
             continue;
             }
@@ -291,8 +292,7 @@ int vtkFeatureEdges::RequestData(
         polyNormals->GetTuple(cellId, cellTuple);
         if ( vtkMath::Dot(neiTuple, cellTuple) <= cosAngle )
           {
-          if (ghosts &&
-              ghosts[cellId] & vtkDataSetAttributes::DUPLICATECELL)
+          if (ghostLevels && ghostLevels[cellId] > updateLevel)
             {
             continue;
             }
@@ -310,8 +310,7 @@ int vtkFeatureEdges::RequestData(
       else if ( this->ManifoldEdges &&
                 numNei == 1 && neighbors->GetId(0) > cellId )
         {
-        if (ghosts &&
-            ghosts[cellId] & vtkDataSetAttributes::DUPLICATECELL)
+        if (ghostLevels && ghostLevels[cellId] > updateLevel)
           {
           continue;
           }

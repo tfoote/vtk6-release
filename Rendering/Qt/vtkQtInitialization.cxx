@@ -37,7 +37,10 @@ vtkQtInitialization::vtkQtInitialization()
 
 vtkQtInitialization::~vtkQtInitialization()
 {
-  delete this->Application;
+  if (this->Application)
+    {
+    delete this->Application;
+    }
 }
 
 void vtkQtInitialization::PrintSelf(ostream &os, vtkIndent indent)

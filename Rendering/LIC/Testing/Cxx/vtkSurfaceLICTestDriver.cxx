@@ -295,6 +295,7 @@ int vtkSurfaceLICTestDriver(
     mapper->SetScalarMode(VTK_SCALAR_MODE_USE_POINT_FIELD_DATA);
     lut->Delete();
     }
+  dataObj = NULL;
 
   // Pass parameters.
   painter->SetNumberOfSteps(num_steps);

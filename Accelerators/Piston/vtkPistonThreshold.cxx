@@ -29,7 +29,6 @@ namespace vtkpiston {
 //----------------------------------------------------------------------------
 vtkPistonThreshold::vtkPistonThreshold()
 {
-  VTK_LEGACY_BODY(vtkPistonThreshold::vtkPistonThreshold, "VTK 6.3");
   this->MinValue = 0.0;
   this->MaxValue = 0.0;
 }

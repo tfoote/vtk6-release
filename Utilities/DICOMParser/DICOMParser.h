@@ -72,11 +72,6 @@ class DICOM_EXPORT DICOMParser
   bool OpenFile(const dicom_stl::string& filename);
 
   //
-  // Closes the currently open file.
-  //
-  void CloseFile();
-
-  //
   // Return the name of the file last processed.
   //
   const dicom_stl::string& GetFileName();

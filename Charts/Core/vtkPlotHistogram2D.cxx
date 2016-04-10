@@ -93,7 +93,6 @@ vtkScalarsToColors * vtkPlotHistogram2D::GetTransferFunction()
   return this->TransferFunction;
 }
 
-//-----------------------------------------------------------------------------
 void vtkPlotHistogram2D::GetBounds(double bounds[4])
 {
   if (this->Input)
@@ -235,10 +234,6 @@ vtkStdString vtkPlotHistogram2D::GetTooltipLabel(const vtkVector2d &plotPos,
 //-----------------------------------------------------------------------------
 void vtkPlotHistogram2D::GenerateHistogram()
 {
-  if (!this->Input)
-    {
-    return;
-    }
   if (!this->Output)
     {
     this->Output = vtkSmartPointer<vtkImageData>::New();

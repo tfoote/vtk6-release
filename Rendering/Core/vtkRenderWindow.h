@@ -60,7 +60,6 @@ class vtkUnsignedCharArray;
 #define VTK_STEREO_ANAGLYPH     7
 #define VTK_STEREO_CHECKERBOARD 8
 #define VTK_STEREO_SPLITVIEWPORT_HORIZONTAL 9
-#define VTK_STEREO_FAKE 10
 
 #define VTK_CURSOR_DEFAULT   0
 #define VTK_CURSOR_ARROW     1
@@ -73,6 +72,25 @@ class vtkUnsignedCharArray;
 #define VTK_CURSOR_SIZEALL   8
 #define VTK_CURSOR_HAND      9
 #define VTK_CURSOR_CROSSHAIR 10
+
+#ifndef VTK_LEGACY_REMOVE
+// This macro should not be used, see vtkOpenGLError.h for
+// GL error handling functions and macros.
+#if defined NDEBUG
+# define vtkGraphicErrorMacro(renderWindow,message)   \
+  renderWindow->CheckGraphicError();
+#else
+# define vtkGraphicErrorMacro(renderWindow,message)   \
+  renderWindow->CheckGraphicError();                  \
+  if ( renderWindow->GetReportGraphicErrors()         \
+    && renderWindow->HasGraphicError() )              \
+    {                                                 \
+    vtkErrorMacro(                                    \
+      << message << " "                               \
+      << renderWindow->GetLastGraphicErrorString());  \
+    }
+# endif
+#endif
 
 class VTKRENDERINGCORE_EXPORT vtkRenderWindow : public vtkWindow
 {
@@ -233,10 +251,7 @@ public:
   // image where horizontal lines alternate between left and right
   // views.  StereoLeft and StereoRight modes choose one or the other
   // stereo view.  Dresden mode is yet another stereoscopic
-  // interleaving. Fake simply causes the window to render twice without
-  // actually swapping the camera from left eye to right eye. This is useful in
-  // certain applications that want to emulate the rendering passes without
-  // actually rendering in stereo mode.
+  // interleaving.
   vtkGetMacro(StereoType,int);
   vtkSetMacro(StereoType,int);
   void SetStereoTypeToCrystalEyes()
@@ -257,8 +272,6 @@ public:
     {this->SetStereoType(VTK_STEREO_CHECKERBOARD);}
   void SetStereoTypeToSplitViewportHorizontal()
     {this->SetStereoType(VTK_STEREO_SPLITVIEWPORT_HORIZONTAL);}
-  void SetStereoTypeToFake()
-    {this->SetStereoType(VTK_STEREO_FAKE);}
 
   const char *GetStereoTypeAsString();
 
@@ -552,6 +565,24 @@ public:
   vtkGetMacro(StencilCapable, int);
   vtkBooleanMacro(StencilCapable, int);
 
+  // Description:
+  // @deprecated Replaced by
+  // the CMakeLists variable VTK_REPORT_OPENGL_ERRORS
+  // error reporting is enabled/disabled at compile time
+  VTK_LEGACY(void SetReportGraphicErrors(int val));
+  VTK_LEGACY(void SetReportGraphicErrorsOn());
+  VTK_LEGACY(void SetReportGraphicErrorsOff());
+  VTK_LEGACY(int GetReportGraphicErrors());
+
+#ifndef VTK_LEGACY_REMOVE
+  // Description:
+  // @deprecated Replaced by
+  // vtkOpenGLCheckErrorMacro
+  virtual void CheckGraphicError() = 0;
+  virtual int HasGraphicError() = 0;
+  virtual const char *GetLastGraphicErrorString() = 0;
+#endif
+
 protected:
   vtkRenderWindow();
   ~vtkRenderWindow();
@@ -598,6 +629,14 @@ protected:
   int MultiSamples;
   int StencilCapable;
   int CapturingGL2PSSpecialProps;
+
+#ifndef VTK_LEGACY_REMOVE
+  // Description:
+  // @deprecated Replaced by
+  // the CMakeLists variable VTK_REPORT_OPENGL_ERRORS
+  // error reporting is enabled/disabled at compile time
+  int ReportGraphicErrors;
+#endif
 
   // Description:
   // The universal time since the last abort check occurred.

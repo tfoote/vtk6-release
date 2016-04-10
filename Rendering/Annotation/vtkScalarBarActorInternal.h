@@ -3,6 +3,7 @@
 // VTK-HeaderTest-Exclude: vtkScalarBarActorInternal.h
 
 #include "vtkColor.h" // for AnnotationColors, LabelColorMap, and tuples
+#include "vtkFreeTypeUtilities.h" // for bounding box calculations
 #include "vtkSmartPointer.h" // for "smart vectors"
 #include "vtkStdString.h" // for LabelMap
 

@@ -14,7 +14,7 @@ PURPOSE.  See the above copyright notice for more information.
 =========================================================================*/
 #include "vtkOpenGLRenderer.h"
 
-#include "vtkOpenGLHelper.h"
+#include "vtkglVBOHelper.h"
 
 #include "vtkCellArray.h"
 #include "vtkDepthPeelingPass.h"
@@ -249,11 +249,7 @@ void vtkOpenGLRenderer::Clear(void)
 
   if (!this->GetPreserveDepthBuffer())
     {
-#if GL_ES_VERSION_2_0 == 1
-    glClearDepthf(static_cast<GLclampf>(1.0));
-#else
-    glClearDepth(static_cast<GLclampf>(1.0));
-#endif
+    //glClearDepth(static_cast<GLclampf>(1.0));
     clear_mask |= GL_DEPTH_BUFFER_BIT;
     glDepthMask(GL_TRUE);
     }

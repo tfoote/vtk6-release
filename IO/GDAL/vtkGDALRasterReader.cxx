@@ -24,7 +24,6 @@
 #include <vtkInformationVector.h>
 #include <vtkInformation.h>
 #include <vtkIntArray.h>
-#include <vtkMath.h>
 #include <vtkObjectFactory.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
@@ -444,8 +443,11 @@ void vtkGDALRasterReader::vtkGDALRasterReaderInternal::GenericReadData()
 //----------------------------------------------------------------------------
 void vtkGDALRasterReader::vtkGDALRasterReaderInternal::ReleaseData()
 {
-  delete this->GDALData;
-  this->GDALData = 0;
+  if (this->GDALData)
+    {
+    delete this->GDALData;
+    this->GDALData = 0;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -648,7 +650,11 @@ vtkGDALRasterReader::vtkGDALRasterReader() : vtkImageReader2(),
 //-----------------------------------------------------------------------------
 vtkGDALRasterReader::~vtkGDALRasterReader()
 {
-  delete this->Implementation;
+  if (this->Implementation)
+    {
+    delete this->Implementation;
+    this->Implementation = 0;
+    }
 
   if (this->FileName)
     {
@@ -746,28 +752,6 @@ int vtkGDALRasterReader::RequestData(vtkInformation* vtkNotUsed(request),
   projectionData->SetValue(0, this->Projection);
   this->Implementation->UniformGridData->GetFieldData()->AddArray(
     projectionData);
-
-  // Add NoDataValue as field data
-  // GDALDatset can have 1 value for each raster band
-  // Use NaN for undefined values
-  vtkSmartPointer<vtkDoubleArray> noDataArray =
-    vtkSmartPointer<vtkDoubleArray>::New();
-  noDataArray->SetName("NO_DATA_VALUE");
-  noDataArray->SetNumberOfComponents(1);
-  noDataArray->SetNumberOfTuples(this->Implementation->NumberOfBands);
-  for (int i=0; i<this->Implementation->NumberOfBands; ++i)
-    {
-    int success = 0;
-    double noDataValue = this->Implementation->GDALData->GetRasterBand(
-      i+1)->GetNoDataValue(&success);
-    if (!success)
-      {
-      noDataValue = vtkMath::Nan();
-      }
-     noDataArray->SetValue(i, noDataValue);
-    }
-  this->Implementation->UniformGridData->GetFieldData()->AddArray(
-    noDataArray);
 
   // Check if file has been changed here.
   // If changed then throw the vtxId time and load a new one.

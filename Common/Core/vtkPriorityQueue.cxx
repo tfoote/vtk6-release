@@ -134,7 +134,7 @@ vtkIdType vtkPriorityQueue::Pop(vtkIdType location, double &priority)
     }
 
   // percolate down the tree from the specified location
-  vtkIdType lastNodeToCheck = (this->MaxId-1)/2;
+  int lastNodeToCheck = (this->MaxId-1)/2;
   for ( vtkIdType j=0, i=location; i <= lastNodeToCheck; i=j )
     {
     idx = 2*i + 1;

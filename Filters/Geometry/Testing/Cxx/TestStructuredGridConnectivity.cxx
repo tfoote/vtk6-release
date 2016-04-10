@@ -30,6 +30,7 @@
 #include "vtkStructuredNeighbor.h"
 #include "vtkUnsignedCharArray.h"
 #include "vtkIntArray.h"
+#include "vtkGhostArray.h"
 #include "vtkPointData.h"
 #include "vtkCellData.h"
 #include "vtkDoubleArray.h"
@@ -72,8 +73,8 @@ void AttachPointFlagsArray(
   for( ; pidx < grid->GetNumberOfPoints(); ++pidx )
     {
     unsigned char nodeProperty =
-         *(grid->GetPointGhostArray()->GetPointer( pidx ));
-    if( nodeProperty & flag )
+         *(grid->GetPointVisibilityArray()->GetPointer( pidx ));
+    if( vtkGhostArray::IsPropertySet(nodeProperty,flag) )
       {
       flags->SetValue( pidx, 1);
       }
@@ -106,8 +107,8 @@ void AttachCellFlagsArray(
   for( ; cellIdx < grid->GetNumberOfCells(); ++cellIdx )
     {
     unsigned char cellProperty =
-        *(grid->GetCellGhostArray()->GetPointer(cellIdx));
-    if( cellProperty & flag )
+        *(grid->GetCellVisibilityArray()->GetPointer(cellIdx));
+    if( vtkGhostArray::IsPropertySet(cellProperty,flag) )
       {
       flags->SetValue( cellIdx, 1 );
       }
@@ -135,12 +136,12 @@ void AttachNodeAndCellGhostFlags( vtkMultiBlockDataSet *mbds )
        vtkUniformGrid::SafeDownCast(mbds->GetBlock( block ) );
     if( myGrid != NULL )
       {
-      // original IGNORE
-      AttachPointFlagsArray( myGrid, vtkDataSetAttributes::DUPLICATEPOINT,
-                             "DUPLICATEPOINT" );
-      // original DUPLICATE
-      AttachCellFlagsArray( myGrid, vtkDataSetAttributes::DUPLICATECELL,
-                            "DUPLICATECELL" );
+      AttachPointFlagsArray( myGrid, vtkGhostArray::IGNORE, "IGNORE" );
+      AttachPointFlagsArray( myGrid, vtkGhostArray::SHARED, "SHARED" );
+      AttachPointFlagsArray( myGrid, vtkGhostArray::GHOST, "GHOST" );
+      AttachPointFlagsArray( myGrid, vtkGhostArray::BOUNDARY, "BOUNDARY" );
+      AttachCellFlagsArray( myGrid, vtkGhostArray::DUPLICATE, "DUPLICATE" );
+      AttachCellFlagsArray( myGrid, vtkGhostArray::INTERIOR, "INTERIOR" );
       }
    } // END for all blocks
 }
@@ -340,9 +341,9 @@ int GetTotalNumberOfNodes( vtkMultiBlockDataSet *multiblock )
       for( ; pntIdx < grid->GetNumberOfPoints(); ++pntIdx )
         {
         unsigned char nodeProperty =
-            *(grid->GetPointGhostArray()->GetPointer( pntIdx ));
-        if( ! (nodeProperty & (vtkDataSetAttributes::DUPLICATEPOINT |
-                               vtkDataSetAttributes::HIDDENPOINT)))
+            *(grid->GetPointVisibilityArray()->GetPointer( pntIdx ));
+        if( !vtkGhostArray::IsPropertySet(
+            nodeProperty,vtkGhostArray::IGNORE ) )
           {
           ++numNodes;
           }
@@ -374,9 +375,9 @@ int GetTotalNumberOfCells( vtkMultiBlockDataSet *multiblock )
       for( ; cellIdx < grid->GetNumberOfCells(); ++cellIdx )
         {
         unsigned char cellProperty =
-            *(grid->GetCellGhostArray()->GetPointer( cellIdx ) );
-        if( ! (cellProperty & vtkDataSetAttributes::DUPLICATECELL) )
-
+            *(grid->GetCellVisibilityArray()->GetPointer( cellIdx ) );
+        if( !vtkGhostArray::IsPropertySet(
+            cellProperty,vtkGhostArray::DUPLICATE) )
           {
           ++numCells;
           }
@@ -397,8 +398,6 @@ void RegisterGrids(
     {
     vtkUniformGrid *grid = vtkUniformGrid::SafeDownCast(mbds->GetBlock(block));
     assert( "pre: grid should not be NULL!" && (grid != NULL) );
-    grid->AllocatePointGhostArray();
-    grid->AllocateCellGhostArray();
 
     vtkInformation *info = mbds->GetMetaData( block );
     assert( "pre: metadata should not be NULL" && (info != NULL) );
@@ -407,8 +406,8 @@ void RegisterGrids(
 
     connectivity->RegisterGrid(
         block,info->Get(vtkDataObject::PIECE_EXTENT()),
-        grid->GetPointGhostArray(),
-        grid->GetCellGhostArray(),
+        grid->GetPointVisibilityArray(),
+        grid->GetCellVisibilityArray(),
         grid->GetPointData(),
         grid->GetCellData(),
         NULL);
@@ -501,12 +500,8 @@ vtkMultiBlockDataSet* GetGhostedDataSet(
         SGC->GetGhostedGridCellData(block) );
 
     // Copy the ghost arrays
-    vtkUnsignedCharArray* ghosts = SGC->GetGhostedPointGhostArray(block);
-    ghosts->SetName(vtkDataSetAttributes::GhostArrayName());
-    ghostedGrid->GetPointData()->AddArray(ghosts);
-    ghosts = SGC->GetGhostedCellGhostArray(block);
-    ghosts->SetName(vtkDataSetAttributes::GhostArrayName());
-    ghostedGrid->GetCellData()->AddArray(ghosts);
+    ghostedGrid->SetPointVisibilityArray(SGC->GetGhostedPointGhostArray(block));
+    ghostedGrid->SetCellVisibilityArray(SGC->GetGhostedCellGhostArray(block));
 
     output->SetBlock( block, ghostedGrid );
     ghostedGrid->Delete();
@@ -517,7 +512,7 @@ vtkMultiBlockDataSet* GetGhostedDataSet(
 
 //------------------------------------------------------------------------------
 bool Check(
-    std::string name, const int val, const int expected, bool verbose=true )
+    std::string name, const int val, const int expected, bool verbose=false )
 {
   bool status = false;
 
@@ -596,6 +591,9 @@ int TestStructuredGridConnectivity_internal( int argc, char *argv[] )
       if( !Check( "NODES", NumNodes, expected ) )
         {
         ++rc;
+        mbds->Delete();
+        gridConnectivity->Delete();
+        return( rc );
         }
 
       // STEP 6: Compute total number of cells & compare to expected
@@ -603,10 +601,6 @@ int TestStructuredGridConnectivity_internal( int argc, char *argv[] )
       if( !Check( "CELLS", NumCells, expectedCells ) )
         {
         ++rc;
-        }
-
-      if(rc != 0)
-        {
         mbds->Delete();
         gridConnectivity->Delete();
         return( rc );
@@ -621,21 +615,24 @@ int TestStructuredGridConnectivity_internal( int argc, char *argv[] )
       if( !Check( "GHOSTED_NODES", GhostedNumNodes, expected ) )
         {
         ++rc;
+        gmbds->Delete();
+        mbds->Delete();
+        gridConnectivity->Delete();
+        return( rc );
         }
       if( !Check( "GHOSTED_CELLS", GhostedNumCells, expectedCells ) )
         {
         ++rc;
+        gmbds->Delete();
+        mbds->Delete();
+        gridConnectivity->Delete();
+        return( rc );
         }
 
       // STEP 9: De-allocated data-structures
       gmbds->Delete();
       mbds->Delete();
       gridConnectivity->Delete();
-
-      if(rc != 0)
-        {
-        return rc;
-        }
       }// END for all ghost layer tests
     } // END for all numPartition tests
 

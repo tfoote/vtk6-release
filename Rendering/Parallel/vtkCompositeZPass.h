@@ -36,8 +36,11 @@ class vtkMultiProcessController;
 class vtkPixelBufferObject;
 class vtkTextureObject;
 class vtkOpenGLRenderWindow;
-#ifdef VTK_OPENGL2
-class vtkOpenGLHelper;
+#ifdef VTKGL2
+namespace vtkgl
+{
+class CellBO;
+}
 #else
 class vtkShaderProgram2;
 #endif
@@ -91,8 +94,8 @@ public:
 
   vtkPixelBufferObject *PBO;
   vtkTextureObject *ZTexture;
-#ifdef VTK_OPENGL2
-  vtkOpenGLHelper *Program;
+#ifdef VTKGL2
+  vtkgl::CellBO *Program;
 #else
   vtkShaderProgram2 *Program;
 #endif

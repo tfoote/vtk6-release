@@ -192,7 +192,9 @@ int vtkDataSetSurfaceFilter::RequestData(
     case  VTK_UNSTRUCTURED_GRID:
     case  VTK_UNSTRUCTURED_GRID_BASE:
       {
-      if (!this->UnstructuredGridExecute(input, output))
+      if (!this->UnstructuredGridExecute(
+            input, output, outInfo->Get(
+              vtkStreamingDemandDrivenPipeline::UPDATE_NUMBER_OF_GHOST_LEVELS())))
         {
         return 1;
         }
@@ -211,7 +213,7 @@ int vtkDataSetSurfaceFilter::RequestData(
     case VTK_STRUCTURED_GRID:
       {
       vtkStructuredGrid *grid = vtkStructuredGrid::SafeDownCast(input);
-      if (grid->HasAnyBlankCells())
+      if (grid->GetCellBlanking())
         {
         return this->DataSetExecute(grid, output);
         }
@@ -517,8 +519,14 @@ int vtkDataSetSurfaceFilter::StructuredExecute(vtkDataSet *input,
       break;
       }
     case VTK_UNIFORM_GRID:
+      {
+      // same as vtk_image_data
+      }
     case VTK_STRUCTURED_POINTS:
-    case VTK_IMAGE_DATA:
+      {
+      // same as vtk_image_data
+      }
+     case VTK_IMAGE_DATA:
       {
       dataType = VTK_DOUBLE;
       break;
@@ -526,7 +534,6 @@ int vtkDataSetSurfaceFilter::StructuredExecute(vtkDataSet *input,
     default:
       dataType = VTK_DOUBLE;
       vtkWarningMacro("Invalid data set type.");
-      break;
     }
 
   outPoints->SetDataType(dataType);
@@ -1090,7 +1097,7 @@ int vtkDataSetSurfaceFilter::DataSetExecute(vtkDataSet *input,
     }
 
   vtkStructuredGrid *sgridInput = vtkStructuredGrid::SafeDownCast(input);
-  bool mayBlank = sgridInput && sgridInput->HasAnyBlankCells();
+  bool mayBlank = sgridInput && sgridInput->GetCellBlanking();
 
   cellIds = vtkIdList::New();
   pts = vtkIdList::New();
@@ -1301,7 +1308,8 @@ void vtkDataSetSurfaceFilter::PrintSelf(ostream& os, vtkIndent indent)
 
 //----------------------------------------------------------------------------
 int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
-                                                     vtkPolyData *output)
+                                                     vtkPolyData *output,
+                                                     int updateGhostLevel)
 {
   vtkUnstructuredGridBase *input =
       vtkUnstructuredGridBase::SafeDownCast(dataSetInput);
@@ -1360,7 +1368,8 @@ int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
     cellIter = vtkSmartPointer<vtkCellIterator>::Take(input->NewCellIterator());
     }
 
-  vtkUnsignedCharArray* ghosts = input->GetPointGhostArray();
+  vtkUnsignedCharArray* ghosts = vtkUnsignedCharArray::SafeDownCast(
+    input->GetPointData()->GetArray("vtkGhostLevels"));
   vtkCellArray *newVerts;
   vtkCellArray *newLines;
   vtkCellArray *newPolys;
@@ -1591,7 +1600,6 @@ int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
       case VTK_QUADRATIC_QUAD:
       case VTK_QUADRATIC_LINEAR_QUAD:
       case VTK_BIQUADRATIC_QUAD:
-      case VTK_QUADRATIC_POLYGON:
         // save 2D cells for third pass
         flag2D = 1;
         break;
@@ -1799,8 +1807,7 @@ int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
            || cellType == VTK_BIQUADRATIC_TRIANGLE
            || cellType == VTK_QUADRATIC_QUAD
            || cellType == VTK_BIQUADRATIC_QUAD
-           || cellType == VTK_QUADRATIC_LINEAR_QUAD
-           || cellType == VTK_QUADRATIC_POLYGON)
+           || cellType == VTK_QUADRATIC_LINEAR_QUAD)
       {
       bool allGhosts = true;
       pointIdList = cellIter->GetPointIds();
@@ -1835,10 +1842,10 @@ int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
         outPts->InsertNextId(op);
         }
       // Do any further subdivision if necessary.
-        double *pc = cell->GetParametricCoords();
-      if (this->NonlinearSubdivisionLevel > 1 && pc)
+      if (this->NonlinearSubdivisionLevel > 1)
         {
         // We are going to need parametric coordinates to further subdivide.
+        double *pc = cell->GetParametricCoords();
         parametricCoords->Reset();
         parametricCoords->SetNumberOfComponents(3);
         for (i = 0; i < pts->GetNumberOfIds(); i++)
@@ -1990,6 +1997,10 @@ int vtkDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet *dataSetInput,
     {
     this->OriginalPointIds->Delete();
     this->OriginalPointIds = NULL;
+    }
+  if (this->PieceInvariant)
+    {
+    output->RemoveGhostCells(updateGhostLevel+1);
     }
 
   this->DeleteQuadHash();

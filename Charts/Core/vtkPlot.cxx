@@ -27,6 +27,7 @@
 #include "vtkNew.h"
 #include "vtksys/ios/sstream"
 
+vtkCxxSetObjectMacro(vtkPlot, Selection, vtkIdTypeArray);
 vtkCxxSetObjectMacro(vtkPlot, XAxis, vtkAxis);
 vtkCxxSetObjectMacro(vtkPlot, YAxis, vtkAxis);
 
@@ -46,7 +47,6 @@ vtkPlot::vtkPlot() : ShiftScale(0.0, 0.0, 1.0, 1.0)
   this->Labels = NULL;
   this->UseIndexForXSeries = false;
   this->Data = vtkSmartPointer<vtkContextMapper2D>::New();
-  this->Selectable = true;
   this->Selection = NULL;
   this->XAxis = NULL;
   this->YAxis = NULL;
@@ -54,8 +54,6 @@ vtkPlot::vtkPlot() : ShiftScale(0.0, 0.0, 1.0, 1.0)
   this->TooltipDefaultLabelFormat = "%l: %x,  %y";
   this->TooltipNotation = vtkAxis::STANDARD_NOTATION;
   this->TooltipPrecision = 6;
-
-  this->LegendVisibility = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -498,16 +496,6 @@ void vtkPlot::SetInputArray(int index, const vtkStdString &name)
 }
 
 //-----------------------------------------------------------------------------
-void vtkPlot::SetSelection(vtkIdTypeArray *id)
-{
-  if (!this->GetSelectable())
-    {
-    return;
-    }
-  vtkSetObjectBodyMacro(Selection,vtkIdTypeArray,id);
-}
-
-//-----------------------------------------------------------------------------
 void vtkPlot::SetShiftScale(const vtkRectd &shiftScale)
 {
   if (shiftScale != this->ShiftScale)
@@ -538,5 +526,4 @@ vtkVariant vtkPlot::GetProperty(const vtkStdString&)
 void vtkPlot::PrintSelf(ostream &os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
-  os << indent << "LegendVisibility: " << this->LegendVisibility << endl;
 }

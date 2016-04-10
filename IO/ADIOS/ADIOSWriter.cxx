@@ -409,6 +409,7 @@ void Writer::WriteArray(const std::string& path, const void* val)
 void Writer::Commit(const std::string& fName, bool app)
 {
   uint64_t groupSize = 0;
+  std::vector<const WriterImpl::ArrayValue*> nonEmptyArrays;
 
   // Step 1: Preprocessing
 
@@ -446,15 +447,23 @@ void Writer::Commit(const std::string& fName, bool app)
           di->ValueI : this->Impl->IntegralScalars[di->ValueS];
         }
       }
-    groupSize += numElements * ai->ElementSize;
+    //if(numElements == 0)
+    //  {
+    //  delete *avi;
+    //  }
+    //else
+    //  {
+      groupSize += numElements * ai->ElementSize;
+      nonEmptyArrays.push_back(*avi);
+    //  }
     }
+  this->Impl->ArraysToWrite.clear();
 
   int err;
 
   // Step 2. Set the buffer size in MB with the full knowledge of the dynamic
-  // group size.  Ask for 10% over the group size to account for extra metadata
-  int bufSize = (groupSize * 1.1)/(1024*1024) + 1;
-  err = adios_allocate_buffer(ADIOS_BUFFER_ALLOC_LATER, bufSize);
+  // group size
+  err = adios_allocate_buffer(ADIOS_BUFFER_ALLOC_LATER, (groupSize >> 20) + 1);
   WriteError::TestEq(0, err);
 
   // Step 3. Open the file for writing
@@ -479,8 +488,8 @@ void Writer::Commit(const std::string& fName, bool app)
 
   // Step 5: Write Arrays
   for(std::vector<const WriterImpl::ArrayValue*>::iterator avi =
-        this->Impl->ArraysToWrite.begin();
-      avi != this->Impl->ArraysToWrite.end();
+        nonEmptyArrays.begin();
+      avi != nonEmptyArrays.end();
       ++avi)
     {
     err = adios_write(file, (*avi)->Path.c_str(),
@@ -490,6 +499,7 @@ void Writer::Commit(const std::string& fName, bool app)
 
   // Step 6. Close the file and commit the writes to ADIOS
   adios_close(file);
+  MPI_Barrier(this->Ctx->Comm);
 
   // Step 7. Cleanup
   for(std::vector<const WriterImpl::ScalarValue*>::iterator svi =
@@ -499,16 +509,14 @@ void Writer::Commit(const std::string& fName, bool app)
     {
     delete *svi;
     }
-  this->Impl->ScalarsToWrite.clear();
-
   for(std::vector<const WriterImpl::ArrayValue*>::iterator avi =
-        this->Impl->ArraysToWrite.begin();
-      avi != this->Impl->ArraysToWrite.end();
+        nonEmptyArrays.begin();
+      avi != nonEmptyArrays.end();
       ++avi)
     {
     delete *avi;
     }
-  this->Impl->ArraysToWrite.clear();
+  this->Impl->ScalarsToWrite.clear();
 }
 
 } // End namespace

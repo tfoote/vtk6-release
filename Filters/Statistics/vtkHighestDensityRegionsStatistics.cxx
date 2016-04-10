@@ -197,16 +197,7 @@ void vtkHighestDensityRegionsStatistics::Derive(vtkMultiBlockDataSet*)
 double vtkHighestDensityRegionsStatistics::ComputeHDR(vtkDataArray *inObs,
                                                       vtkDataArray *outDensity)
 {
-  return ComputeHDR(inObs, inObs, outDensity);
-}
-
-// ----------------------------------------------------------------------
-double vtkHighestDensityRegionsStatistics
-::ComputeHDR(vtkDataArray *inObs, vtkDataArray *inPointsOfInterest,
-             vtkDataArray *outDensity)
-{
   vtkIdType nbObservations = inObs->GetNumberOfTuples();
-  vtkIdType nbPoints = inPointsOfInterest->GetNumberOfTuples();
 
   if (nbObservations == 0)
     {
@@ -217,31 +208,29 @@ double vtkHighestDensityRegionsStatistics
 
   double denom = 1.0 / static_cast<double>(nbObservations);
 
-  // Let's compute the HDR for each points of interest
-  for (vtkIdType i = 0; i < nbPoints; i++)
+  // Let's compute the HDR for each points of the observations
+  for (vtkIdType i = 0; i < nbObservations; i++)
     {
     double currentXi[2];
     double currentXj[2];
     double hdr = 0.0;
 
     // We are working in a bivariate model.
-    inPointsOfInterest->GetTuple(i, currentXi);
+    inObs->GetTuple(i, currentXi);
     // Sum all gaussian kernel
     for (vtkIdType j = 0; j < nbObservations; j++)
       {
-
-      inObs->GetTuple(j, currentXj);
-
-      const double deltaX = currentXi[0] - currentXj[0];
-      const double deltaY = currentXi[1] - currentXj[1];
       // Avoid case where point is compared to itself
-      if (deltaX == 0. && deltaY == 0.)
+      if (i == j)
         {
         continue;
         }
+      inObs->GetTuple(j, currentXj);
+
       hdr += this->ComputeSmoothGaussianKernel(
         inObs->GetNumberOfComponents(),
-        deltaX, deltaY);
+        currentXi[0] - currentXj[0],
+        currentXi[1] - currentXj[1]);
       }
     double d = denom * hdr;
     outDensity->SetTuple1(i, d);

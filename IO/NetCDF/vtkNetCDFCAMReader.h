@@ -67,10 +67,8 @@ public:
   // Specify which "side" of the domain to add the connecting
   // cells at.  0 indicates left side and 1 indicates right side.
   // The default is the right side.
-  // @deprecated This method is no longer supported. The reader automatically
-  // decides which side to pad cells on. Using this method has no effect.
-  VTK_LEGACY(void SetCellLayerRight(int));
-  VTK_LEGACY(int GetCellLayerRight());
+  vtkSetMacro(CellLayerRight, int);
+  vtkGetMacro(CellLayerRight, int);
 
 protected:
   vtkNetCDFCAMReader();
@@ -111,6 +109,8 @@ private:
   vtkSetStringMacro(CurrentConnectivityFileName);
 
   int SingleLevel;
+
+  int CellLayerRight;
 
   double * TimeSteps;
 

@@ -15,19 +15,25 @@
 #include "vtkCommonMiscModule.h" // For export macro
 #include "vtkHeap.h"
 #include "vtkObjectFactory.h"
-#include <cstddef>
 
 vtkStandardNewMacro(vtkHeap);
 
-static size_t vtkGetLongAlignment()
+struct vtkTestAlignLong
 {
-  struct vtkTestAlignLong
-  {
-    char    pad;
-    long    x;
-  };
+  char    pad;
+  long    x;
+};
 
-  return offsetof(vtkTestAlignLong, x);
+static int vtkGetLongAlignment()
+{
+  struct vtkTestAlignLong    s1;
+  char *               p1;
+  char *               p2;
+
+  p1 = reinterpret_cast<char *>(&s1);   // Get address of struct
+  p2 = reinterpret_cast<char *>(&s1.x); // Get address of long within struct
+
+  return (p2 - p1);    // Get member offset/alignment
 }
 
 class VTKCOMMONMISC_EXPORT vtkHeapBlock

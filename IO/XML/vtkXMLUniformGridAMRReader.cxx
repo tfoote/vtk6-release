@@ -218,7 +218,8 @@ int vtkXMLUniformGridAMRReader::ReadPrimaryElement(vtkXMLDataElement* ePrimary)
     return 0;
     }
 
-  if (this->GetFileMajorVersion() == -1 && this->GetFileMinorVersion() == -1)
+  if (this->GetFileMajorVersion() != 1 ||
+    this->GetFileMinorVersion() != 1)
     {
     // for old files, we don't support providing meta-data for
     // RequestInformation() pass.
@@ -361,7 +362,8 @@ void vtkXMLUniformGridAMRReader::ReadComposite(vtkXMLDataElement* element,
     return;
     }
 
-  if (this->GetFileMajorVersion() == -1 && this->GetFileMinorVersion() == -1)
+  if (this->GetFileMajorVersion() != 1 ||
+    this->GetFileMinorVersion() != 1)
     {
     vtkErrorMacro(
       "Version not supported. Use vtkXMLHierarchicalBoxDataReader instead.");

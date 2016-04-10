@@ -78,7 +78,10 @@ vtkWin32VideoSource::~vtkWin32VideoSource()
 {
   this->vtkWin32VideoSource::ReleaseSystemResources();
 
-  delete [] (char *)(this->Internal->BitMapPtr);
+  if (this->Internal->BitMapPtr != NULL)
+    {
+    delete [] (char *)(this->Internal->BitMapPtr);
+    }
   this->Internal->BitMapPtr = NULL;
   this->BitMapSize = 0;
   delete this->Internal;
@@ -346,7 +349,7 @@ void vtkWin32VideoSource::Initialize()
     }
 
   // set user data for callbacks
-  if (!capSetUserData(this->Internal->CapWnd,this))
+  if (!capSetUserData(this->Internal->CapWnd,(long)this))
     {
     vtkErrorMacro(<< "Initialize: couldn't set user data for callback"\
                     << " (" << GetLastError() << ")");
@@ -1038,7 +1041,10 @@ void vtkWin32VideoSource::DoVFWFormatCheck()
   int formatSize = capGetVideoFormatSize(this->Internal->CapWnd);
   if (formatSize > this->BitMapSize)
     {
-    delete [] ((char *)this->Internal->BitMapPtr);
+    if (this->Internal->BitMapPtr)
+      {
+      delete [] ((char *)this->Internal->BitMapPtr);
+      }
     this->Internal->BitMapPtr = (LPBITMAPINFO) new char[formatSize];
     this->BitMapSize = formatSize;
     }
@@ -1125,7 +1131,10 @@ void vtkWin32VideoSource::DoVFWFormatSetup()
   int formatSize = capGetVideoFormatSize(this->Internal->CapWnd);
   if (formatSize > this->BitMapSize)
     {
-    delete [] ((char *)this->Internal->BitMapPtr);
+    if (this->Internal->BitMapPtr)
+      {
+      delete [] ((char *)this->Internal->BitMapPtr);
+      }
     this->Internal->BitMapPtr = (LPBITMAPINFO) new char[formatSize];
     this->BitMapSize = formatSize;
     }
@@ -1138,7 +1147,7 @@ void vtkWin32VideoSource::DoVFWFormatSetup()
   this->Internal->BitMapPtr->bmiHeader.biClrUsed = 0;
   this->Internal->BitMapPtr->bmiHeader.biClrImportant = 0;
 
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 4; i++)
     { // try for a
     if (this->OutputFormat == VTK_RGBA || this->OutputFormat == VTK_RGB)
       {

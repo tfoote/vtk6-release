@@ -234,7 +234,10 @@ vtkLabelPlacer::vtkLabelPlacer()
 vtkLabelPlacer::~vtkLabelPlacer()
 {
   this->AnchorTransform->Delete();
-  delete this->Buckets;
+  if ( this->Buckets )
+    {
+    delete this->Buckets;
+    }
   this->VisiblePoints->Delete();
 }
 
@@ -837,7 +840,10 @@ int vtkLabelPlacer::RequestData(
   //cout << "Labels Occluded: " << occluded << endl;
 
   inIter->Delete();
-  delete [] zPtr;
+  if (zPtr)
+    {
+    delete [] zPtr;
+    }
 
   timer->StopTimer();
   vtkDebugMacro("Iteration time: " << timer->GetElapsedTime());

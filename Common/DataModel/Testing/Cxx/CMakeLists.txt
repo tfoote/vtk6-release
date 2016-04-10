@@ -11,8 +11,6 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
   TestDispatchers.cxx
   TestGenericCell.cxx
   TestGraph.cxx
-  TestGraph2.cxx
-  TestGraphAttributes.cxx
   TestHigherOrderCell.cxx
   TestImageDataFindCell.cxx
   TestImageDataInterpolation.cxx
@@ -20,7 +18,6 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
   TestInterpolationDerivs.cxx
   TestInterpolationFunctions.cxx
   TestPath.cxx
-  TestPentagonalPrism.cxx
   TestPixelExtent.cxx
   TestPointLocators.cxx
   TestPolyDataRemoveCell.cxx
@@ -29,7 +26,6 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
   TestPolyhedron1.cxx
   TestQuadraticPolygon.cxx
   TestSelectionSubtract.cxx
-  TestTable.cxx
   TestTreeBFSIterator.cxx
   TestTreeDFSIterator.cxx
   TestTriangle.cxx
@@ -49,14 +45,9 @@ vtk_add_test_cxx(${vtk-module}CxxTests tests
   TestStructuredData.cxx
   TestDataObjectTypes.cxx
   TestPolyDataRemoveDeletedCells.cxx
-  UnitTestCells.cxx
   )
 vtk_add_test_cxx(${vtk-module}CxxTests data_tests
   TestCellIterators.cxx,NO_VALID,NO_OUTPUT
-  TestCellLocator.cxx,NO_DATA
-  TestMeanValueCoordinatesInterpolation1.cxx
-  TestMeanValueCoordinatesInterpolation2.cxx
-  TestSmoothErrorMetric.cxx
   TestQuadraticPolygonFilters.cxx
   )
 vtk_add_test_cxx(${vtk-module}CxxTests output_tests

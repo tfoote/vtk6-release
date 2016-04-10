@@ -1,7 +1,9 @@
 vtk_module(vtkRenderingVolumeAMR
+  BACKEND
+    OpenGL
   DEPENDS
     vtkParallelCore
-    vtkRenderingVolume${VTK_RENDERING_BACKEND}
+    vtkRenderingVolumeOpenGL
     vtkFiltersAMR
   KIT
     vtkParallel

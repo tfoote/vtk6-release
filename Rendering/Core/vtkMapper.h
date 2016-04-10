@@ -55,7 +55,6 @@
 #include "vtkRenderingCoreModule.h" // For export macro
 #include "vtkAbstractMapper3D.h"
 #include "vtkSystemIncludes.h" // For VTK_COLOR_MODE_DEFAULT and _MAP_SCALARS
-#include "vtkSmartPointer.h" // needed for vtkSmartPointer.
 
 #define VTK_RESOLVE_OFF 0
 #define VTK_RESOLVE_POLYGON_OFFSET 1
@@ -411,16 +410,6 @@ public:
   // selection.
   virtual bool GetSupportsSelection()
     { return false; }
-
-  // Description:
-  // Returns if we can use texture maps for scalar coloring. Note this doesn't
-  // say we "will" use scalar coloring. It says, if we do use scalar coloring,
-  // we will use a texture.
-  // When rendering multiblock datasets, if any 2 blocks provide different
-  // lookup tables for the scalars, then also we cannot use textures. This case
-  // can be handled if required.
-  virtual int CanUseTextureMapForColoring(vtkDataObject* input);
-
 protected:
   vtkMapper();
   ~vtkMapper();
@@ -433,7 +422,7 @@ protected:
   vtkFloatArray *ColorCoordinates;
   // 1D ColorMap used for the texture image.
   vtkImageData* ColorTextureMap;
-  void MapScalarsToTexture(vtkAbstractArray* scalars, double alpha);
+  void MapScalarsToTexture(vtkDataArray* scalars, double alpha);
 
   vtkScalarsToColors *LookupTable;
   int ScalarVisibility;

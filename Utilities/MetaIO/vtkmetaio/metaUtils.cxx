@@ -317,8 +317,6 @@ bool MET_ValueToDouble(MET_ValueEnumType _type, const void *_data,
     case MET_STRING:
       *_value = atof(&(((const MET_CHAR_TYPE *)_data)[_index]));
       return true;
-    case MET_NONE:
-    case MET_OTHER:
     default:
       *_value = 0;
       return false;
@@ -385,8 +383,6 @@ bool MET_DoubleToValue(double _value,
     case MET_STRING:
       sprintf(&(((MET_CHAR_TYPE *)_data)[_index]), "%f", _value);
       return true;
-    case MET_NONE:
-    case MET_OTHER:
     default:
       return false;
     }
@@ -467,8 +463,6 @@ bool MET_ValueToValue(MET_ValueEnumType _fromType, const void *_fromData,
     case MET_STRING:
       sprintf(&(((MET_CHAR_TYPE *)_toData)[_index]), "%f", tf);
       return true;
-    case MET_NONE:
-    case MET_OTHER:
     default:
       return false;
     }
@@ -1679,8 +1673,6 @@ bool MET_WriteFieldToFile(METAIO_STREAM::ostream & _fp, const char *_fieldName,
         f.value[i] = (double)((const MET_FLOAT_TYPE *)_v)[i];
         }
       break;
-    case MET_NONE:
-    case MET_OTHER:
     default:
       break;
     }

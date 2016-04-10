@@ -118,11 +118,10 @@ protected:
                                   vtkInformationVector **, vtkInformationVector *);
   virtual int FillInputPortInformation(int, vtkInformation *);
 
-  // An efficient templated way to append data.
+  // An efficient way to append data/cells.
   void AppendData(vtkDataArray *dest, vtkDataArray *src, vtkIdType offset);
-
-
-  // An efficient way to append cells.
+  void AppendDifferentPoints(vtkDataArray *dest, vtkDataArray *src,
+                             vtkIdType offset);
   vtkIdType *AppendCells(vtkIdType *pDest, vtkCellArray *src,
                          vtkIdType offset);
 
@@ -130,15 +129,6 @@ protected:
   // hide the superclass' AddInput() from the user and the compiler
   void AddInputData(vtkDataObject *)
     { vtkErrorMacro( << "AddInput() must be called with a vtkPolyData not a vtkDataObject."); };
-
-  template <class InputIterator>
-  void AppendData(vtkDataArray *dest, vtkDataArray *src, vtkIdType offset,
-                  InputIterator srcData, InputIterator srcEnd);
-
-  template <class InputIterator, class OutputIterator>
-  void AppendData(vtkDataArray *dest, vtkDataArray *src, vtkIdType offset,
-                  InputIterator srcData, InputIterator srcEnd,
-                  OutputIterator destData);
 
   int UserManagedInputs;
 

@@ -14,11 +14,10 @@
 // .NAME vtkPointGaussianMapper - draw PointGaussians using imposters
 // .SECTION Description
 // An  mapper that uses imposters to draw PointGaussians. Supports
-// transparency and picking as well. It draws all the points and
-// does not require or look at any cell arrays
+// transparency and picking as well.
 
-#ifndef vtkPointGaussianMapper_h
-#define vtkPointGaussianMapper_h
+#ifndef __vtkPointGaussianMapper_h
+#define __vtkPointGaussianMapper_h
 
 #include "vtkRenderingCoreModule.h" // For export macro
 #include "vtkPolyDataMapper.h"
@@ -37,17 +36,9 @@ public:
 
   // Description:
   // Set the default radius of the point gaussians.  This is used if the
-  // array to scale with has not been set or is set to NULL. If there
-  // is no scale array and the default radius is set to zero then
-  // the splats wil be rendered as simple points requiring less memory.
+  // array to scale with has not been set or is set to NULL.
   vtkSetMacro(DefaultRadius,double);
   vtkGetMacro(DefaultRadius,double);
-
-  // Description:
-  // Treat the points/splats as emissive light sources. The default is true.
-  vtkSetMacro(Emissive, int);
-  vtkGetMacro(Emissive, int);
-  vtkBooleanMacro(Emissive, int);
 
 protected:
   vtkPointGaussianMapper();
@@ -55,7 +46,6 @@ protected:
 
   char *ScaleArray;
   double DefaultRadius;
-  int Emissive;
 
 private:
   vtkPointGaussianMapper(const vtkPointGaussianMapper&); // Not implemented.

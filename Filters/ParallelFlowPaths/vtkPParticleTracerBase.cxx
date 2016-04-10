@@ -28,7 +28,6 @@ PURPOSE.  See the above copyright notice for more information.
 #include "vtkPolyData.h"
 #include "vtkSmartPointer.h"
 #include "vtkStreamingDemandDrivenPipeline.h"
-#include "vtkTemporalInterpolatedVelocityField.h"
 #include <cassert>
 
 #include <algorithm>
@@ -55,14 +54,6 @@ vtkPolyData* vtkPParticleTracerBase::Execute(vtkInformationVector** inputVector)
   this->MPISendList.clear();
   this->Tail.clear();
 
-  // clear out TailPointId
-  ParticleListIterator  it_first = this->ParticleHistories.begin();
-  ParticleListIterator  it_last  = this->ParticleHistories.end();
-  for (ParticleListIterator it=it_first; it!=it_last;it++)
-    {
-    it->TailPointId = -1;
-    }
-
   return vtkParticleTracerBase::Execute(inputVector);
 }
 
@@ -71,12 +62,7 @@ bool vtkPParticleTracerBase::SendParticleToAnotherProcess(
   ParticleInformation &info, ParticleInformation &previousInfo,
   vtkPointData* pd)
 {
-  if(info.PointId < 0 && info.TailPointId < 0)
-    {
-    vtkErrorMacro("Bad particle information.");
-    assert(0);
-    return true;
-    }
+  assert(info.PointId>=0); //the particle must have already been added;
 
   RemoteParticleInfo remoteInfo;
 
@@ -84,33 +70,16 @@ bool vtkPParticleTracerBase::SendParticleToAnotherProcess(
 
   remoteInfo.Previous = previousInfo;
   remoteInfo.PreviousPD = vtkSmartPointer<vtkPointData>::New();
-  // the point data that we get values from.
-  vtkPointData* fromPD = NULL;
-  vtkIdType fromTupleId = -1;
-  // ProtoPD is ONLY used to properly copy allocate the new point data
-  if(info.PointId >= 0)
-    { // point data comes from the input pd and the tuple
-    // location comes from the particles's PointId
-    remoteInfo.PreviousPD->CopyAllocate(this->ProtoPD);
-    fromPD = pd;
-    fromTupleId = info.PointId;
-    }
-  else
-    { // point data comes from this->Tail and the tuple
-    // location comes from the particle's TailPointId
-    remoteInfo.PreviousPD->CopyAllocate(this->ProtoPD);
-    fromPD = this->Tail[info.TailPointId].PreviousPD;
-    fromTupleId = 0;
-    }
+  remoteInfo.PreviousPD->CopyAllocate(this->ProtoPD);
 
   //only copy those that correspond to the original data fields
   for(int i=0; i <this->ProtoPD->GetNumberOfArrays(); i++)
     {
     char* arrName = this->ProtoPD->GetArray(i)->GetName();
-    vtkDataArray* arrFrom = fromPD->GetArray(arrName);
+    vtkDataArray* arrFrom = pd->GetArray(arrName);
     vtkDataArray* arrTo = remoteInfo.PreviousPD->GetArray(i);
     assert(arrFrom->GetNumberOfComponents()==arrTo->GetNumberOfComponents());
-    arrTo->InsertNextTuple(arrFrom->GetTuple(fromTupleId));
+    arrTo->InsertNextTuple(arrFrom->GetTuple(info.PointId));
     }
 
   double eps = (this->GetCacheDataTime(1)-this->GetCacheDataTime(0))/100;
@@ -169,43 +138,15 @@ void vtkPParticleTracerBase::AssignSeedsToProcessors(
     info.speed                = 0.0;
     info.SimulationTime       = this->GetCurrentTimeValue();
     info.ErrorCode            = 0;
-    info.PointId              = -1;
-    info.TailPointId          = -1;
   }
   //
-  // Check all Seeds on all processors for classification
+  // Gather all Seeds to all processors for classification
   //
-  std::vector<int> owningProcess(numSeeds, -1);
-  int myRank = this->Controller->GetLocalProcessId();
-  ParticleIterator it=candidates.begin();
-  for (int i=0; it!=candidates.end(); ++it, ++i)
-    {
-    ParticleInformation &info = (*it);
-    double *pos = &info.CurrentPosition.x[0];
-    // if outside bounds, reject instantly
-    if (this->InsideBounds(pos))
-      {
-      // since this is first test, avoid bad cache tests
-      this->GetInterpolator()->ClearCache();
-      int searchResult = this->GetInterpolator()->TestPoint(pos);
-      if(searchResult==ID_INSIDE_ALL || searchResult==ID_OUTSIDE_T0)
-        {
-        // this particle is in this process's domain for the latest time step
-        owningProcess[i] = myRank;
-        }
-      }
-    }
-  std::vector<int> realOwningProcess(numSeeds);
-  this->Controller->AllReduce(&owningProcess[0], &realOwningProcess[0], numSeeds,
-                              vtkCommunicator::MAX_OP);
-
-  for(size_t i=0;i<realOwningProcess.size();i++)
-    {
-    if(realOwningProcess[i] == myRank)
-      {
-      localSeedPoints.push_back(candidates[i]);
-      }
-    }
+  // TODO : can we just use the same array here for send and receive
+  ParticleVector allCandidates;
+  this->TestParticles(candidates, localSeedPoints, localAssignedCount);
+  int TotalAssigned = 0;
+  this->Controller->Reduce(&localAssignedCount, &TotalAssigned, 1, vtkCommunicator::SUM_OP, 0);
 
   // Assign unique identifiers taking into account uneven distribution
   // across processes and seeds which were rejected
@@ -259,11 +200,10 @@ void vtkPParticleTracerBase::AssignUniqueIds(
 }
 
 //---------------------------------------------------------------------------
-bool vtkPParticleTracerBase::SendReceiveParticles(RemoteParticleVector &sParticles,
+void vtkPParticleTracerBase::SendReceiveParticles(RemoteParticleVector &sParticles,
                                                   RemoteParticleVector &rParticles)
 {
   int numParticles = static_cast<int>(sParticles.size());
-
   std::vector<int> allNumParticles(this->Controller->GetNumberOfProcesses(), 0);
   // Broadcast and receive size to/from all other processes.
   this->Controller->AllGather(&numParticles, &allNumParticles[0], 1);
@@ -318,89 +258,36 @@ bool vtkPParticleTracerBase::SendReceiveParticles(RemoteParticleVector &sParticl
                                messageSize, &messageLength[0],
                                &messageOffset[0]);
 
-
-  int myRank = this->Controller->GetLocalProcessId();
-
-  // owningProcess is used to make sure that particles that are sent aren't added
-  // on multiple processes
-  std::vector<vtkIdType> owningProcess(numAllParticles, -1);
-  // we automatically ignore particles that we sent
-  int ignoreBegin = messageOffset[myRank]/typeSize;
-  int ignoreEnd = ignoreBegin+messageLength[myRank]/typeSize;
+  //read the message
+  rParticles.resize(numAllParticles);
   for(int i=0; i<numAllParticles; i++)
     {
-    if(i < ignoreBegin || i >= ignoreEnd)
+    memcpy(&rParticles[i].Current,  &recvMessage[i*typeSize],     size1);
+    memcpy(&rParticles[i].Previous, &recvMessage[i*typeSize]+size1,size1);
+
+    rParticles[i].PreviousPD = vtkSmartPointer<vtkPointData>::New();
+    rParticles[i].PreviousPD->CopyAllocate(this->ProtoPD);
+    vtkPointData* pd = rParticles[i].PreviousPD;
+    char* data = &recvMessage[i*typeSize] + 2*size1;
+    for(int j=0; j<nArrays;j++)
       {
-      ParticleInformation tmpParticle;
-      memcpy(&tmpParticle, &recvMessage[i*typeSize], size1);
-      // since this is first test, avoid bad cache tests
-      this->GetInterpolator()->ClearCache();
-      int searchResult =
-        this->GetInterpolator()->TestPoint(tmpParticle.CurrentPosition.x);
-      if(searchResult==ID_INSIDE_ALL || searchResult==ID_OUTSIDE_T0)
-        {
-        // this particle is in this process's domain for the latest time step
-        owningProcess[i] = myRank;
-        }
-      }
-    }
-  std::vector<vtkIdType> realOwningProcess(numAllParticles);
-  this->Controller->AllReduce(&owningProcess[0], &realOwningProcess[0],
-                              numAllParticles, vtkCommunicator::MAX_OP);
-
-  // if any value in realOwningProcess array is not -1 then we know
-  // that a particle was moved to another process and probably needs
-  // to be integrated further
-  bool particlesMoved = false; // assume no particles moved
-
-  //read the message for the particles that we really want
-  int counter = 0;
-  for(std::vector<vtkIdType>::iterator it=realOwningProcess.begin();
-      it!=realOwningProcess.end();it++)
-    {
-    if(*it != -1)
-      {
-      particlesMoved = true;
-      if(*it == myRank)
-        {
-        counter++;
-        }
-      }
-    }
-  rParticles.resize(counter);
-  counter = 0;
-  // owningProcess is used to make sure that particles that are sent aren't added
-  // on multiple processes
-
-  for(int i=0; i<numAllParticles; i++)
-    {
-    if(realOwningProcess[i] == myRank)
-      {
-      memcpy(&rParticles[counter].Current,  &recvMessage[i*typeSize],     size1);
-      memcpy(&rParticles[counter].Previous, &recvMessage[i*typeSize]+size1,size1);
-
-      rParticles[counter].PreviousPD = vtkSmartPointer<vtkPointData>::New();
-      rParticles[counter].PreviousPD->CopyAllocate(this->ProtoPD);
-      vtkPointData* pd = rParticles[counter].PreviousPD;
-      char* data = &recvMessage[i*typeSize] + 2*size1;
-      for(int j=0; j<nArrays;j++)
-        {
-        vtkDataArray* arr = pd->GetArray(j);
-        int numComponents = arr->GetNumberOfComponents();
-        int dataSize = sizeof(double)*numComponents;
-        std::vector<double> xi(numComponents);
-        memcpy(&xi[0], data, dataSize);
-        arr->InsertNextTuple(&xi[0]);
-        data+=dataSize;
-        }
-      counter++;
+      vtkDataArray* arr = pd->GetArray(j);
+      int numComponents = arr->GetNumberOfComponents();
+      int dataSize = sizeof(double)*numComponents;
+      std::vector<double> xi(numComponents);
+      memcpy(&xi[0], data, dataSize);
+      arr->InsertNextTuple(&xi[0]);
+      data+=dataSize;
       }
     }
 
+  std::vector<RemoteParticleInfo>::iterator first =
+    rParticles.begin() + messageOffset[this->Controller->GetLocalProcessId()]/typeSize;
+  std::vector<RemoteParticleInfo>::iterator last =
+    first + messageLength[this->Controller->GetLocalProcessId()]/typeSize;
+  rParticles.erase(first, last);
   // don't want the ones that we sent away
   this->MPISendList.clear();
-
-  return particlesMoved;
 }
 
 //---------------------------------------------------------------------------
@@ -420,6 +307,21 @@ int vtkPParticleTracerBase::RequestUpdateExtent(
 }
 
 //---------------------------------------------------------------------------
+int vtkPParticleTracerBase::RequestData(
+  vtkInformation *request,
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
+{
+  int rvalue = this->Superclass::RequestData(request, inputVector, outputVector);
+  if(this->Controller)
+    {
+    this->Controller->Barrier();
+    }
+
+  return rvalue;
+}
+
+//---------------------------------------------------------------------------
 void vtkPParticleTracerBase::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os,indent);
@@ -428,32 +330,54 @@ void vtkPParticleTracerBase::PrintSelf(ostream& os, vtkIndent indent)
 }
 
 //---------------------------------------------------------------------------
-bool vtkPParticleTracerBase::UpdateParticleListFromOtherProcesses()
+void vtkPParticleTracerBase::UpdateParticleListFromOtherProcesses()
 {
   if(!this->Controller)
     {
-    return false;
+    return;
     }
   RemoteParticleVector received;
 
-  bool particlesMoved = this->SendReceiveParticles(this->MPISendList, received);
+  this->SendReceiveParticles(this->MPISendList, received);
 
-  for(size_t i=0;i<received.size();i++)
+  std::vector<int> candidatesIndices;
+
+  // the Particle lists will grow if any are received
+  // so we must be very careful with our iterators
+  //  this->TransmitReceiveParticles(this->MPISendList, received, true);
+  // classify all the ones we received
+  if (received.size()>0)
     {
-    RemoteParticleInfo& info(received[i]);
+    ParticleVector receivedParticles;
+    for(unsigned int i=0; i<received.size();i++)
+      {
+      receivedParticles.push_back(received[i].Current);
+      }
+
+    this->TestParticles(receivedParticles, candidatesIndices);
+    }
+  int numCandidates =static_cast<int>(candidatesIndices.size());
+
+  //increment particle ids
+  for(int i=0; i<numCandidates;i++)
+    {
+    RemoteParticleInfo& info(received[candidatesIndices[i]]);
     info.Current.UniqueParticleId++;
     info.Previous.UniqueParticleId++;
+    }
+
+// Now update our main list with the ones we are keeping
+  for (int i=0; i<numCandidates; i++)
+    {
+    RemoteParticleInfo& info(received[candidatesIndices[i]]);
     info.Current.PointId = -1;
     info.Current.CachedDataSetId[0] = info.Current.CachedDataSetId[1] = -1;
     info.Current.CachedCellId[0] = info.Current.CachedCellId[1] = -1;
     info.Previous.CachedDataSetId[0] = info.Previous.CachedDataSetId[1] = -1;
     info.Previous.CachedCellId[0] = info.Previous.CachedCellId[1] = -1;
-    info.Current.TailPointId = info.Previous.TailPointId = this->Tail.size();
     this->Tail.push_back(info);
     this->ParticleHistories.push_back(info.Current);
-   }
-
-  return particlesMoved;
+    }
 }
 
 //---------------------------------------------------------------------------

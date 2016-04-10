@@ -11,12 +11,10 @@ vtk_module(vtkCommonDataModel
     vtkTestingRendering
     vtkInteractionStyle
     vtkCommonExecutionModel
-    vtkFiltersGeneric
     vtkFiltersModeling
     vtkIOGeometry
     vtkIOLegacy
     vtkIOXML
-    vtkTestingGenericBridge
     vtkRendering${VTK_RENDERING_BACKEND}
   KIT
     vtkCommon

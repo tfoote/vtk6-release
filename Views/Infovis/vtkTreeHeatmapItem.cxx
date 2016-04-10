@@ -162,7 +162,7 @@ void vtkTreeHeatmapItem::SetColumnTree(vtkTree *tree)
     }
 
   if (this->Orientation == vtkDendrogramItem::LEFT_TO_RIGHT ||
-      this->Orientation == vtkDendrogramItem::RIGHT_TO_LEFT)
+      this->Orientation == vtkDendrogramItem::LEFT_TO_RIGHT)
     {
     this->ColumnDendrogram->SetOrientation(vtkDendrogramItem::UP_TO_DOWN);
     }

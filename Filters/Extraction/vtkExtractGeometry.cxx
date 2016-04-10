@@ -92,7 +92,7 @@ int vtkExtractGeometry::RequestData(
       vtkSmartPointer<vtkCellIterator>::Take(input->NewCellIterator());
   vtkIdList *pointIdList;
   int cellType;
-  vtkIdType numCellPts;
+  int numCellPts;
   double x[3];
   double multiplier;
   vtkPoints *newPts;

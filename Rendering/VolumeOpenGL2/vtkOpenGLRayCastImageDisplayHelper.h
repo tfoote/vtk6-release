@@ -27,12 +27,13 @@
 #include "vtkRenderingVolumeOpenGL2Module.h" // For export macro
 #include "vtkRayCastImageDisplayHelper.h"
 
+class vtkActor;
 class vtkFixedPointRayCastImage;
-class vtkOpenGLHelper;
+class vtkOpenGLTexture;
 class vtkRenderer;
-class vtkTextureObject;
 class vtkVolume;
 class vtkWindow;
+class vtkTextureObject;
 
 class VTKRENDERINGVOLUMEOPENGL2_EXPORT vtkOpenGLRayCastImageDisplayHelper
   : public vtkRayCastImageDisplayHelper
@@ -77,11 +78,9 @@ protected:
                               int imageScalarType,
                               void *image );
 
-  // used for copying to framebuffer
+  vtkActor *TextureActor;
+  vtkOpenGLTexture* Texture;
   vtkTextureObject *TextureObject;
-  vtkOpenGLHelper *ShaderProgram;
-
-
 
 private:
   vtkOpenGLRayCastImageDisplayHelper(const vtkOpenGLRayCastImageDisplayHelper&);  // Not implemented.

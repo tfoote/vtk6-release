@@ -43,7 +43,6 @@ vtkPlotBag::vtkPlotBag()
   this->MedianPoints = vtkPoints2D::New();
   this->Q3Points = vtkPoints2D::New();
   this->TooltipDefaultLabelFormat = "%C, %l (%x, %y): %z";
-  this->BagVisible = true;
   this->Brush->SetColor(255, 0, 0);
   this->Brush->SetOpacity(255);
   this->Pen->SetColor(0, 0, 0);
@@ -235,37 +234,34 @@ bool vtkPlotBag::Paint(vtkContext2D *painter)
     return false;
     }
 
-  if (this->BagVisible)
+  unsigned char bcolor[4];
+  this->Brush->GetColor(bcolor);
+
+  // Draw the 2 bags
+  this->Brush->SetOpacity(255);
+  this->Brush->SetColor(bcolor[0] / 2, bcolor[1] / 2, bcolor[2] / 2);
+  painter->ApplyPen(this->LinePen);
+  painter->ApplyBrush(this->Brush);
+  if (this->Q3Points->GetNumberOfPoints() > 2)
     {
-    unsigned char bcolor[4];
-    this->Brush->GetColor(bcolor);
+    painter->DrawPolygon(this->Q3Points);
+    }
+  else if (this->Q3Points->GetNumberOfPoints() == 2)
+    {
+    painter->DrawLine(this->Q3Points);
+    }
 
-    // Draw the 2 bags
-    this->Brush->SetOpacity(255);
-    this->Brush->SetColor(bcolor[0] / 2, bcolor[1] / 2, bcolor[2] / 2);
-    painter->ApplyPen(this->LinePen);
-    painter->ApplyBrush(this->Brush);
-    if (this->Q3Points->GetNumberOfPoints() > 2)
-      {
-      painter->DrawPolygon(this->Q3Points);
-      }
-    else if (this->Q3Points->GetNumberOfPoints() == 2)
-      {
-      painter->DrawLine(this->Q3Points);
-      }
+  this->Brush->SetColor(bcolor);
+  this->Brush->SetOpacity(128);
+  painter->ApplyBrush(this->Brush);
 
-    this->Brush->SetColor(bcolor);
-    this->Brush->SetOpacity(128);
-    painter->ApplyBrush(this->Brush);
-
-    if (this->MedianPoints->GetNumberOfPoints() > 2)
-      {
-      painter->DrawPolygon(this->MedianPoints);
-      }
-    else if (this->MedianPoints->GetNumberOfPoints() == 2)
-      {
-      painter->DrawLine(this->MedianPoints);
-      }
+  if (this->MedianPoints->GetNumberOfPoints() > 2)
+    {
+    painter->DrawPolygon(this->MedianPoints);
+    }
+  else if (this->MedianPoints->GetNumberOfPoints() == 2)
+    {
+    painter->DrawLine(this->MedianPoints);
     }
 
   painter->ApplyPen(this->Pen);

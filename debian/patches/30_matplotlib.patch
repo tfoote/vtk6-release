@@ -1,13 +1,15 @@
---- a/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.h
-+++ b/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.h
-@@ -143,6 +143,10 @@
-   // is called internally when matplotlib rendering is first needed and is used
-   // to implement IsAvailable.
-   static Availability CheckMPLAvailability();
+Index: VTK-6.2.0/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.h
+===================================================================
+--- VTK-6.2.0.orig/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.h
++++ VTK-6.2.0/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.h
+@@ -132,6 +132,10 @@ protected:
+   // Function used to check MPL availability and update MPLMathTextAvailable.
+   // This will do tests only the first time this method is called.
+   static void CheckMPLAvailability();
 +  static void DisableMPL()
 +    {
 +    MPLMathTextAvailable = UNAVAILABLE;
 +    };
  
-   // Description:
-   // Cache the availability of matplotlib in the current python session.
+ private:
+   vtkMatplotlibMathTextUtilities(const vtkMatplotlibMathTextUtilities&); // Not implemented.

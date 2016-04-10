@@ -30,14 +30,6 @@
 class VTKIOXML_EXPORT vtkXMLDataReader : public vtkXMLReader
 {
 public:
-  enum FieldType
-  {
-    POINT_DATA,
-    CELL_DATA,
-    OTHER
-  };
-
-
   vtkTypeMacro(vtkXMLDataReader,vtkXMLReader);
   void PrintSelf(ostream& os, vtkIndent indent);
 
@@ -89,9 +81,8 @@ protected:
   // This method assumes that the array is of correct size to
   // accommodate all numValues values. arrayIndex is the value index at which the read
   // values will be put in the array.
-  int ReadArrayValues(
-    vtkXMLDataElement* da, vtkIdType arrayIndex, vtkAbstractArray* array,
-    vtkIdType startIndex, vtkIdType numValues, FieldType type = OTHER);
+  int ReadArrayValues(vtkXMLDataElement* da, vtkIdType arrayIndex, vtkAbstractArray* array,
+    vtkIdType startIndex, vtkIdType numValues);
 
 
 
@@ -137,11 +128,6 @@ protected:
 private:
   vtkXMLDataReader(const vtkXMLDataReader&);  // Not implemented.
   void operator=(const vtkXMLDataReader&);  // Not implemented.
-
-  void ConvertGhostLevelsToGhostType(
-    FieldType type, vtkAbstractArray* data, vtkIdType startIndex,
-    vtkIdType numValues);
-
 };
 
 #endif

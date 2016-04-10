@@ -98,10 +98,7 @@ void vtkVoidArray::InsertVoidPointer(vtkIdType id, void* p)
 {
   if ( id >= this->Size )
     {
-    if (!this->ResizeAndExtend(id+1))
-      {
-      return;
-      }
+    this->ResizeAndExtend(id+1);
     }
   this->Array[id] = p;
   if ( id >= this->NumberOfPointers )

@@ -185,9 +185,9 @@ double vtkDijkstraGraphGeodesicPath::CalculateStaticEdgeCost(
 void vtkDijkstraGraphGeodesicPath::BuildAdjacency(vtkDataSet *inData)
 {
   vtkPolyData *pd = vtkPolyData::SafeDownCast( inData );
-  vtkIdType ncells = pd->GetNumberOfCells();
+  int ncells = pd->GetNumberOfCells();
 
-  for ( vtkIdType i = 0; i < ncells; i++)
+  for ( int i = 0; i < ncells; i++)
     {
     // Possible types
     //    VTK_VERTEX, VTK_POLY_VERTEX, VTK_LINE,
@@ -242,7 +242,7 @@ void vtkDijkstraGraphGeodesicPath::TraceShortestPath(
   lines->InsertNextCell(this->NumberOfVertices);
 
   // trace backward
-  vtkIdType v = endv;
+  int v = endv;
   double pt[3];
   vtkIdType id;
   while (v != startv)

@@ -570,10 +570,9 @@ bool vtkAMRInformation::HasValidBounds()
 
 void vtkAMRInformation::SetGridDescription(int description)
 {
-  if (description < VTK_SINGLE_POINT || description > VTK_EMPTY)
+  if(this->GridDescription>=0 && description!=this->GridDescription)
     {
-    vtkErrorMacro("Invalid grid description for a vtkUniformGrid.");
-    return;
+    vtkErrorMacro("Inconsistent types of vtkUniformGrid");
     }
   this->GridDescription = description;
 }

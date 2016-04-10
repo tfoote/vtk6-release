@@ -29,7 +29,6 @@
 # define VTK_USE_UINT64 0
 
 #define VTK_BSPLINE_KERNEL_SIZE_MAX (VTK_IMAGE_BSPLINE_DEGREE_MAX + 1)
-#define VTK_BSPLINE_INT_INITIALIZER { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }
 
 // kernel lookup table size must be 256*n where n is kernel half-width
 // in order to provide sufficient precision for 16-bit images
@@ -661,9 +660,7 @@ void vtkImageBSplineInterpolatorPrecomputeWeights(
         }
       else
         {
-        // initialization is needed to avoid a warning for gcc 4.9.2, but
-        // not for other compilers or for valgrind
-        int inId[VTK_BSPLINE_KERNEL_SIZE_MAX] = VTK_BSPLINE_INT_INITIALIZER;
+        int inId[VTK_BSPLINE_KERNEL_SIZE_MAX];
 
         int l = 0;
         switch (weights->BorderMode)

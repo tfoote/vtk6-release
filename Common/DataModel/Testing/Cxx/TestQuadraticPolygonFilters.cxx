@@ -207,10 +207,9 @@ int TestQuadraticPolygonFilters(int argc, char* argv[])
   if ( retVal == vtkRegressionTester::DO_INTERACTOR )
     {
     iren->Start();
-    retVal = vtkRegressionTester::PASSED;
     }
 
-  return (retVal == vtkRegressionTester::PASSED) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return retVal;
 }
 
 int TestPicker(vtkRenderWindow *renWin, vtkRenderer *renderer)

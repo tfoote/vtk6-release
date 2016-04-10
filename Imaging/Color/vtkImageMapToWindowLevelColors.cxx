@@ -208,20 +208,15 @@ void vtkImageMapToWindowLevelClamps ( vtkImageData *data, double w,
     }
 
   // now compute the lower and upper values
-  if (w > 0.0)
+  if (w >= 0)
     {
     f_lower_val = 255.0*(adjustedLower - f_lower)/w;
     f_upper_val = 255.0*(adjustedUpper - f_lower)/w;
     }
-  else if (w < 0.0)
+  else
     {
     f_lower_val = 255.0 + 255.0*(adjustedLower - f_lower)/w;
     f_upper_val = 255.0 + 255.0*(adjustedUpper - f_lower)/w;
-    }
-  else
-    {
-    f_lower_val = 0.0;
-    f_upper_val = 255.0;
     }
 
   if (f_upper_val > 255)

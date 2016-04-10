@@ -386,7 +386,6 @@ METAIO_STL::string MetaOutput::TypeToString(TypeEnumType type)
       return "flag";
     case BOOL:
       return "boolean";
-    case CHAR:
     default:
       return "not defined";
     }
@@ -495,7 +494,7 @@ METAIO_STL::string MetaOutput::GenerateXML(const char* filename)
       if((*itOutput).value.size()>1)
         {
         char* val = new char[10];
-        sprintf(val,"%u",index);
+        sprintf(val,"%d",index);
         buffer += val;
         delete [] val;
         }
@@ -577,7 +576,7 @@ void MetaOutput::Write()
     FieldVector::const_iterator itEnd = m_FieldVector.end();
     while(it != itEnd)
       {
-      if(dynamic_cast<MetaFileOutputStream*>(*itStream))
+      if(typeid(*(*itStream)) == typeid(MetaFileOutputStream))
         {
         METAIO_STL::string filename = ((MetaFileOutputStream*)(*itStream))
                                       ->GetFileName().c_str();

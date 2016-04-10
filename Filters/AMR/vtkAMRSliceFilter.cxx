@@ -15,27 +15,26 @@
 
 #include "vtkAMRSliceFilter.h"
 #include "vtkAMRBox.h"
-#include "vtkCell.h"
-#include "vtkCellData.h"
-#include "vtkCompositeDataPipeline.h"
-#include "vtkDataArray.h"
+#include "vtkObjectFactory.h"
 #include "vtkDataObject.h"
 #include "vtkInformation.h"
-#include "vtkInformationIntegerKey.h"
 #include "vtkInformationVector.h"
-#include "vtkMultiProcessController.h"
-#include "vtkObjectFactory.h"
 #include "vtkOverlappingAMR.h"
+#include "vtkCell.h"
 #include "vtkParallelAMRUtilities.h"
 #include "vtkPlane.h"
-#include "vtkPointData.h"
-#include "vtkStructuredData.h"
-#include "vtkSmartPointer.h"
-#include "vtkStreamingDemandDrivenPipeline.h"
-#include "vtkTimerLog.h"
 #include "vtkUniformGrid.h"
+#include "vtkStructuredData.h"
+#include "vtkCellData.h"
+#include "vtkPointData.h"
+#include "vtkInformationIntegerKey.h"
+#include "vtkCompositeDataPipeline.h"
+#include "vtkMultiProcessController.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
+#include "vtkDataArray.h"
+#include "vtkTimerLog.h"
+#include "vtkSmartPointer.h"
 #include "vtkUniformGridAMRDataIterator.h"
-#include "vtkUnsignedCharArray.h"
 
 #include <cassert>
 #include <algorithm>
@@ -54,7 +53,6 @@ vtkAMRSliceFilter::vtkAMRSliceFilter()
   this->EnablePrefetching = 1;
   this->Controller        = vtkMultiProcessController::GetGlobalController();
   this->initialRequest    = true;
-  this->MaxResolution     = 1;
 }
 
 //------------------------------------------------------------------------------
@@ -493,7 +491,7 @@ int vtkAMRSliceFilter::GetDonorCellIdx( double x[3], vtkUniformGrid *ug )
       }
     }
 
-  return( vtkStructuredData::ComputeCellId( dims, ijk ) );
+  return( vtkStructuredData::ComputePointId( dims, ijk ) );
 }
 
 //------------------------------------------------------------------------------
@@ -525,12 +523,6 @@ void vtkAMRSliceFilter::GetSliceCellData(
      sourceCD->GetArray( arrayIdx )->GetNumberOfComponents( ) );
     array->SetNumberOfTuples( numCells );
     targetCD->AddArray( array );
-    vtkUnsignedCharArray* uca = vtkUnsignedCharArray::SafeDownCast(array);
-    if (uca != NULL && uca == slice->GetCellGhostArray())
-      {
-      // initiallize the ghost array
-      memset(uca->WritePointer(0, numCells), 0, numCells);
-      }
     array->Delete();
     } // END for all arrays
 

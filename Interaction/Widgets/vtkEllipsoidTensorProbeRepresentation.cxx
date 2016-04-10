@@ -199,7 +199,6 @@ void vtkEllipsoidTensorProbeRepresentation::GetActors(vtkPropCollection *pc)
 void vtkEllipsoidTensorProbeRepresentation::ReleaseGraphicsResources(vtkWindow *win)
 {
   this->EllipsoidActor->ReleaseGraphicsResources(win);
-  this->Superclass::ReleaseGraphicsResources(win);
 }
 
 //----------------------------------------------------------------------

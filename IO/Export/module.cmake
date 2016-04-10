@@ -26,6 +26,7 @@ vtk_module(vtkIOExport
     vtkTestingRendering
     vtkInteractionStyle
     vtkRenderingAnnotation
+    vtkRenderingFreeType${VTK_RENDERING_BACKEND}
     vtkRenderingVolume${VTK_RENDERING_BACKEND}
     vtkRenderingContext${VTK_RENDERING_BACKEND}
     vtkViewsContext2D

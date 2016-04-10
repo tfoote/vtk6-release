@@ -1,15 +1,13 @@
 vtk_module(vtkIOMPIParallel
   IMPLEMENTS
     vtkIOGeometry
-    vtkIOParallel
   GROUPS
     MPI
   DEPENDS
     vtkIOGeometry
-    vtkIOParallel
+    vtkParallelMPI
   PRIVATE_DEPENDS
     vtksys
-    vtkParallelMPI
   TEST_DEPENDS
     vtkRendering${VTK_RENDERING_BACKEND}
     vtkTestingRendering

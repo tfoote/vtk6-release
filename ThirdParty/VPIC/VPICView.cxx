@@ -26,10 +26,6 @@ VPICView::VPICView(int r, int t, VPICGlobal& dsGlobal) :
                 global(dsGlobal),
                 calculateGridNeeded(true)
 {
-  for (int i = 0; i < DIMENSION; ++i)
-    {
-    this->stride[i] = 1;
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////

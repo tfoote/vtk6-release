@@ -293,8 +293,7 @@ inline void vtkLinearRayIntegratorTransferFunction::GetColor(double x,
                                                              double c[4])
 {
   int i = 1;
-  while ((i < this->NumControlPoints-1) && (this->ControlPoints[i] < x))
-    i++;
+  while ((this->ControlPoints[i] < x) && (i < this->NumControlPoints-1)) i++;
 
   double before = this->ControlPoints[i-1];
   double after = this->ControlPoints[i];

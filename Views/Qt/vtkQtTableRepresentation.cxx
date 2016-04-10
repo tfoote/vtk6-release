@@ -66,7 +66,10 @@ vtkQtTableRepresentation::vtkQtTableRepresentation()
 
 vtkQtTableRepresentation::~vtkQtTableRepresentation()
 {
-  delete this->ModelAdapter;
+  if (this->ModelAdapter)
+    {
+    delete this->ModelAdapter;
+    }
   this->ColorTable->UnRegister(this);
   this->SeriesColors->UnRegister(this);
   this->SetKeyColumnInternal(NULL);

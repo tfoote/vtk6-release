@@ -52,7 +52,6 @@ void vtkSTLWriter::WriteData()
   if (pts == NULL || polys == NULL )
     {
     vtkErrorMacro(<<"No data to write!");
-    this->SetErrorCode(vtkErrorCode::UnknownError);
     return;
     }
 

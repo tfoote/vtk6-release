@@ -92,7 +92,7 @@ protected:
   size_t BlockSize;
   int    NumberOfAllocations;
   int    NumberOfBlocks;
-  size_t Alignment;
+  int    Alignment;
 
   // Manage the blocks
   vtkHeapBlock* First;

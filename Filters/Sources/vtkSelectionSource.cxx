@@ -346,7 +346,7 @@ int vtkSelectionSource::RequestData(
         vtkSelectionSourceInternals::StringIDSetType& selSet =
           this->Internal->StringIDs[idx];
 
-        if (!selSet.empty())
+        if (selSet.size() > 0)
           {
           // Create the selection list
           selectionList->SetNumberOfTuples(selSet.size());
@@ -408,7 +408,7 @@ int vtkSelectionSource::RequestData(
         vtkSelectionSourceInternals::IDSetType& selSet =
           this->Internal->IDs[idx];
 
-        if (!selSet.empty())
+        if (selSet.size() > 0)
           {
           // Create the selection list
           selectionList->SetNumberOfTuples(selSet.size());

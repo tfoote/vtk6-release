@@ -18,6 +18,7 @@ find_package(VTK COMPONENTS
   vtkFiltersCore
   vtkInfovisCore
   vtkInteractionStyle
+  vtkRenderingFreeType${VTK_RENDERING_BACKEND}
   vtkViewsQt
 )
 include(${VTK_USE_FILE})
@@ -50,7 +51,7 @@ set(CMAKE_AUTOMOC ON)
 # The rest should just work (sure...)
 if(VTK_QT_VERSION VERSION_GREATER "4")
   # We have ui files, this will bring in the macro: qt5_wrap_ui
-  find_package(Qt5 COMPONENTS Widgets REQUIRED QUIET)
+  find_package(Qt5Widgets REQUIRED QUIET)
   qt5_wrap_ui(UI_Srcs ${UIs})
   qt5_add_resources(QRC_Srcs ${QRCs} )
 

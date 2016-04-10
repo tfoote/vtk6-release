@@ -14,16 +14,14 @@
 =========================================================================*/
 #include "vtkExtractDataSets.h"
 
-#include "vtkCellData.h"
-#include "vtkHierarchicalBoxDataSet.h"
+#include "vtkObjectFactory.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
-#include "vtkMultiBlockDataSet.h"
-#include "vtkMultiPieceDataSet.h"
-#include "vtkObjectFactory.h"
+#include "vtkHierarchicalBoxDataSet.h"
 #include "vtkUniformGrid.h"
 #include "vtkUnsignedCharArray.h"
-
+#include "vtkMultiBlockDataSet.h"
+#include "vtkMultiPieceDataSet.h"
 
 #include <cassert>
 #include <set>
@@ -147,7 +145,7 @@ int vtkExtractDataSets::RequestData(
       clone->ShallowCopy(inUG);
 
       // Remove blanking from output datasets.
-      clone->GetCellData()->RemoveArray(vtkDataSetAttributes::GhostArrayName());
+      clone->SetCellVisibilityArray(0);
       mpds->SetPiece( out_index, clone );
       clone->Delete();
       }

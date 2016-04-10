@@ -48,12 +48,12 @@ struct vtkQtLabelMapEntry
 class vtkQtStringToImage::Internals
 {
 public:
-  QFont TextPropertyToFont(vtkTextProperty* tprop, int dpi)
+  QFont TextPropertyToFont(vtkTextProperty* tprop)
     {
     QFont fontSpec(tprop->GetFontFamilyAsString());
     fontSpec.setBold(tprop->GetBold());
     fontSpec.setItalic(tprop->GetItalic());
-    fontSpec.setPixelSize(static_cast<int>(tprop->GetFontSize() * (dpi / 72.)));
+    fontSpec.setPixelSize(tprop->GetFontSize());
     return fontSpec;
     }
 
@@ -86,8 +86,7 @@ vtkQtStringToImage::~vtkQtStringToImage()
 
 //-----------------------------------------------------------------------------
 vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
-                                          const vtkUnicodeString& string,
-                                          int dpi)
+                                          const vtkUnicodeString& string)
 {
   vtkVector2i recti(0, 0);
   if (!QApplication::instance())
@@ -101,7 +100,7 @@ vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
     return recti;
     }
 
-  QFont fontSpec = this->Implementation->TextPropertyToFont(property, dpi);
+  QFont fontSpec = this->Implementation->TextPropertyToFont(property);
 
   QString text = QString::fromUtf8(string.utf8_str());
 
@@ -118,7 +117,7 @@ vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
 
 //-----------------------------------------------------------------------------
 vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
-                                          const vtkStdString& string, int dpi)
+                                          const vtkStdString& string)
 {
   vtkVector2i recti(0, 0);
   if (!QApplication::instance())
@@ -132,7 +131,7 @@ vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
     return recti;
     }
 
-  QFont fontSpec = this->Implementation->TextPropertyToFont(property, dpi);
+  QFont fontSpec = this->Implementation->TextPropertyToFont(property);
 
   QString text(string.c_str());
 
@@ -148,7 +147,7 @@ vtkVector2i vtkQtStringToImage::GetBounds(vtkTextProperty *property,
 }
 
 int vtkQtStringToImage::RenderString(vtkTextProperty *property,
-                                     const vtkUnicodeString& string, int dpi,
+                                     const vtkUnicodeString& string,
                                      vtkImageData *data, int textDims[2])
 {
   if (!QApplication::instance())
@@ -157,7 +156,7 @@ int vtkQtStringToImage::RenderString(vtkTextProperty *property,
     return 0;
     }
   // Get the required size, and initialize a new QImage to draw on.
-  vtkVector2i box = this->GetBounds(property, string, dpi);
+  vtkVector2i box = this->GetBounds(property, string);
   if (box.GetX() == 0 || box.GetY() == 0)
     {
     return 0;
@@ -169,7 +168,7 @@ int vtkQtStringToImage::RenderString(vtkTextProperty *property,
     }
 
   QString text = QString::fromUtf8(string.utf8_str());
-  QFont fontSpec = this->Implementation->TextPropertyToFont(property, dpi);
+  QFont fontSpec = this->Implementation->TextPropertyToFont(property);
   QFontMetrics fontMetric(fontSpec);
 
   // Get properties from text property
@@ -227,11 +226,11 @@ int vtkQtStringToImage::RenderString(vtkTextProperty *property,
 }
 
 int vtkQtStringToImage::RenderString(vtkTextProperty *property,
-                                     const vtkStdString& string, int dpi,
+                                     const vtkStdString& string,
                                      vtkImageData *data, int textDims[2])
 {
-  return this->RenderString(property, vtkUnicodeString::from_utf8(string), dpi,
-                            data, textDims);
+  return this->RenderString(property, vtkUnicodeString::from_utf8(string), data,
+                            textDims);
 }
 
 //-----------------------------------------------------------------------------

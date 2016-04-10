@@ -241,7 +241,6 @@ int vtkContourFilter::RequestUpdateExtent(vtkInformation* request,
       this->GridSynchronizedTemplates->SetComputeNormals(this->ComputeNormals);
       this->GridSynchronizedTemplates->SetComputeGradients(this->ComputeGradients);
       this->GridSynchronizedTemplates->SetComputeScalars(this->ComputeScalars);
-      this->GridSynchronizedTemplates->SetOutputPointsPrecision(this->OutputPointsPrecision);
       this->GridSynchronizedTemplates->SetGenerateTriangles(this->GenerateTriangles);
       return this->GridSynchronizedTemplates->
         ProcessRequest(request,inputVector,outputVector);
@@ -368,7 +367,6 @@ int vtkContourFilter::RequestData(
       this->GridSynchronizedTemplates->SetComputeNormals(this->ComputeNormals);
       this->GridSynchronizedTemplates->SetComputeGradients(this->ComputeGradients);
       this->GridSynchronizedTemplates->SetComputeScalars(this->ComputeScalars);
-      this->GridSynchronizedTemplates->SetOutputPointsPrecision(this->OutputPointsPrecision);
       this->GridSynchronizedTemplates->SetGenerateTriangles(this->GenerateTriangles);
       this->GridSynchronizedTemplates->
         SetInputArrayToProcess(0,this->GetInputArrayInformation(0));

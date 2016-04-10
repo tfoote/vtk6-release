@@ -370,7 +370,6 @@ static void vtkExtractArraysAddColumnValue(
   arr->SetNumberOfTuples(1);
   arr->SetVariantValue(0, val);
   statSummary->AddColumn(arr);
-  arr->FastDelete();
 }
 
 //------------------------------------------------------------------------------
@@ -963,6 +962,12 @@ void vtkExtractArraysOverTime::ExecuteAtTimeStep(
   vtkDataObject* input = vtkDataObject::GetData(inInfo);
   vtkSelection* selInput = vtkSelection::GetData(selInfo);
 
+  vtkDataObject* inputClone = input->NewInstance();
+  inputClone->ShallowCopy(input);
+
+  vtkSelection* selInputClone = selInput->NewInstance();
+  selInputClone->ShallowCopy(selInput);
+
   vtkExtractSelection* filter = this->SelectionExtractor;
   if (!filter)
     {
@@ -972,8 +977,8 @@ void vtkExtractArraysOverTime::ExecuteAtTimeStep(
     }
   filter->SetPreserveTopology(0);
   filter->SetUseProbeForLocations(1);
-  filter->SetInputData(0, input);
-  filter->SetInputData(1, selInput);
+  filter->SetInputData(0, inputClone);
+  filter->SetInputData(1, selInputClone);
 
   vtkDebugMacro(<< "Preparing subfilter to extract from dataset");
   //pass all required information to the helper filter
@@ -1007,6 +1012,8 @@ void vtkExtractArraysOverTime::ExecuteAtTimeStep(
   this->Internal->AddTimeStep(time_step, output);
 
   output->Delete();
+  inputClone->Delete();
+  selInputClone->Delete();
 
   this->UpdateProgress(
     static_cast<double>(this->CurrentTimeIndex)/this->NumberOfTimeSteps);

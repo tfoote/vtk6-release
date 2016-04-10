@@ -34,7 +34,7 @@
 #include "vtkRenderer.h"
 #include "vtkSphereSource.h"
 
-static double TestImplicitPlaneWidget2bPlaneOrigins[3][3] =
+double TestImplicitPlaneWidget2bPlaneOrigins[3][3] =
 { { 0, 10, 0 }, { 10, 0 , 0 }, { 0, 0, 0 } };
 
 class vtkTimerCallback : public vtkCommand

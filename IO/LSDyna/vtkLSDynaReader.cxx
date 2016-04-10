@@ -1497,7 +1497,6 @@ int vtkLSDynaReader::ReadHeaderInformation( int curAdapt )
     break;
   case 7:
     p->ReadRigidRoadMvmt = 1;
-    VTK_FALLTHROUGH;
   case 5:
     p->Dict["MATTYP"] = 1;
     p->ConnectivityUnpacked = 1;

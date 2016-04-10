@@ -359,10 +359,6 @@ protected:
   int OpaqueFlag;
   vtkTimeStamp OpaqueFlagBuildTime;
 
-  // Description:
-  // Resize the LookupTable to have enough room for the out-of-range colors
-  void ResizeTableForSpecialColors();
-
 private:
   vtkLookupTable(const vtkLookupTable&);  // Not implemented.
   void operator=(const vtkLookupTable&);  // Not implemented.
@@ -377,3 +373,6 @@ inline unsigned char *vtkLookupTable::WritePointer(const vtkIdType id,
 }
 
 #endif
+
+
+

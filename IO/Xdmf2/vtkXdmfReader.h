@@ -35,7 +35,6 @@
 
 #include "vtkIOXdmf2Module.h" // For export macro
 #include "vtkDataReader.h"
-#include <map> // for caching
 
 class vtkXdmfArraySelection;
 class vtkXdmfDocument;
@@ -141,21 +140,6 @@ public:
   virtual vtkGraph* GetSIL();
 
 //BTX
-  class XdmfDataSetTopoGeoPath
-  {
-  public:
-    XdmfDataSetTopoGeoPath() : dataset(0), topologyPath(), geometryPath() {}
-    vtkDataSet* dataset;
-    std::string topologyPath;
-    std::string geometryPath;
-  };
-
-  typedef std::map<int, XdmfDataSetTopoGeoPath> XdmfReaderCachedData;
-
-  // Description
-  // Get the data set cache
-  XdmfReaderCachedData& GetDataSetCache();
-
 protected:
   vtkXdmfReader();
   ~vtkXdmfReader();
@@ -198,15 +182,10 @@ protected:
   vtkXdmfArraySelection* SetsCache;
 
   int SILUpdateStamp;
-
-  XdmfReaderCachedData DataSetCache;
-
 private:
   // Description:
   // Prepares the XdmfDocument.
   bool PrepareDocument();
-
-  void ClearDataSetCache();
 
   // Description:
   // Returns the time-step index requested using the UPDATE_TIME_STEPS from the

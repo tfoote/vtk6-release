@@ -255,14 +255,14 @@ void vtkImageActor::GetDisplayExtent(int extent[6])
 // Get the bounds for this Volume as (Xmin,Xmax,Ymin,Ymax,Zmin,Zmax).
 double *vtkImageActor::GetDisplayBounds()
 {
-  vtkAlgorithm* inputAlg = NULL;
+  vtkAlgorithm* inputAlg = this->Mapper->GetInputAlgorithm();
 
-  if (this->Mapper && this->Mapper->GetNumberOfInputConnections(0) > 0)
+  if (this->Mapper)
     {
     inputAlg = this->Mapper->GetInputAlgorithm();
     }
 
-  if (!inputAlg)
+  if (!this->Mapper || !inputAlg)
     {
     return this->DisplayBounds;
     }

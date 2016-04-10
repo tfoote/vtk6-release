@@ -318,8 +318,6 @@ int vtkWeightedTransformFilter::RequestData(
       {
       vtkErrorMacro(<<"WeightArray " << this->WeightArray <<
       " " << "doesn't exist");
-      delete [] linearNormMtx;
-      delete [] linearPtMtx;
       return 1;
       }
 
@@ -350,8 +348,6 @@ int vtkWeightedTransformFilter::RequestData(
       {
       vtkErrorMacro(<<"TransformIndexArray " << this->TransformIndexArray <<
       " " << "doesn't exist");
-      delete [] linearNormMtx;
-      delete [] linearPtMtx;
       return 1;
       }
 
@@ -391,8 +387,6 @@ int vtkWeightedTransformFilter::RequestData(
       {
       vtkErrorMacro(<<"CellDataWeightArray " << this->CellDataWeightArray <<
       " " << "doesn't exist");
-      delete [] linearNormMtx;
-      delete [] linearPtMtx;
       return 1;
       }
     cdComponents = cdArray->GetNumberOfComponents();
@@ -426,8 +420,6 @@ int vtkWeightedTransformFilter::RequestData(
       vtkErrorMacro(<<"CellDataTransformIndexArray " <<
                     this->CellDataTransformIndexArray <<
                     " " << "doesn't exist");
-      delete [] linearNormMtx;
-      delete [] linearPtMtx;
       return 1;
       }
 
@@ -458,8 +450,6 @@ int vtkWeightedTransformFilter::RequestData(
   if ( !inPts )
     {
     vtkErrorMacro(<<"No input data");
-    delete [] linearNormMtx;
-    delete [] linearPtMtx;
     return 1;
     }
 

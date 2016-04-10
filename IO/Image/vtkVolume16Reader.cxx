@@ -275,7 +275,7 @@ void vtkVolume16Reader::ReadImage(int sliceNumber,
   unsigned short *pixels;
   FILE *fp;
   int numPts;
-  char filename[VTK_MAXPATH];
+  char filename[1024];
 
   // build the file name. if there is no prefix, just use the slice number
   if (this->FilePrefix)
@@ -318,7 +318,7 @@ void vtkVolume16Reader::ReadVolume(int first, int last,
   int fileNumber;
   int status;
   int numberSlices = last - first + 1;
-  char filename[VTK_MAXPATH];
+  char filename[1024];
   int dimensions[3];
   int bounds[6];
 

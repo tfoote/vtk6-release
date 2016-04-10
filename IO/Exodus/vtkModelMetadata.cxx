@@ -473,23 +473,11 @@ void vtkModelMetadata::SetNodeSetIds(int *n)
 
   this->NodeSetIds = n;
 }
-void vtkModelMetadata::SetNodeSetSize(int *n)
-{
-  FREE(this->NodeSetSize);
-
-  this->NodeSetSize = n;
-}
 void vtkModelMetadata::SetNodeSetNodeIdList(int *n)
 {
   FREE(this->NodeSetNodeIdList);
 
   this->NodeSetNodeIdList = n;
-}
-void vtkModelMetadata::SetNodeSetNumberOfDistributionFactors(int *n)
-{
-  FREE(this->NodeSetNumberOfDistributionFactors);
-
-  this->NodeSetNumberOfDistributionFactors = n;
 }
 void vtkModelMetadata::SetNodeSetDistributionFactors(float *d)
 {

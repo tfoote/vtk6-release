@@ -160,13 +160,6 @@ vtkEnSightReader::~vtkEnSightReader()
 }
 
 //----------------------------------------------------------------------------
-void vtkEnSightReader::ClearForNewCaseFileName()
-{
-  this->UnstructuredPartIds->Reset();
-  vtkGenericEnSightReader::ClearForNewCaseFileName();
-}
-
-//----------------------------------------------------------------------------
 int vtkEnSightReader::RequestData(
   vtkInformation *vtkNotUsed(request),
   vtkInformationVector **vtkNotUsed(inputVector),
@@ -1572,12 +1565,11 @@ int vtkEnSightReader::ReadVariableFiles(vtkMultiBlockDataSet *output)
           fileNum = 1;
           for (j = 1; j < numStepsList->GetNumberOfIds(); j++)
             {
-            int curNumSteps = numStepsList->GetId(j);
-            numSteps += curNumSteps;
+            numSteps += numStepsList->GetId(j);
             if (timeStep > numSteps)
               {
               fileNum++;
-              timeStepInFile -= curNumSteps;
+              timeStepInFile -= numStepsList->GetId(j);
               }
             }
           }
@@ -1717,12 +1709,11 @@ int vtkEnSightReader::ReadVariableFiles(vtkMultiBlockDataSet *output)
           fileNum = 1;
           for (j = 1; j < numStepsList->GetNumberOfIds(); j++)
             {
-            int curNumSteps = numStepsList->GetId(j);
-            numSteps += curNumSteps;
+            numSteps += numStepsList->GetId(j);
             if (timeStep > numSteps)
               {
               fileNum++;
-              timeStepInFile -= curNumSteps;
+              timeStepInFile -= numStepsList->GetId(j);
               }
             }
           }

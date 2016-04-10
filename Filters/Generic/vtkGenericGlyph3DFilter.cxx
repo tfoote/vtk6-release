@@ -101,6 +101,7 @@ int vtkGenericGlyph3DFilter::RequestData(
   vtkGenericAttribute *inNormals=0;
   //  vtkGenericAttribute *sourceNormals=0;
 
+  int requestedGhostLevel=0;
   unsigned char* inGhostLevels=0;
 
   vtkIdType numPts, numSourcePts, numSourceCells, inPtId, i;
@@ -215,7 +216,7 @@ int vtkGenericGlyph3DFilter::RequestData(
   vtkDataArray* temp = 0;
   if (pd)
     {
-    temp = pd->GetArray(vtkDataSetAttributes::GhostArrayName());
+    temp = pd->GetArray("vtkGhostLevels");
     }
   if ( (!temp) || (temp->GetDataType() != VTK_UNSIGNED_CHAR)
        || (temp->GetNumberOfComponents() != 1))
@@ -226,6 +227,8 @@ int vtkGenericGlyph3DFilter::RequestData(
     {
     inGhostLevels = ((vtkUnsignedCharArray*)temp)->GetPointer(0);
     }
+
+  requestedGhostLevel = output->GetUpdateGhostLevel();
 #endif
 
   numPts = input->GetNumberOfPoints();
@@ -515,9 +518,13 @@ int vtkGenericGlyph3DFilter::RequestData(
 
     // Check ghost points.
     // If we are processing a piece, we do not want to duplicate
-    // glyphs on the borders.
-    if (inGhostLevels &&
-        inGhostLevels[inPtId] & vtkDataSetAttributes::DUPLICATEPOINT)
+    // glyphs on the borders.  The corrct check here is:
+    // ghostLevel > 0.  I am leaving this over glyphing here because
+    // it make a nice example (sphereGhost.tcl) to show the
+    // point ghost levels with the glyph filter.  I am not certain
+    // of the usefulness of point ghost levels over 1, but I will have
+    // to think about it.
+    if (inGhostLevels && inGhostLevels[inPtId] > requestedGhostLevel)
       {
       continue;
       }

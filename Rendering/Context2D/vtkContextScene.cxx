@@ -232,17 +232,6 @@ int vtkContextScene::GetSceneHeight()
 }
 
 //-----------------------------------------------------------------------------
-vtkVector2i vtkContextScene::GetLogicalTileScale()
-{
-  vtkVector2i result(1);
-  if (this->ScaleTiles && this->Renderer && this->Renderer->GetRenderWindow())
-    {
-    this->Renderer->GetRenderWindow()->GetTileScale(result.GetData());
-    }
-  return result;
-}
-
-//-----------------------------------------------------------------------------
 void vtkContextScene::SetDirty(bool isDirty)
 {
   if (this->Storage->IsDirty == isDirty)

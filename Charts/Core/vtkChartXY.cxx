@@ -32,7 +32,6 @@
 #include "vtkVector.h"
 #include "vtkVectorOperators.h"
 
-#include "vtkPlotArea.h"
 #include "vtkPlotBar.h"
 #include "vtkPlotBag.h"
 #include "vtkPlotFunctionalBag.h"
@@ -315,8 +314,11 @@ void vtkChartXY::Update()
 
   if (this->AutoAxes)
     {
-    vtkTuple<bool, 4> visibilities(false);
-    for (int i = 0; i < static_cast<int>(this->ChartPrivate->PlotCorners.size()); ++i)
+    for (int i = 0; i < 4; ++i)
+      {
+      this->ChartPrivate->axes[i]->SetVisible(false);
+      }
+    for (size_t i = 0; i < this->ChartPrivate->PlotCorners.size(); ++i)
       {
       int visible = 0;
       for (unsigned int j = 0;
@@ -330,13 +332,17 @@ void vtkChartXY::Update()
         }
       if (visible)
         {
-        visibilities[i % 4] = true;
-        visibilities[(i+1) % 4] = true;
+        if (i < 3)
+          {
+          this->ChartPrivate->axes[i]->SetVisible(true);
+          this->ChartPrivate->axes[i+1]->SetVisible(true);
+          }
+        else
+          {
+          this->ChartPrivate->axes[0]->SetVisible(true);
+          this->ChartPrivate->axes[3]->SetVisible(true);
+          }
         }
-      }
-    for (int i = 0; i < 4; ++i)
-      {
-      this->ChartPrivate->axes[i]->SetVisible(visibilities[i]);
       }
     }
 }
@@ -390,7 +396,6 @@ bool vtkChartXY::Paint(vtkContext2D *painter)
     }
 
   this->UpdateLayout(painter);
-
   // Recalculate the plot transform, min and max values if necessary
   if (!this->PlotTransformValid)
     {
@@ -400,14 +405,6 @@ bool vtkChartXY::Paint(vtkContext2D *painter)
   if (this->UpdateLayout(painter) || recalculateTransform)
     {
     this->RecalculatePlotTransforms();
-    }
-
-  // Now that plot transforms, including whether to use log scaling and the
-  // shift-scale factors, have been updated, we give the vtkPlot instances an
-  // opportunity to update caches.
-  for (size_t i = 0; i < this->ChartPrivate->plots.size(); ++i)
-    {
-    this->ChartPrivate->plots[i]->UpdateCache();
     }
 
   // Update the clipping if necessary
@@ -833,9 +830,6 @@ bool vtkChartXY::UpdateLayout(vtkContext2D* painter)
   // their bounds, and to update the chart in response to that.
   bool changed = false;
 
-  vtkVector2i tileScale = this->Scene->GetLogicalTileScale();
-  vtkVector2i hiddenAxisBorder = tileScale * this->HiddenAxisBorder;
-
   // Axes
   if (this->LayoutStrategy == vtkChart::FILL_SCENE ||
       this->LayoutStrategy == vtkChart::FILL_RECT)
@@ -865,20 +859,13 @@ bool vtkChartXY::UpdateLayout(vtkContext2D* painter)
         painter->ComputeStringBounds(this->Title, bounds);
         if (bounds[3] > 0)
           {
-          border += (5 * tileScale.GetY()) /* title margin */
+          border += 5 /* title margin */
                     + bounds[3]; // add the title text height to the border.
           }
         }
 
-      if (i == vtkAxis::TOP || i == vtkAxis::BOTTOM)
-        {
-        border = std::max(border, hiddenAxisBorder.GetY());
-        }
-      else
-        {
-        border = std::max(border, hiddenAxisBorder.GetX());
-        }
-
+      border = border < this->HiddenAxisBorder ? this->HiddenAxisBorder :
+                                                 border;
       if (this->ChartPrivate->Borders[i] != border)
         {
         this->ChartPrivate->Borders[i] = border;
@@ -891,8 +878,8 @@ bool vtkChartXY::UpdateLayout(vtkContext2D* painter)
     {
     if (this->DrawAxesAtOrigin)
       {
-      this->SetBorders(hiddenAxisBorder.GetX(),
-                       hiddenAxisBorder.GetY(),
+      this->SetBorders(this->HiddenAxisBorder,
+                       this->HiddenAxisBorder,
                        this->ChartPrivate->Borders[2],
                        this->ChartPrivate->Borders[3]);
       // Get the screen coordinates for the origin, and move the axes there.
@@ -977,8 +964,6 @@ int vtkChartXY::GetLegendBorder(vtkContext2D* painter, int axisPosition)
     return 0;
     }
 
-  vtkVector2i tileScale = this->Scene->GetLogicalTileScale();
-
   int padding = 10;
   vtkVector2i legendSize(0, 0);
   vtkVector2i legendAlignment(this->Legend->GetHorizontalAlignment(),
@@ -992,12 +977,12 @@ int vtkChartXY::GetLegendBorder(vtkContext2D* painter, int axisPosition)
   if (axisPosition == vtkAxis::LEFT &&
       legendAlignment.GetX() == vtkChartLegend::LEFT)
     {
-    return legendSize.GetX() + padding * tileScale.GetX();
+    return legendSize.GetX() + padding;
     }
   else if (axisPosition == vtkAxis::RIGHT &&
            legendAlignment.GetX() == vtkChartLegend::RIGHT)
     {
-    return legendSize.GetX() + padding * tileScale.GetX();
+    return legendSize.GetX() + padding;
     }
   else if ((axisPosition == vtkAxis::TOP || axisPosition == vtkAxis::BOTTOM) &&
            (legendAlignment.GetX() == vtkChartLegend::LEFT ||
@@ -1008,12 +993,12 @@ int vtkChartXY::GetLegendBorder(vtkContext2D* painter, int axisPosition)
   else if (axisPosition == vtkAxis::TOP &&
            legendAlignment.GetY() == vtkChartLegend::TOP)
     {
-    return legendSize.GetY() + padding * tileScale.GetY();
+    return legendSize.GetY() + padding;
     }
   else if (axisPosition == vtkAxis::BOTTOM &&
            legendAlignment.GetY() == vtkChartLegend::BOTTOM)
     {
-    return legendSize.GetY() + padding * tileScale.GetY();
+    return legendSize.GetY() + padding;
     }
   else
     {
@@ -1170,14 +1155,6 @@ vtkPlot * vtkChartXY::AddPlot(int type)
       bag->SetParent(this);
       bag->GetBrush()->SetColor(color.GetData());
       plot = bag;
-      break;
-      }
-    case AREA:
-      {
-      vtkPlotArea* area = vtkPlotArea::New();
-      area->SetParent(this);
-      area->GetBrush()->SetColor(color.GetData());
-      plot = area;
       break;
       }
 
@@ -1970,7 +1947,7 @@ bool vtkChartXY::MouseButtonReleaseEvent(const vtkContextMouseEvent &mouse)
             {
             vtkPlot* plot = vtkPlot::SafeDownCast(this->ChartPrivate->
                                                   PlotCorners[i]->GetItem(j));
-            if (plot && plot->GetVisible() && plot->GetSelectable())
+            if (plot && plot->GetVisible())
               {
               // There is only really one old selection in this mode.
               if (i == 0 && j == 0)
@@ -2025,7 +2002,7 @@ bool vtkChartXY::MouseButtonReleaseEvent(const vtkContextMouseEvent &mouse)
             {
             vtkPlot* plot = vtkPlot::SafeDownCast(this->ChartPrivate->
                                                   PlotCorners[i]->GetItem(j));
-            if (plot && plot->GetVisible() && plot->GetSelectable())
+            if (plot && plot->GetVisible())
               {
               oldSelection->DeepCopy(plot->GetSelection());
               // Populate the selection using the appropriate shape.
@@ -2083,7 +2060,7 @@ bool vtkChartXY::MouseButtonReleaseEvent(const vtkContextMouseEvent &mouse)
             {
             vtkPlot* plot = vtkPlot::SafeDownCast(this->ChartPrivate->
                                                   PlotCorners[i]->GetItem(j));
-            if (plot && plot->GetVisible() && plot->GetSelectable())
+            if (plot && plot->GetVisible())
               {
               bool selected = false;
               // Populate the selection using the appropriate shape.
@@ -2118,9 +2095,6 @@ bool vtkChartXY::MouseButtonReleaseEvent(const vtkContextMouseEvent &mouse)
             }
           }
         }
-      vtkIdType* ptrSelection =
-        reinterpret_cast<vtkIdType *>(accumulateSelection->GetVoidPointer(0));
-      std::sort(ptrSelection, ptrSelection + accumulateSelection->GetNumberOfTuples());
       // Now add the accumulated selection to the old selection
       vtkChartSelectionHelper::BuildSelection(this->AnnotationLink,
                                               selectionMode,

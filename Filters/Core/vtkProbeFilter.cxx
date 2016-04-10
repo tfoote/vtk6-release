@@ -40,7 +40,8 @@ vtkProbeFilter::vtkProbeFilter()
 {
   this->SpatialMatch = 0;
   this->ValidPoints = vtkIdTypeArray::New();
-  this->MaskPoints = NULL;
+  this->MaskPoints = vtkCharArray::New();
+  this->MaskPoints->SetNumberOfComponents(1);
   this->SetNumberOfInputPorts(2);
   this->ValidPointMaskArrayName = 0;
   this->SetValidPointMaskArrayName("vtkValidPointMask");
@@ -62,11 +63,8 @@ vtkProbeFilter::vtkProbeFilter()
 //----------------------------------------------------------------------------
 vtkProbeFilter::~vtkProbeFilter()
 {
-  if (this->MaskPoints)
-    {
-    this->MaskPoints->Delete();
-    this->MaskPoints = 0;
-    }
+  this->MaskPoints->Delete();
+  this->MaskPoints = 0;
   this->ValidPoints->Delete();
   this->ValidPoints = NULL;
   this->SetValidPointMaskArrayName(0);
@@ -194,15 +192,6 @@ void vtkProbeFilter::InitializeForProbing(vtkDataSet* input,
   // Initialize valid points/mask points arrays.
   this->NumberOfValidPoints = 0;
   this->ValidPoints->Allocate(numPts);
-  // if this is repeatedly called by the pipeline for a composite mesh,
-  // you need a new array for each block
-  // (that is you need to reinitialize the object)
-  if (this->MaskPoints)
-    {
-    this->MaskPoints->Delete();
-    }
-  this->MaskPoints = vtkCharArray::New();
-  this->MaskPoints->SetNumberOfComponents(1);
   this->MaskPoints->SetNumberOfTuples(numPts);
   this->MaskPoints->FillComponent(0, 0);
   this->MaskPoints->SetName(this->ValidPointMaskArrayName?
@@ -290,7 +279,7 @@ void vtkProbeFilter::ProbeEmptyPoints(vtkDataSet *input,
     // Use tolerance as a function of size of source data
     //
     tol2 = source->GetLength();
-    tol2 = (tol2 != 0.0) ? tol2*tol2 / 1000.0 : 0.001;
+    tol2 = tol2 ? tol2*tol2 / 1000.0 : 0.001;
 
     // the actual sampling rate needs to be considered for a
     // more appropriate / accurate selection of the tolerance.

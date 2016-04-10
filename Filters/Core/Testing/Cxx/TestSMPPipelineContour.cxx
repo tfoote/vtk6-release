@@ -28,7 +28,7 @@
 #include "vtkSmartPointer.h"
 
 const int EXTENT = 100;
-static int WholeExtent[] = {-EXTENT, EXTENT, -EXTENT, EXTENT, -EXTENT, EXTENT};
+int WholeExtent[] = {-EXTENT, EXTENT, -EXTENT, EXTENT, -EXTENT, EXTENT};
 const int NUMBER_OF_PIECES = 50;
 static vtkImageData* Pieces[NUMBER_OF_PIECES];
 

@@ -144,14 +144,14 @@ void vtkDICOMImageReader::ExecuteInformation()
       dir->Delete();
       return;
       }
-    vtkIdType numFiles = dir->GetNumberOfFiles();
+    int numFiles = dir->GetNumberOfFiles();
 
     vtkDebugMacro( << "There are " << numFiles << " files in the directory.");
 
     this->DICOMFileNames->clear();
     this->AppHelper->Clear();
 
-    for (vtkIdType i = 0; i < numFiles; i++)
+    for (int i = 0; i < numFiles; i++)
       {
       if (strcmp(dir->GetFile(i), ".") == 0 ||
           strcmp(dir->GetFile(i), "..") == 0)
@@ -197,7 +197,6 @@ void vtkDICOMImageReader::ExecuteInformation()
       this->AppHelper->RegisterCallbacks(this->Parser);
 
       this->Parser->ReadHeader();
-      this->Parser->CloseFile();
 
       vtkDebugMacro( << "File name : " << fn );
       vtkDebugMacro( << "Slice number : " << this->AppHelper->GetSliceNumber());
@@ -311,7 +310,7 @@ void vtkDICOMImageReader::ExecuteDataWithInformation(vtkDataObject *output,
     std::vector<std::string>::iterator fiter;
 
     int count = 0;
-    vtkIdType numFiles = static_cast<int>(this->DICOMFileNames->size());
+    int numFiles = static_cast<int>(this->DICOMFileNames->size());
 
     for (fiter = this->DICOMFileNames->begin();
          fiter != this->DICOMFileNames->end();
@@ -506,7 +505,10 @@ const char* vtkDICOMImageReader::GetTransferSyntaxUID()
 {
   std::string tmp = this->AppHelper->GetTransferSyntaxUID();
 
-  delete [] this->TransferSyntaxUID;
+  if (this->TransferSyntaxUID)
+    {
+    delete [] this->TransferSyntaxUID;
+    }
   this->TransferSyntaxUID = new char[tmp.length()+1];
   strcpy(this->TransferSyntaxUID, tmp.c_str());
   this->TransferSyntaxUID[tmp.length()] = '\0';
@@ -531,7 +533,10 @@ const char* vtkDICOMImageReader::GetPatientName()
 {
   std::string tmp = this->AppHelper->GetPatientName();
 
-  delete [] this->PatientName;
+  if (this->PatientName)
+    {
+    delete [] this->PatientName;
+    }
   this->PatientName = new char[tmp.length()+1];
   strcpy(this->PatientName, tmp.c_str());
   this->PatientName[tmp.length()] = '\0';
@@ -544,7 +549,10 @@ const char* vtkDICOMImageReader::GetStudyUID()
 {
   std::string tmp = this->AppHelper->GetStudyUID();
 
-  delete [] this->StudyUID;
+  if (this->StudyUID)
+    {
+    delete [] this->StudyUID;
+    }
   this->StudyUID = new char[tmp.length()+1];
   strcpy(this->StudyUID, tmp.c_str());
   this->StudyUID[tmp.length()] = '\0';
@@ -557,7 +565,10 @@ const char* vtkDICOMImageReader::GetStudyID()
 {
   std::string tmp = this->AppHelper->GetStudyID();
 
-  delete [] this->StudyID;
+  if (this->StudyID)
+    {
+    delete [] this->StudyID;
+    }
   this->StudyID = new char[tmp.length()+1];
   strcpy(this->StudyID, tmp.c_str());
   this->StudyID[tmp.length()] = '\0';

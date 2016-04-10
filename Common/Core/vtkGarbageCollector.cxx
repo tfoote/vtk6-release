@@ -60,9 +60,9 @@ static vtkGarbageCollectorSingleton* vtkGarbageCollectorSingletonInstance;
 //----------------------------------------------------------------------------
 // Global debug setting.  This flag specifies whether a collector
 // should print debugging output.  This must be default initialized to
-// false by the compiler and is therefore not initialized here.  The
+// zero by the compiler and is therefore not initialized here.  The
 // ClassInitialize and ClassFinalize methods handle it.
-static bool vtkGarbageCollectorGlobalDebugFlag;
+static int vtkGarbageCollectorGlobalDebugFlag;
 
 //----------------------------------------------------------------------------
 // The thread identifier of the main thread.  Delayed garbage
@@ -93,13 +93,13 @@ void vtkGarbageCollector::PrintSelf(ostream& os, vtkIndent indent)
 }
 
 //----------------------------------------------------------------------------
-void vtkGarbageCollector::SetGlobalDebugFlag(bool flag)
+void vtkGarbageCollector::SetGlobalDebugFlag(int flag)
 {
   vtkGarbageCollectorGlobalDebugFlag = flag;
 }
 
 //----------------------------------------------------------------------------
-bool vtkGarbageCollector::GetGlobalDebugFlag()
+int vtkGarbageCollector::GetGlobalDebugFlag()
 {
   return vtkGarbageCollectorGlobalDebugFlag;
 }
@@ -439,7 +439,7 @@ vtkGarbageCollectorImpl::~vtkGarbageCollectorImpl()
   this->Visited.clear();
 
   // Disable debugging to avoid destruction message.
-  this->SetDebug(false);
+  this->SetDebug(0);
 }
 
 //----------------------------------------------------------------------------
@@ -844,7 +844,7 @@ void vtkGarbageCollectorImpl::FlushEntryReferences(Entry* e)
 void vtkGarbageCollector::ClassInitialize()
 {
   // Set default debugging state.
-  vtkGarbageCollectorGlobalDebugFlag = false;
+  vtkGarbageCollectorGlobalDebugFlag = 0;
 
   // Record the id of the main thread.
   vtkGarbageCollectorMainThread = vtkMultiThreader::GetCurrentThreadID();

@@ -45,13 +45,12 @@
 # include "vtkOpenGLState.h"
 #endif
 
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
 # include "vtkOpenGLShaderCache.h"
 # include "vtkShaderProgram.h"
-# include "vtkOpenGLHelper.h"
+# include "vtkglVBOHelper.h"
 # include "vtkTextureObjectVS.h"
 # include "vtkCompositeZPassFS.h"
-# include "vtk_glew.h"
 #else
 # include "vtkgl.h"
 # include "vtkShaderProgram2.h"
@@ -93,14 +92,17 @@ vtkCompositeZPass::~vtkCompositeZPass()
     }
    if(this->Program!=0)
      {
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
      delete this->Program;
 #else
      this->Program->Delete();
 #endif
      this->Program = 0;
      }
-   delete[] this->RawZBuffer;
+   if(this->RawZBuffer!=0)
+     {
+     delete[] this->RawZBuffer;
+     }
 }
 
 // ----------------------------------------------------------------------------
@@ -122,7 +124,7 @@ void vtkCompositeZPass::PrintSelf(ostream& os, vtkIndent indent)
 // ----------------------------------------------------------------------------
 bool vtkCompositeZPass::IsSupported(vtkOpenGLRenderWindow *context)
 {
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
   return context != 0;
 #else
   return vtkFrameBufferObject::IsSupported(context)
@@ -161,7 +163,7 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
   vtkOpenGLRenderWindow *context=static_cast<vtkOpenGLRenderWindow *>(
     r->GetRenderWindow());
 
-#ifndef VTK_OPENGL2
+#ifndef VTKGL2
    // Test for Hardware support. If not supported, return.
   bool supported=vtkFrameBufferObject::IsSupported(context);
 
@@ -226,7 +228,7 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
   continuousInc[2]=0;
 
 
-  if(this->RawZBufferSize<static_cast<size_t>(w*h))
+  if(this->RawZBuffer!=0 && this->RawZBufferSize<static_cast<size_t>(w*h))
     {
     delete[] this->RawZBuffer;
     }
@@ -448,6 +450,13 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       this->ZTexture->CreateDepth(dims[0],dims[1],vtkTextureObject::Native,
                                   this->PBO);
 
+      // Apply TO on quad with special zcomposite fragment shader.
+      glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
+      glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+      glEnable(GL_DEPTH_TEST);
+      glDepthMask(GL_TRUE);
+      glDepthFunc(GL_LEQUAL);
+
       if(this->Program==0)
         {
         this->CreateProgram(context);
@@ -457,24 +466,11 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       cout << "sourceId=" << sourceId << endl;
 #endif
 
-#ifdef VTK_OPENGL2
-      // Apply TO on quad with special zcomposite fragment shader.
-      glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
-      glEnable(GL_DEPTH_TEST);
-      glDepthMask(GL_TRUE);
-      glDepthFunc(GL_LEQUAL);
-
-      context->GetShaderCache()->ReadyShaderProgram(this->Program->Program);
+#ifdef VTKGL2
+      context->GetShaderCache()->ReadyShader(this->Program->Program);
       this->ZTexture->Activate();
       this->Program->Program->SetUniformi("depth", this->ZTexture->GetTextureUnit());
 #else
-      // Apply TO on quad with special zcomposite fragment shader.
-      glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-      glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
-      glEnable(GL_DEPTH_TEST);
-      glDepthMask(GL_TRUE);
-      glDepthFunc(GL_LEQUAL);
-
       vtkTextureUnitManager *tu=context->GetTextureUnitManager();
       int sourceId=tu->Allocate();
 
@@ -498,11 +494,11 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       outfile04.close();
 #endif
 
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
       this->ZTexture->CopyToFrameBuffer(0, 0, w - 1, h - 1,
                                         0, 0, w, h,
                                         this->Program->Program,
-                                        this->Program->VAO);
+                                        &this->Program->vao);
 #else
       this->ZTexture->Bind();
       this->ZTexture->CopyToFrameBuffer(0,0,
@@ -521,7 +517,7 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       outfile05.close();
 #endif
 
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
       this->ZTexture->Deactivate();
 #else
       this->ZTexture->UnBind();
@@ -541,9 +537,7 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       outfile06.close();
 #endif
 
-#ifndef VTK_OPENGL2
       glPopAttrib();
-#endif
 
 #ifdef VTK_COMPOSITE_ZPASS_DEBUG
       state->Update();
@@ -764,14 +758,14 @@ void vtkCompositeZPass::Render(const vtkRenderState *s)
       this->CreateProgram(context);
       }
 
-#ifdef VTK_OPENGL2
-    context->GetShaderCache()->ReadyShaderProgram(this->Program->Program);
+#ifdef VTKGL2
+    context->GetShaderCache()->ReadyShader(this->Program->Program);
     this->ZTexture->Activate();
     this->Program->Program->SetUniformi("depth", this->ZTexture->GetTextureUnit());
     this->ZTexture->CopyToFrameBuffer(0, 0, w - 1, h - 1,
                                       0, 0, w, h,
                                       this->Program->Program,
-                                      this->Program->VAO);
+                                      &this->Program->vao);
     this->ZTexture->Deactivate();
 #else
     vtkTextureUnitManager *tu=context->GetTextureUnitManager();
@@ -805,10 +799,10 @@ void vtkCompositeZPass::CreateProgram(vtkOpenGLRenderWindow *context)
   assert("pre: context_exists" && context!=0);
   assert("pre: Program_void" && this->Program==0);
 
-#ifdef VTK_OPENGL2
-  this->Program = new vtkOpenGLHelper;
+#ifdef VTKGL2
+  this->Program = new vtkgl::CellBO;
   this->Program->Program =
-    context->GetShaderCache()->ReadyShaderProgram(vtkTextureObjectVS,
+    context->GetShaderCache()->ReadyShader(vtkTextureObjectVS,
                                            vtkCompositeZPassFS,
                                            "");
   if (!this->Program->Program)
@@ -859,7 +853,7 @@ void vtkCompositeZPass::ReleaseGraphicsResources(vtkWindow *w)
     }
   if(this->Program!=0)
     {
-#ifdef VTK_OPENGL2
+#ifdef VTKGL2
     this->Program->ReleaseGraphicsResources(w);
 #else
     this->Program->ReleaseGraphicsResources();

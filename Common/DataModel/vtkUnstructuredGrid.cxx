@@ -1877,11 +1877,11 @@ void vtkUnstructuredGrid::GetIdsOfCellsOfType(int type, vtkIdTypeArray *array)
 
 
 //----------------------------------------------------------------------------
-void vtkUnstructuredGrid::RemoveGhostCells()
+void vtkUnstructuredGrid::RemoveGhostCells(int level)
 {
   vtkUnstructuredGrid* newGrid = vtkUnstructuredGrid::New();
-  vtkUnsignedCharArray* temp;
-  unsigned char* cellGhosts;
+  vtkDataArray* temp;
+  unsigned char* cellGhostLevels;
 
   vtkIdType cellId, newCellId;
   vtkIdList *cellPts, *pointMap;
@@ -1897,25 +1897,26 @@ void vtkUnstructuredGrid::RemoveGhostCells()
   vtkCellData*    outCD = newGrid->GetCellData();
 
 
-  // Get a pointer to the cell ghost array.
-  temp = this->GetCellGhostArray();
+  // Get a pointer to the cell ghost level array.
+  temp = this->CellData->GetArray("vtkGhostLevels");
   if (temp == NULL)
     {
-    vtkDebugMacro("Could not find cell ghost array.");
+    vtkDebugMacro("Could not find cell ghost level array.");
     newGrid->Delete();
     return;
     }
-  if ((temp->GetNumberOfComponents() != 1)
-      || (temp->GetNumberOfTuples() < this->GetNumberOfCells()))
+  if ( (temp->GetDataType() != VTK_UNSIGNED_CHAR)
+       || (temp->GetNumberOfComponents() != 1)
+       || (temp->GetNumberOfTuples() < this->GetNumberOfCells()))
     {
-    vtkErrorMacro("Poorly formed ghost array.");
+    vtkErrorMacro("Poorly formed ghost level array.");
     newGrid->Delete();
     return;
     }
-  cellGhosts = temp->GetPointer(0);
+  cellGhostLevels =(static_cast<vtkUnsignedCharArray*>(temp))->GetPointer(0);
 
 
-  // Now threshold based on the cell ghost array.
+  // Now threshold based on the cell ghost level array.
   outPD->CopyAllocate(pd);
   outCD->CopyAllocate(cd);
 
@@ -1941,7 +1942,7 @@ void vtkUnstructuredGrid::RemoveGhostCells()
     cellPts = cell->GetPointIds();
     numCellPts = cell->GetNumberOfPoints();
 
-    if ( (cellGhosts[cellId] & vtkDataSetAttributes::DUPLICATECELL) == 0 ) // Keep the cell.
+    if ( cellGhostLevels[cellId] < level ) // Keep the cell.
       {
       for (i=0; i < numCellPts; i++)
         {
@@ -2090,3 +2091,11 @@ vtkUnstructuredGrid* vtkUnstructuredGrid::GetData(vtkInformationVector* v,
 {
   return vtkUnstructuredGrid::GetData(v->GetInformationObject(i));
 }
+
+//----------------------------------------------------------------------------
+#ifndef VTK_LEGACY_REMOVE
+void vtkUnstructuredGrid::GetCellNeighbors(vtkIdType cellId, vtkIdList& ptIds, vtkIdList& cellIds)
+{
+  this->GetCellNeighbors(cellId, &ptIds, &cellIds);
+}
+#endif

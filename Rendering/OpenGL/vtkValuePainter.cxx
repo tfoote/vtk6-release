@@ -309,7 +309,6 @@ void vtkValuePainter::RenderInternal(
   int oldBlend = glIsEnabled(GL_BLEND);
   glDisable(GL_LIGHTING);
   glDisable(GL_BLEND);
-  glColor4f(1,1,1,1);
 
   vtkPolyData* pd = this->GetInputAsPolyData();
 

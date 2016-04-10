@@ -2,7 +2,7 @@ vtk_module(vtkRenderingTk
   GROUPS
     Tk
   DEPENDS
-    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkRenderingOpenGL
     vtkInteractionStyle
     vtkInteractionImage
   COMPILE_DEPENDS

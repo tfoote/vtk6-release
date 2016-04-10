@@ -102,7 +102,10 @@ vtkLabeledDataMapper::vtkLabeledDataMapper()
 //----------------------------------------------------------------------------
 vtkLabeledDataMapper::~vtkLabeledDataMapper()
 {
-  delete [] this->LabelFormat;
+  if (this->LabelFormat)
+    {
+    delete [] this->LabelFormat;
+    }
 
   delete [] this->LabelPositions;
   if (this->TextMappers != NULL )
@@ -751,8 +754,11 @@ void vtkLabeledDataMapper::PrintSelf(ostream& os, vtkIndent indent)
 void
 vtkLabeledDataMapper::SetFieldDataArray(int arrayIndex)
 {
-  delete [] this->FieldDataName;
-  this->FieldDataName = NULL;
+  if (this->FieldDataName)
+    {
+    delete [] this->FieldDataName;
+    this->FieldDataName = NULL;
+    }
 
   vtkDebugMacro(<< this->GetClassName() << " (" << this << "): setting FieldDataArray to " << arrayIndex );
 

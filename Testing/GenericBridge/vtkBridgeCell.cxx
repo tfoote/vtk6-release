@@ -1034,7 +1034,10 @@ vtkBridgeCell::~vtkBridgeCell()
   vtkSetObjectBodyMacro(InternalIterator,vtkBridgeCellIterator,0);
   vtkSetObjectBodyMacro(Cell,vtkCell,0);
 
-  delete[] this->Weights;
+  if(this->Weights)
+    {
+    delete[] this->Weights;
+    }
 }
 
 //----------------------------------------------------------------------------

@@ -24,7 +24,6 @@
 #include "vtkInformation.h"
 #include "vtkMath.h"
 #include "vtkObjectFactory.h"
-#include "vtkOpenGLVertexBufferObject.h"
 #include "vtkPolyData.h"
 #include "vtkProperty.h"
 #include "vtkRenderer.h"
@@ -58,36 +57,24 @@ protected:
 
   // Description:
   // Set the shader parameteres related to the property, called by UpdateShader
-  virtual void SetPropertyShaderParameters(
-    vtkOpenGLHelper &cellBO, vtkRenderer *ren, vtkActor *act);
+  virtual void SetPropertyShaderParameters(vtkgl::CellBO &cellBO, vtkRenderer *ren, vtkActor *act);
 
   // Description:
   // Set the shader parameteres related to lighting, called by UpdateShader
-  virtual void SetLightingShaderParameters(
-    vtkOpenGLHelper &cellBO, vtkRenderer *ren, vtkActor *act);
+  virtual void SetLightingShaderParameters(vtkgl::CellBO &cellBO, vtkRenderer *ren, vtkActor *act);
 
   // Description:
   // Set the shader parameteres related to the Camera, called by UpdateShader
-  virtual void SetCameraShaderParameters(
-    vtkOpenGLHelper &cellBO, vtkRenderer *ren, vtkActor *act);
+  virtual void SetCameraShaderParameters(vtkgl::CellBO &cellBO, vtkRenderer *ren, vtkActor *act);
 
   // Description:
   // Does the shader source need to be recomputed
-  virtual bool GetNeedToRebuildShaders(
-    vtkOpenGLHelper &cellBO, vtkRenderer *ren, vtkActor *act);
+  virtual bool GetNeedToRebuildShader(vtkgl::CellBO &cellBO, vtkRenderer *ren, vtkActor *act);
 
   // Description:
   // Make sure an appropriate shader is defined, compiled and bound.  This method
   // orchistrates the process, much of the work is done in other methods
-  virtual void UpdateShaders(
-    vtkOpenGLHelper &cellBO, vtkRenderer *ren, vtkActor *act);
-
-  // Description:
-  // Perform string replacments on the shader templates, called from
-  // ReplaceShaderValues
-  virtual void ReplaceShaderColor(
-    std::map<vtkShader::Type, vtkShader *> shaders,
-    vtkRenderer *ren, vtkActor *act);
+  virtual void UpdateShader(vtkgl::CellBO &cellBO, vtkRenderer *ren, vtkActor *act);
 
 private:
   vtkCompositeMapperHelper(const vtkCompositeMapperHelper&); // Not implemented.
@@ -96,7 +83,7 @@ private:
 
 vtkStandardNewMacro(vtkCompositeMapperHelper);
 
-void vtkCompositeMapperHelper::SetCameraShaderParameters(vtkOpenGLHelper &cellBO,
+void vtkCompositeMapperHelper::SetCameraShaderParameters(vtkgl::CellBO &cellBO,
                                                        vtkRenderer *ren, vtkActor *actor)
 {
   if (!this->Parent->GetShaderInitialized(cellBO.Program))
@@ -105,7 +92,7 @@ void vtkCompositeMapperHelper::SetCameraShaderParameters(vtkOpenGLHelper &cellBO
     }
 }
 
-void vtkCompositeMapperHelper::SetLightingShaderParameters(vtkOpenGLHelper &cellBO,
+void vtkCompositeMapperHelper::SetLightingShaderParameters(vtkgl::CellBO &cellBO,
                                                        vtkRenderer *ren, vtkActor *actor)
 {
   if (!this->Parent->GetShaderInitialized(cellBO.Program))
@@ -114,7 +101,7 @@ void vtkCompositeMapperHelper::SetLightingShaderParameters(vtkOpenGLHelper &cell
     }
 }
 
-void vtkCompositeMapperHelper::SetPropertyShaderParameters(vtkOpenGLHelper &cellBO,
+void vtkCompositeMapperHelper::SetPropertyShaderParameters(vtkgl::CellBO &cellBO,
                                                        vtkRenderer *ren, vtkActor *actor)
 {
   if (!this->Parent->GetShaderInitialized(cellBO.Program))
@@ -123,10 +110,6 @@ void vtkCompositeMapperHelper::SetPropertyShaderParameters(vtkOpenGLHelper &cell
     }
 
   vtkProperty *ppty = actor->GetProperty();
-
-  // block colors, if set override scalar coloring
-  cellBO.Program->SetUniformi("OverridesColor",
-    this->Parent->BlockState.AmbientColor.size() > 1);
 
   // override the opacity
   cellBO.Program->SetUniformf("opacityUniform", this->Parent->BlockState.Opacity.top());
@@ -145,59 +128,32 @@ void vtkCompositeMapperHelper::SetPropertyShaderParameters(vtkOpenGLHelper &cell
   cellBO.Program->SetUniform3f("diffuseColorUniform", diffuseColor);
 }
 
-void vtkCompositeMapperHelper::ReplaceShaderColor(
-  std::map<vtkShader::Type, vtkShader *> shaders,
-  vtkRenderer *ren, vtkActor *actor)
-{
-  std::string FSSource = shaders[vtkShader::Fragment]->GetSource();
-
-  vtkShaderProgram::Substitute(FSSource,"//VTK::Color::Dec",
-    "uniform bool OverridesColor;\n"
-    "//VTK::Color::Dec",false);
-
-  vtkShaderProgram::Substitute(FSSource,"//VTK::Color::Impl",
-    "//VTK::Color::Impl\n"
-    "  if (OverridesColor) {\n"
-    "    ambientColor = ambientColorUniform;\n"
-    "    diffuseColor = diffuseColorUniform; }\n",
-    false);
-
-  shaders[vtkShader::Fragment]->SetSource(FSSource);
-
-  this->Superclass::ReplaceShaderColor(shaders,ren,actor);
-}
-
-
 //-----------------------------------------------------------------------------
-void vtkCompositeMapperHelper::UpdateShaders(
-  vtkOpenGLHelper &cellBO,
-  vtkRenderer* ren, vtkActor *actor)
+void vtkCompositeMapperHelper::UpdateShader(vtkgl::CellBO &cellBO, vtkRenderer* ren, vtkActor *actor)
 {
   // invoke superclass
-  this->Superclass::UpdateShaders(cellBO, ren, actor);
+  this->Superclass::UpdateShader(cellBO, ren, actor);
   // mark this shader as initialized
   this->Parent->SetShaderInitialized(cellBO.Program, true);
 }
 
 //-----------------------------------------------------------------------------
 // smarter version that knows actor/property/camera/lights are not changing
-bool vtkCompositeMapperHelper::GetNeedToRebuildShaders(
-  vtkOpenGLHelper &cellBO, vtkRenderer* ren, vtkActor *actor)
+bool vtkCompositeMapperHelper::GetNeedToRebuildShader(vtkgl::CellBO &cellBO, vtkRenderer* ren, vtkActor *actor)
 {
   if (!cellBO.Program ||  !this->Parent->GetShaderInitialized(cellBO.Program))
     {
-    bool result =
-      this->Superclass::GetNeedToRebuildShaders(cellBO, ren, actor);
-    this->LastColorCoordinates = this->VBO->ColorComponents;
-    this->LastNormalsOffset = this->VBO->NormalOffset;
-    this->LastTCoordComponents = this->VBO->TCoordComponents;
+    bool result = this->Superclass::GetNeedToRebuildShader(cellBO, ren, actor);
+    this->LastColorCoordinates = this->Layout.ColorComponents;
+    this->LastNormalsOffset = this->Layout.NormalOffset;
+    this->LastTCoordComponents = this->Layout.TCoordComponents;
     return result;
     }
 
   // after the first datasedt we only look for changes in pointdata
-  if (this->LastColorCoordinates != this->VBO->ColorComponents ||
-      this->LastNormalsOffset != this->VBO->NormalOffset ||
-      this->LastTCoordComponents != this->VBO->TCoordComponents)
+  if (this->LastColorCoordinates != this->Layout.ColorComponents ||
+      this->LastNormalsOffset != this->Layout.NormalOffset ||
+      this->LastTCoordComponents != this->Layout.TCoordComponents)
     {
     return true;
     }
@@ -652,7 +608,6 @@ void vtkGenericCompositePolyDataMapper2::CopyMapperValuesToHelper(vtkCompositeMa
 {
   helper->vtkMapper::ShallowCopy(this);
   helper->SetStatic(1);
-  helper->SetPopulateSelectionSettings(0);
 }
 
 void vtkGenericCompositePolyDataMapper2::FreeGenericStructures()
@@ -664,13 +619,6 @@ void vtkGenericCompositePolyDataMapper2::FreeGenericStructures()
     }
   this->Helpers.clear();
   this->ShadersInitialized.clear();
-}
-
-//-----------------------------------------------------------------------------
-void vtkGenericCompositePolyDataMapper2::ReleaseGraphicsResources(vtkWindow* win)
-{
-  this->FreeGenericStructures();
-  this->Superclass::ReleaseGraphicsResources(win);
 }
 
 // ---------------------------------------------------------------------------

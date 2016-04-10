@@ -145,12 +145,6 @@ protected:
   void GetAMRData(
     const int blockIdx, vtkUniformGrid *block, const char *fieldName );
 
-
-  // Description:
-  // Loads the AMR point data corresponding to the given field name.
-  void GetAMRPointData(
-    const int blockIdx, vtkUniformGrid *block, const char *fieldName );
-
   // Description:
   // A wrapper that loops over point arrays and load the point
   // arrays that are enabled, i.e., selected for the given block.
@@ -202,11 +196,6 @@ protected:
   // Description:
   // Loads the block data
   virtual void GetAMRGridData(
-      const int blockIdx, vtkUniformGrid *block, const char *field ) = 0;
-
-  // Description:
-  // Loads the block Point data
-  virtual void GetAMRGridPointData(
       const int blockIdx, vtkUniformGrid *block, const char *field ) = 0;
 
   // Description:

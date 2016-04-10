@@ -144,7 +144,10 @@ vtkVolumeRayCastMapper::~vtkVolumeRayCastMapper()
 
   this->Threader->Delete();
 
-  delete [] this->Image;
+  if ( this->Image )
+    {
+    delete [] this->Image;
+    }
 
   if ( this->RenderTableSize )
     {
@@ -552,10 +555,18 @@ void vtkVolumeRayCastMapper::Render( vtkRenderer *ren, vtkVolume *vol )
       this->ImageSampleDistance = oldImageSampleDistance;
       }
 
-    delete [] staticInfo->ClippingPlane;
+    if ( staticInfo->ClippingPlane )
+      {
+      delete [] staticInfo->ClippingPlane;
+      }
     delete staticInfo;
-    delete [] this->ZBuffer;
-    this->ZBuffer = NULL;
+
+    if ( this->ZBuffer )
+      {
+      delete [] this->ZBuffer;
+      this->ZBuffer = NULL;
+      }
+
     }
 }
 VTK_THREAD_RETURN_TYPE VolumeRayCastMapper_CastRays( void *arg )

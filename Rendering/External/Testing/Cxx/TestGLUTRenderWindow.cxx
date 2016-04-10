@@ -21,14 +21,11 @@
 // vtkExternalOpenGLRenderer by drawing a GL_TRIANGLE in the scene before
 // drawing the vtk sphere.
 
-#include <vtk_glew.h>
 // GLUT includes
 #if defined(__APPLE__)
 # include <GLUT/glut.h> // Include GLUT API.
 #else
-# if defined(_WIN32)
 # include "vtkWindows.h" // Needed to include OpenGL header on Windows.
-# endif // _WIN32
 # include <GL/glut.h> // Include GLUT API.
 #endif
 
@@ -47,11 +44,9 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkTesting.h>
 
-namespace {
-
 // Global variables used by the glutDisplayFunc and glutIdleFunc
 vtkNew<ExternalVTKWidget> externalVTKWidget;
-static bool initialized = false;
+static bool initilaized = false;
 static int NumArgs;
 char** ArgV;
 static bool tested = false;
@@ -65,7 +60,7 @@ static void MakeCurrentCallback(vtkObject* caller,
                                 void * clientData,
                                 void * callData)
 {
-  if (initialized)
+  if (initilaized)
     {
     glutSetWindow(windowId);
     }
@@ -75,9 +70,10 @@ static void MakeCurrentCallback(vtkObject* caller,
    whenever the window needs to be re-painted. */
 void display()
 {
-  if (!initialized)
+  if (!initilaized)
     {
     vtkNew<vtkExternalOpenGLRenderWindow> renWin;
+    renWin->SetSize(windowW, windowH);
     externalVTKWidget->SetRenderWindow(renWin.GetPointer());
     vtkNew<vtkCallbackCommand> callback;
     callback->SetCallback(MakeCurrentCallback);
@@ -94,7 +90,20 @@ void display()
     actor->RotateY(45.0);
     ren->ResetCamera();
 
-    initialized = true;
+    vtkNew<vtkLight> light;
+    light->SetLightTypeToSceneLight();
+    light->SetPosition(0, 0, 1);
+    light->SetConeAngle(25.0);
+    light->SetPositional(true);
+    light->SetFocalPoint(0, 0, 0);
+    light->SetDiffuseColor(1, 0, 0);
+    light->SetAmbientColor(0, 1, 0);
+    light->SetSpecularColor(0, 0, 1);
+    renWin->Render();
+    // Make sure light is added after first render call
+    ren->AddLight(light.GetPointer());
+
+    initilaized = true;
     }
 
   // Enable depth testing. Demonstrates OpenGL context being managed by external
@@ -112,17 +121,6 @@ void display()
     glVertex3f(1.5,0.0,0.0);
     glVertex3f(0.0,1.5,1.0);
   glEnd();
-
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
-  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
   externalVTKWidget->GetRenderWindow()->Render();
   glutSwapBuffers();
@@ -162,10 +160,8 @@ void handleResize(int w, int h)
 
 void onexit(void)
 {
-  initialized = false;
+  initilaized = false;
 }
-
-} // end anon namespace
 
 /* Main function: GLUT runs as a console application starting at main()  */
 int TestGLUTRenderWindow(int argc, char** argv)
@@ -173,15 +169,13 @@ int TestGLUTRenderWindow(int argc, char** argv)
   NumArgs = argc;
   ArgV = argv;
   glutInit(&argc, argv);                 // Initialize GLUT
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
   glutInitWindowSize(windowW, windowH);   // Set the window's initial width & height
-  glutInitWindowPosition(101, 201); // Position the window's initial top-left corner
+  glutInitWindowPosition(0, 0); // Position the window's initial top-left corner
   windowId = glutCreateWindow("VTK External Window Test"); // Create a window with the given title
   glutDisplayFunc(display); // Register display callback handler for window re-paint
   glutIdleFunc(test); // Register test callback handler for vtkTesting
   glutReshapeFunc(handleResize); // Register resize callback handler for window resize
   atexit(onexit);  // Register callback to uninitialize on exit
-  glewInit();
   glutMainLoop();  // Enter the infinitely event-processing loop
   return 0;
 }

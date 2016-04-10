@@ -99,7 +99,10 @@ vtkQtListView::vtkQtListView()
 //----------------------------------------------------------------------------
 vtkQtListView::~vtkQtListView()
 {
-  delete this->ListView;
+  if(this->ListView)
+    {
+    delete this->ListView;
+    }
   delete this->TableAdapter;
 }
 

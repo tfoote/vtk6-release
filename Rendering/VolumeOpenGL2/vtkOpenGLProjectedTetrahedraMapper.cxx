@@ -37,11 +37,8 @@
 #include "vtkNew.h"
 #include "vtkObjectFactory.h"
 #include "vtkOpenGLCamera.h"
-#include "vtkOpenGLIndexBufferObject.h"
 #include "vtkOpenGLRenderWindow.h"
 #include "vtkOpenGLShaderCache.h"
-#include "vtkOpenGLVertexArrayObject.h"
-#include "vtkOpenGLVertexBufferObject.h"
 #include "vtkPointData.h"
 #include "vtkRenderer.h"
 #include "vtkShaderProgram.h"
@@ -103,7 +100,6 @@ vtkOpenGLProjectedTetrahedraMapper::vtkOpenGLProjectedTetrahedraMapper()
   this->UseFloatingPointFrameBuffer = true;
   this->CanDoFloatingPointFrameBuffer = false;
   this->HasHardwareSupport = false;
-  this->VBO = vtkOpenGLVertexBufferObject::New();
 }
 
 //-----------------------------------------------------------------------------
@@ -114,7 +110,6 @@ vtkOpenGLProjectedTetrahedraMapper::~vtkOpenGLProjectedTetrahedraMapper()
   this->Colors->Delete();
   delete this->Internals;
   delete[] this->SqrtTable;
-  this->VBO->Delete();
 }
 
 //-----------------------------------------------------------------------------
@@ -316,8 +311,7 @@ void vtkOpenGLProjectedTetrahedraMapper::ReleaseGraphicsResources(vtkWindow *win
       this->Internals->RenderBufferObjectIds[1] = 0;
     }
 
-  this->VBO->ReleaseGraphicsResources();
-  this->Tris.ReleaseGraphicsResources(win);
+  this->VBO.ReleaseGraphicsResources();
 
   this->Superclass::ReleaseGraphicsResources(win);
 }
@@ -352,7 +346,7 @@ void vtkOpenGLProjectedTetrahedraMapper::Render(vtkRenderer *renderer,
 
     // compile and bind it if needed
     vtkShaderProgram *newShader =
-      renWin->GetShaderCache()->ReadyShaderProgram(VSSource.c_str(),
+      renWin->GetShaderCache()->ReadyShader(VSSource.c_str(),
                                             FSSource.c_str(),
                                             GSSource.c_str());
 
@@ -360,14 +354,14 @@ void vtkOpenGLProjectedTetrahedraMapper::Render(vtkRenderer *renderer,
     if (newShader != this->Tris.Program)
       {
       this->Tris.Program = newShader;
-      this->Tris.VAO->ShaderProgramChanged(); // reset the VAO as the shader has changed
+      this->Tris.vao.ShaderProgramChanged(); // reset the VAO as the shader has changed
       }
 
     this->Tris.ShaderSourceTime.Modified();
     }
   else
     {
-    renWin->GetShaderCache()->ReadyShaderProgram(this->Tris.Program);
+    renWin->GetShaderCache()->ReadyShader(this->Tris.Program);
     }
 
   // Check to see if input changed.
@@ -536,6 +530,9 @@ void vtkOpenGLProjectedTetrahedraMapper::ProjectTetrahedra(vtkRenderer *renderer
 
   // after mucking about with FBO bindings be sure
   // we're saving the default fbo attributes/blend function
+  glPushAttrib(GL_COLOR_BUFFER_BIT);
+  vtkOpenGLCheckErrorMacro("failed at glPushAttrib");
+
   this->AllocateFBOResources(renderer);
 
   if (this->UseFloatingPointFrameBuffer
@@ -690,13 +687,13 @@ void vtkOpenGLProjectedTetrahedraMapper::ProjectTetrahedra(vtkRenderer *renderer
   // build the VBO and IBOs,  we so these in chuncks as based on
   // the settings of the VisibilitySort tclass
 
-  this->VBO->VertexOffset = 0;
-  this->VBO->NormalOffset = 0;
-  this->VBO->ColorOffset = 3*sizeof(float);
-  this->VBO->ColorComponents = 3;
-  this->VBO->TCoordOffset = 4*sizeof(float);
-  this->VBO->TCoordComponents = 2;
-  this->VBO->Stride = 6*sizeof(float);
+  this->Layout.VertexOffset = 0;
+  this->Layout.NormalOffset = 0;
+  this->Layout.ColorOffset = 3*sizeof(float);
+  this->Layout.ColorComponents = 3;
+  this->Layout.TCoordOffset = 4*sizeof(float);
+  this->Layout.TCoordComponents = 2;
+  this->Layout.Stride = 6*sizeof(float);
 
   // Establish vertex arrays.
   // tets have 4 points, 5th point here is used
@@ -1035,55 +1032,55 @@ void vtkOpenGLProjectedTetrahedraMapper::ProjectTetrahedra(vtkRenderer *renderer
       numPts += 5;
       }
 
-    this->VBO->Upload(packedVBO, vtkOpenGLBufferObject::ArrayBuffer);
-    this->VBO->VertexCount = numPts;
-    this->VBO->Bind();
+    this->VBO.Upload(packedVBO, vtkgl::BufferObject::ArrayBuffer);
+    this->Layout.VertexCount = numPts;
+    this->VBO.Bind();
 
-    this->Tris.VAO->Bind();
-    if (this->Tris.IBO->IndexCount && (
-        this->Tris.ShaderSourceTime > this->Tris.AttributeUpdateTime))
+    this->Tris.vao.Bind();
+    if (this->Tris.indexCount && (
+        this->Tris.ShaderSourceTime > this->Tris.attributeUpdateTime))
       {
-      if (!this->Tris.VAO->AddAttributeArray(this->Tris.Program, this->VBO,
-                                      "vertexDC", this->VBO->VertexOffset,
-                                      this->VBO->Stride, VTK_FLOAT, 3, false))
+      if (!this->Tris.vao.AddAttributeArray(this->Tris.Program, this->VBO,
+                                      "vertexDC", this->Layout.VertexOffset,
+                                      this->Layout.Stride, VTK_FLOAT, 3, false))
         {
         vtkErrorMacro(<< "Error setting 'vertexDC' in shader VAO.");
         }
-      if (!this->Tris.VAO->AddAttributeArray(this->Tris.Program, this->VBO,
-                                      "scalarColor", this->VBO->ColorOffset,
-                                      this->VBO->Stride, VTK_UNSIGNED_CHAR,
-                                      this->VBO->ColorComponents, true))
+      if (!this->Tris.vao.AddAttributeArray(this->Tris.Program, this->VBO,
+                                      "scalarColor", this->Layout.ColorOffset,
+                                      this->Layout.Stride, VTK_UNSIGNED_CHAR,
+                                      this->Layout.ColorComponents, true))
         {
         vtkErrorMacro(<< "Error setting 'scalarColor' in shader VAO.");
         }
-      if (!this->Tris.VAO->AddAttributeArray(this->Tris.Program, this->VBO,
-                                      "attenuationArray", this->VBO->TCoordOffset,
-                                      this->VBO->Stride, VTK_FLOAT,
+      if (!this->Tris.vao.AddAttributeArray(this->Tris.Program, this->VBO,
+                                      "attenuationArray", this->Layout.TCoordOffset,
+                                      this->Layout.Stride, VTK_FLOAT,
                                       1, false))
         {
         vtkErrorMacro(<< "Error setting attenuation in shader VAO.");
         }
-      if (!this->Tris.VAO->AddAttributeArray(this->Tris.Program, this->VBO,
-                                      "depthArray", this->VBO->TCoordOffset+sizeof(float),
-                                      this->VBO->Stride, VTK_FLOAT,
+      if (!this->Tris.vao.AddAttributeArray(this->Tris.Program, this->VBO,
+                                      "depthArray", this->Layout.TCoordOffset+sizeof(float),
+                                      this->Layout.Stride, VTK_FLOAT,
                                       1, false))
         {
         vtkErrorMacro(<< "Error setting depth in shader VAO.");
         }
-      this->Tris.AttributeUpdateTime.Modified();
+      this->Tris.attributeUpdateTime.Modified();
       }
 
-    this->Tris.IBO->Upload(indexArray, vtkOpenGLBufferObject::ElementArrayBuffer);
-    this->Tris.IBO->IndexCount = indexArray.size();
-    this->Tris.IBO->Bind();
+    this->Tris.ibo.Upload(indexArray, vtkgl::BufferObject::ElementArrayBuffer);
+    this->Tris.indexCount = indexArray.size();
+    this->Tris.ibo.Bind();
     glDrawRangeElements(GL_TRIANGLES, 0,
-                        static_cast<GLuint>(this->VBO->VertexCount - 1),
-                        static_cast<GLsizei>(this->Tris.IBO->IndexCount),
+                        static_cast<GLuint>(this->Layout.VertexCount - 1),
+                        static_cast<GLsizei>(this->Tris.indexCount),
                         GL_UNSIGNED_INT,
                         reinterpret_cast<const GLvoid *>(NULL));
-    this->Tris.IBO->Release();
-    this->Tris.VAO->Release();
-    this->VBO->Release();
+    this->Tris.ibo.Release();
+    this->Tris.vao.Release();
+    this->VBO.Release();
     numcellsrendered += num_cell_ids;
     }
 
@@ -1120,6 +1117,7 @@ void vtkOpenGLProjectedTetrahedraMapper::ProjectTetrahedra(vtkRenderer *renderer
     }
 
   // Restore the blend function.
+  glPopAttrib();
   vtkOpenGLCheckErrorMacro("failed at glPopAttrib");
 
   glDepthMask(GL_TRUE);

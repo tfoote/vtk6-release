@@ -226,7 +226,7 @@ protected:
   // Can be used in HandleEndRender(), MasterEndRender() or SlaveEndRender()
   // calls to paste back the image from either this->ReducedImage or
   // this->FullImage info the viewport.
-  virtual void PushImageToScreen();
+  void PushImageToScreen();
 
   vtkSynchronizedRenderers* CaptureDelegate;
   vtkRawImage ReducedImage;

@@ -731,11 +731,21 @@ int vtkLabeledTreeMapDataMapper::AnalyseLabel(char * string, int level,
   trueLevel =
     (trueLevel > this->MaxFontLevel) ? this->MaxFontLevel : trueLevel;
    fsize = this->GetStringSize(string, trueLevel);
-
-  // Horizontal label.
-  // (Vertical labels don't work due to issues with vtkTextActor.)
-  oDir = 0;
-  *tprop = this->HLabelProperties[trueLevel];
+  // Determine the orientation of the label
+  // Vertical Label - THIS DOESN'T WORK DUE TO ISSUES WITH vtkTextActor
+  // so always do the following - hence the 1 in the condition
+  if (1 || (sizes[0] >= sizes[1]))
+    {
+    // Horizontal label
+    oDir = 0;
+    *tprop = this->HLabelProperties[trueLevel];
+    }
+  else
+    {
+    // Vertical Label - THIS DOESN'T WORK DUE TO ISSUES WITH vtkTextActor
+    oDir = 1;
+    *tprop = this->VerticalLabelProperty;
+    }
 
   // Is this level dynamic or static?
   if (level >= this->DynamicLevel)

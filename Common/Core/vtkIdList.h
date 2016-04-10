@@ -152,10 +152,7 @@ inline vtkIdType vtkIdList::InsertNextId(const vtkIdType vtkid)
 {
   if ( this->NumberOfIds >= this->Size )
     {
-    if (!this->Resize(this->NumberOfIds+1))
-      {
-      return this->NumberOfIds-1;
-      }
+    this->Resize(this->NumberOfIds+1);
     }
   this->Ids[this->NumberOfIds++] = vtkid;
   return this->NumberOfIds-1;

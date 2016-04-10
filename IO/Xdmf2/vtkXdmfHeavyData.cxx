@@ -43,8 +43,6 @@
 #include <deque>
 #include <cassert>
 
-#include <libxml/tree.h>
-
 using namespace xdmf2;
 
 static void vtkScaleExtents(int in_exts[6], int out_exts[6], int stride[3])
@@ -139,7 +137,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadData()
 }
 
 //----------------------------------------------------------------------------
-vtkDataObject* vtkXdmfHeavyData::ReadData(XdmfGrid* xmfGrid, int blockId)
+vtkDataObject* vtkXdmfHeavyData::ReadData(XdmfGrid* xmfGrid)
 {
   if (!xmfGrid || xmfGrid->GetGridType() == XDMF_GRID_UNSET)
     {
@@ -153,7 +151,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadData(XdmfGrid* xmfGrid, int blockId)
     {
     // grid is a temporal collection, pick the sub-grid with matching time and
     // process that.
-    return this->ReadTemporalCollection(xmfGrid, blockId);
+    return this->ReadTemporalCollection(xmfGrid);
     }
   else if (gridType == XDMF_GRID_COLLECTION ||
     gridType == XDMF_GRID_TREE)
@@ -162,7 +160,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadData(XdmfGrid* xmfGrid, int blockId)
     }
 
   // grid is a primitive grid, so read the data.
-  return this->ReadUniformData(xmfGrid, blockId);
+  return this->ReadUniformData(xmfGrid);
 }
 
 //----------------------------------------------------------------------------
@@ -191,7 +189,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadComposite(XdmfGrid* xmfComposite)
     if (!child_is_leaf || !distribute_leaf_nodes ||
       (number_of_leaf_nodes % this->NumberOfPieces) == this->Piece)
       {
-      vtkDataObject* childDO = this->ReadData(xmfChild, cc);
+      vtkDataObject* childDO = this->ReadData(xmfChild);
       if (childDO)
         {
         multiBlock->SetBlock(cc, childDO);
@@ -206,7 +204,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadComposite(XdmfGrid* xmfComposite)
 
 //----------------------------------------------------------------------------
 vtkDataObject* vtkXdmfHeavyData::ReadTemporalCollection(
-  XdmfGrid* xmfTemporalCollection, int blockId)
+  XdmfGrid* xmfTemporalCollection)
 {
   assert(xmfTemporalCollection->GetGridType() & XDMF_GRID_COLLECTION &&
     xmfTemporalCollection->GetCollectionType() == XDMF_GRID_COLLECTION_TEMPORAL
@@ -256,7 +254,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadTemporalCollection(
   std::deque<XdmfGrid*>::iterator iter;
   for (iter = valid_children.begin(); iter != valid_children.end(); ++iter)
     {
-    vtkDataObject* childDO = this->ReadData(*iter, blockId);
+    vtkDataObject* childDO = this->ReadData(*iter);
     if (childDO)
       {
       child_data_objects.push_back(childDO);
@@ -288,7 +286,7 @@ vtkDataObject* vtkXdmfHeavyData::ReadTemporalCollection(
 //----------------------------------------------------------------------------
 // Read a non-composite grid. Note here uniform has nothing to do with
 // vtkUniformGrid but to what Xdmf's GridType="Uniform".
-vtkDataObject* vtkXdmfHeavyData::ReadUniformData(XdmfGrid* xmfGrid, int blockId)
+vtkDataObject* vtkXdmfHeavyData::ReadUniformData(XdmfGrid* xmfGrid)
 {
   assert(xmfGrid->IsUniform() && "Input must be a uniform xdmf grid.");
 
@@ -302,79 +300,6 @@ vtkDataObject* vtkXdmfHeavyData::ReadUniformData(XdmfGrid* xmfGrid, int blockId)
 
   // Read heavy data for grid geometry/topology. This does not read any
   // data-arrays. They are read explicitly.
-  XdmfTopology* topo = xmfGrid->GetTopology();
-  XdmfGeometry* geom = xmfGrid->GetGeometry();
-  xmlChar* filePtr;
-
-  bool caching = true;
-  XdmfDOM* topoDom = topo->GetDOM();
-  XdmfXmlNode topoNode = topo->GetElement();
-  XdmfXmlNode topoNodeDataItem = topoDom->FindElement("DataItem", 0, topoNode);
-  std::string topoFilename = "NULL";
-  if (topoNodeDataItem && caching)
-    {
-    filePtr = topoNodeDataItem->children->content;
-    if (filePtr != NULL)
-      {
-      topoFilename = reinterpret_cast<char*>(filePtr);
-      }
-    else
-      {
-      vtkErrorWithObjectMacro(this->Reader, << "Cannot find DataItem element in topology xml, no caching possible");
-      caching = false;
-      }
-    }
-  else
-    {
-    caching = false;
-    }
-
-  XdmfDOM* geomDom = geom->GetDOM();
-  XdmfXmlNode geomNode = geom->GetElement();
-  XdmfXmlNode geomNodeDataItem = geomDom->FindElement("DataItem", 0, geomNode);
-  std::string geomFilename = "NULL";
-  if (geomNodeDataItem && caching)
-    {
-    filePtr =  geomNodeDataItem->children->content;
-    if (filePtr != NULL)
-      {
-      geomFilename = reinterpret_cast<char*>(filePtr);
-      }
-    else
-      {
-      vtkErrorWithObjectMacro(this->Reader, << "Cannot find DataItem element in geometry xml, no caching possible");
-      caching = false;
-      }
-    }
-  else
-    {
-    caching = false;
-    }
-
-  vtkXdmfReader::XdmfReaderCachedData& cache =
-    vtkXdmfReader::SafeDownCast(this->Reader)->GetDataSetCache();
-  vtkXdmfReader::XdmfDataSetTopoGeoPath& cachedData = cache[blockId];
-  if (caching &&
-    (cachedData.topologyPath == topoFilename) && (cachedData.geometryPath == geomFilename))
-    {
-    vtkDataSet* ds = vtkDataSet::SafeDownCast(
-      vtkDataObjectTypes::NewDataObject(cachedData.dataset->GetDataObjectType()));
-    ds->ShallowCopy(cachedData.dataset);
-    this->ReadAttributes(ds, xmfGrid);
-    return ds;
-    }
-
-  if (caching)
-    {
-    cachedData.topologyPath = topoFilename;
-    cachedData.geometryPath = geomFilename;
-    if (cache[blockId].dataset != NULL)
-      {
-      cache[blockId].dataset->Delete();
-      cache[blockId].dataset = NULL;
-      }
-    }
-
   XdmfInt32 status = xmfGrid->Update();
   if (status == XDMF_FAIL)
     {
@@ -410,11 +335,6 @@ vtkDataObject* vtkXdmfHeavyData::ReadUniformData(XdmfGrid* xmfGrid, int blockId)
     return 0;
     }
 
-  if (caching)
-    {
-    cache[blockId].dataset = vtkDataSet::SafeDownCast(dataObject);
-    dataObject->Register(0);
-    }
   return dataObject;
 }
 
@@ -1240,7 +1160,7 @@ vtkDataArray* vtkXdmfHeavyData::ReadAttribute(XdmfAttribute* xmfAttribute,
 
 //-----------------------------------------------------------------------------
 // Read ghost cell/point information. This is simply loaded info a
-// vtkGhostType attribute array.
+// vtkGhostLevels attribute array.
 bool vtkXdmfHeavyData::ReadGhostSets(vtkDataSet* dataSet, XdmfGrid* xmfGrid,
   int *vtkNotUsed(update_extents)/*=0*/)
 {
@@ -1257,19 +1177,16 @@ bool vtkXdmfHeavyData::ReadGhostSets(vtkDataSet* dataSet, XdmfGrid* xmfGrid,
     XdmfInt32 setCenter = xmfSet->GetSetType();
     vtkIdType numElems = 0;
     vtkDataSetAttributes* dsa = 0;
-    unsigned char ghostFlag = 0;
     switch (setCenter)
       {
     case XDMF_SET_TYPE_NODE:
       dsa = dataSet->GetPointData();
       numElems = dataSet->GetNumberOfPoints();
-      ghostFlag = vtkDataSetAttributes::DUPLICATEPOINT;
       break;
 
     case XDMF_SET_TYPE_CELL:
       dsa = dataSet->GetCellData();
       numElems = dataSet->GetNumberOfCells();
-      ghostFlag = vtkDataSetAttributes::DUPLICATECELL;
       break;
 
     default:
@@ -1278,20 +1195,20 @@ bool vtkXdmfHeavyData::ReadGhostSets(vtkDataSet* dataSet, XdmfGrid* xmfGrid,
       continue;
       }
 
-    vtkUnsignedCharArray* ghosts = vtkUnsignedCharArray::SafeDownCast(
-      dsa->GetArray(vtkDataSetAttributes::GhostArrayName()));
-    if (!ghosts)
+    vtkUnsignedCharArray* ghostLevels = vtkUnsignedCharArray::SafeDownCast(
+      dsa->GetArray("vtkGhostLevels"));
+    if (!ghostLevels)
       {
-      ghosts = vtkUnsignedCharArray::New();
-      ghosts->SetName(vtkDataSetAttributes::GhostArrayName());
-      ghosts->SetNumberOfComponents(1);
-      ghosts->SetNumberOfTuples(numElems);
-      ghosts->FillComponent(0, 0);
-      dsa->AddArray(ghosts);
-      ghosts->Delete();
+      ghostLevels = vtkUnsignedCharArray::New();
+      ghostLevels->SetName("vtkGhostLevels");
+      ghostLevels->SetNumberOfComponents(1);
+      ghostLevels->SetNumberOfTuples(numElems);
+      ghostLevels->FillComponent(0, 0);
+      dsa->AddArray(ghostLevels);
+      ghostLevels->Delete();
       }
 
-    unsigned char* ptrGhosts = ghosts->GetPointer(0);
+    unsigned char* ptrGhostLevels = ghostLevels->GetPointer(0);
 
     // Read heavy data. We cannot do anything smart if update_extents or stride
     // is specified here. We have to read the entire set and then prune it.
@@ -1313,7 +1230,7 @@ bool vtkXdmfHeavyData::ReadGhostSets(vtkDataSet* dataSet, XdmfGrid* xmfGrid,
           "No such cell or point exists: " << ids[kk]);
         continue;
         }
-      ptrGhosts[ids[kk]] = ghostFlag;
+      ptrGhostLevels[ids[kk]] = ghost_value;
       }
     delete []ids;
     }

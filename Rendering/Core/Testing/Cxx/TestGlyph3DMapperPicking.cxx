@@ -45,7 +45,7 @@
 #include "vtkSelectionNode.h"
 #include <cassert>
 
-static vtkRenderer *renderer = NULL;
+vtkRenderer *renderer = NULL;
 
 class MyEndPickCommand : public vtkCommand
 {

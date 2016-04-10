@@ -1248,15 +1248,21 @@ done:
     /* Graph was empty */
     delete [] *start;
     *start = NULL;
-
-    delete [] *adjacency;
-    *adjacency = NULL;
-
-    delete [] *vweights;
-    *vweights = NULL;
-
-    delete [] *eweights;
-    *eweights = NULL;
+    if (adjacency)
+      {
+      delete [] *adjacency;
+      *adjacency = NULL;
+      }
+    if (vweights)
+      {
+      delete [] *vweights;
+      *vweights = NULL;
+      }
+    if (eweights)
+      {
+      delete [] *eweights;
+      *eweights = NULL;
+      }
     }
 
   return retVal;

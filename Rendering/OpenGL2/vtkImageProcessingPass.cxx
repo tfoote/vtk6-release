@@ -13,8 +13,6 @@
 
 =========================================================================*/
 
-#include "vtk_glew.h"
-
 #include "vtkImageProcessingPass.h"
 #include "vtkObjectFactory.h"
 #include <cassert>
@@ -23,6 +21,7 @@
 #include "vtkFrameBufferObject.h"
 #include "vtkTextureObject.h"
 #include "vtkOpenGLRenderWindow.h"
+#include "vtkTextureUnitManager.h"
 
 // to be able to dump intermediate passes into png files for debugging.
 // only for vtkImageProcessingPass developers.

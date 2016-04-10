@@ -1413,13 +1413,13 @@ void vtkTemporalFractal::AddGhostLevelArray(vtkDataSet *grid,
           }
         else
           {
-          *ptr |= vtkDataSetAttributes::DUPLICATECELL;
+          *ptr = iLevel;
           }
         ++ptr;
         }
       }
     }
-  array->SetName(vtkDataSetAttributes::GhostArrayName());
+  array->SetName("vtkGhostLevels");
   grid->GetCellData()->AddArray(array);
   array->Delete();
 }

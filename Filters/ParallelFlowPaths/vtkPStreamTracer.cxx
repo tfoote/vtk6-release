@@ -989,7 +989,7 @@ namespace
   class Task: public vtkObject
   {
   public:
-
+    vtkTypeMacro(Task,vtkObject);
     static Task *New();
 
     int GetId()
@@ -1256,6 +1256,12 @@ namespace
         delete ReceiveBuffer;
         }
     }
+    double ComputeReceiveTime()
+    {
+      double totalReceiveTime(0);
+      this->Controller->Reduce(&this->ReceiveTime,&totalReceiveTime,1,vtkCommunicator::SUM_OP,0);
+      return totalReceiveTime;
+    }
   private:
     ProcessLocator* Locator;
     vtkSmartPointer<PStreamTracerPoint> Proto;
@@ -1334,6 +1340,15 @@ namespace
         rank = this->Locator->FindNextProcess(p->GetSeed());
         }
       AssertNe(rank,Rank);
+      return rank;
+    }
+    int NextProcess()
+    {
+      int rank=(this->Rank+1)%NumProcs;
+      while(!this->HasData[rank] && rank!=this->Rank)
+        {
+        rank = (rank+1)%NumProcs;
+        }
       return rank;
     }
 
@@ -1429,6 +1444,16 @@ namespace
     int NumSends;
     double ReceiveTime;
     vtkSmartPointer<vtkTimerLog> Timer;
+    void StartTimer()
+    {
+      Timer->StartTimer();
+    }
+
+    double StopTimer()
+    {
+      Timer->StopTimer();
+      return Timer->GetElapsedTime();
+    }
   };
 
 };

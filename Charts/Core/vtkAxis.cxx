@@ -18,7 +18,6 @@
 #include "vtkMath.h"
 #include "vtkNew.h"
 #include "vtkContext2D.h"
-#include "vtkContextScene.h"
 #include "vtkPen.h"
 #include "vtkChart.h"
 #include "vtkTextProperty.h"
@@ -156,12 +155,9 @@ void vtkAxis::SetPosition(int position)
 
 void vtkAxis::SetPoint1(const vtkVector2f &pos)
 {
-  if (this->Position1 != pos)
-    {
-    this->Position1 = pos;
-    this->Resized = true;
-    this->Modified();
-    }
+  this->Position1 = pos;
+  this->Resized = true;
+  this->Modified();
 }
 
 void vtkAxis::SetPoint1(float x, float y)
@@ -176,12 +172,9 @@ vtkVector2f vtkAxis::GetPosition1()
 
 void vtkAxis::SetPoint2(const vtkVector2f &pos)
 {
-  if (this->Position2 != pos)
-    {
-    this->Position2 = pos;
-    this->Resized = true;
-    this->Modified();
-    }
+  this->Position2 = pos;
+  this->Resized = true;
+  this->Modified();
 }
 
 void vtkAxis::SetPoint2(float x, float y)
@@ -821,6 +814,44 @@ bool vtkAxis::SetCustomTickPositions(vtkDoubleArray *positions,
     }
 }
 
+#ifndef VTK_LEGACY_REMOVE
+//-----------------------------------------------------------------------------
+void vtkAxis::SetTickPositions(vtkDoubleArray* array)
+{
+  VTK_LEGACY_REPLACED_BODY(vtkAxis::SetTickPositions, "VTK 6.0",
+                           vtkAxis::SetCustomTickPositions);
+  if (!array)
+    {
+    this->TickPositions->SetNumberOfTuples(0);
+    }
+  else
+    {
+    this->TickPositions->DeepCopy(array);
+    }
+  this->CustomTickLabels = true;
+  this->TickMarksDirty = false;
+  this->Modified();
+}
+
+//-----------------------------------------------------------------------------
+void vtkAxis::SetTickLabels(vtkStringArray* array)
+{
+  VTK_LEGACY_REPLACED_BODY(vtkAxis::SetTickLabels, "VTK 6.0",
+                           vtkAxis::SetCustomTickPositions);
+  if (!array)
+    {
+    this->TickLabels->SetNumberOfTuples(0);
+    }
+  else
+    {
+    this->TickLabels->DeepCopy(array);
+    }
+  this->CustomTickLabels = true;
+  this->TickMarksDirty = false;
+  this->Modified();
+}
+#endif // VTK_LEGACY_REMOVE
+
 //-----------------------------------------------------------------------------
 vtkRectf vtkAxis::GetBoundingRect(vtkContext2D* painter)
 {
@@ -885,7 +916,6 @@ void vtkAxis::UpdateLogScaleActive(bool alwaysUpdateMinMaxFromUnscaled)
     if (!this->LogScaleActive)
       {
       this->LogScaleActive = true;
-      this->TickMarksDirty = true;
       needUpdate = true;
       }
     if (needUpdate || alwaysUpdateMinMaxFromUnscaled)
@@ -936,7 +966,6 @@ void vtkAxis::UpdateLogScaleActive(bool alwaysUpdateMinMaxFromUnscaled)
     if (this->LogScaleActive)
       {
       this->LogScaleActive = false;
-      this->TickMarksDirty = true;
       needUpdate = true;
       }
     if (needUpdate || alwaysUpdateMinMaxFromUnscaled)
@@ -1365,38 +1394,18 @@ double vtkAxis::NiceMinMax(double &min, double &max, float pixelRange,
 //-----------------------------------------------------------------------------
 double vtkAxis::CalculateNiceMinMax(double &min, double &max)
 {
-  if (this->NumberOfTicks > 0)
-    {
-    // An exact number of ticks was requested, use the min/max and exact number.
-    min = this->Minimum;
-    max = this->Maximum;
-    double range = fabs(max - min);
-    return range / double(this->NumberOfTicks - 1);
-    }
-
-  vtkVector2i tileScale(1);
-  if (!this->Scene)
-    {
-    vtkWarningMacro("vtkAxis needs a vtkContextScene to determine window "
-                    "properties. Assuming no tile scaling is set.");
-    }
-  else
-    {
-    tileScale = this->Scene->GetLogicalTileScale();
-    }
-
   float pixelRange = 0;
   float tickPixelSpacing = 0;
   if (this->Position == vtkAxis::LEFT || this->Position == vtkAxis::RIGHT
       || this->Position == vtkAxis::PARALLEL)
     {
     pixelRange = this->Position2.GetY() - this->Position1.GetY();
-    tickPixelSpacing = 30 * tileScale.GetX();
+    tickPixelSpacing = 30;
     }
   else
     {
     pixelRange = this->Position2.GetX() - this->Position1.GetX();
-    tickPixelSpacing = 45 * tileScale.GetY();
+    tickPixelSpacing = 45;
     }
 
   double niceTickSpacing = 0.0;
@@ -1411,7 +1420,18 @@ double vtkAxis::CalculateNiceMinMax(double &min, double &max)
       vtkAxis::NiceMinMax(min, max, pixelRange, tickPixelSpacing);
     }
 
-  return niceTickSpacing;
+  if (this->NumberOfTicks > 0)
+    {
+    // An exact number of ticks was requested, use the min/max and exact number.
+    min = this->Minimum;
+    max = this->Maximum;
+    double range = fabs(max - min);
+    return range / double(this->NumberOfTicks - 1);
+    }
+  else
+    {
+    return niceTickSpacing;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1587,25 +1607,25 @@ void vtkAxis::GenerateLogScaleTickMarks(int order,
     double value = result * pow(10.0, static_cast<double>(order));
     this->TickPositions->InsertNextValue(log10(value));
 
+    // Now create a label for the tick position
+    vtksys_ios::ostringstream ostr;
+    ostr.imbue(std::locale::classic());
+    if (this->Notation > 0)
+      {
+      ostr.precision(this->Precision);
+      }
+    if (this->Notation == SCIENTIFIC_NOTATION)
+      {
+      ostr.setf(vtksys_ios::ios::scientific, vtksys_ios::ios::floatfield);
+      }
+    else if (this->Notation == FIXED_NOTATION)
+      {
+      ostr.setf(ios::fixed, ios::floatfield);
+      }
+    ostr << value;
+
     if (niceTickMark)
       {
-      // Now create a label for the tick position
-      vtksys_ios::ostringstream ostr;
-      ostr.imbue(std::locale::classic());
-      if (this->Notation > 0)
-        {
-        ostr.precision(this->Precision);
-        }
-      if (this->Notation == SCIENTIFIC_NOTATION)
-        {
-        ostr.setf(vtksys_ios::ios::scientific, vtksys_ios::ios::floatfield);
-        }
-      else if (this->Notation == FIXED_NOTATION)
-        {
-        ostr.setf(ios::fixed, ios::floatfield);
-        }
-      ostr << value;
-
       this->TickLabels->InsertNextValue(ostr.str());
       }
     else

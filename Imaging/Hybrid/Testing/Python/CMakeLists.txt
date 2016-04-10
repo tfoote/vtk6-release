@@ -3,5 +3,4 @@ vtk_add_test_python(
   iceCream.py
   shepards.py
   triangularTexture.py
-  TestCheckerboardSplatter.py
   )

@@ -577,7 +577,7 @@ int vtkEdgeTable::InitPointInsertion(vtkPoints *newPts, vtkIdType estSize)
 int vtkEdgeTable::InsertUniquePoint(vtkIdType p1, vtkIdType p2, double x[3],
                                     vtkIdType &ptId)
 {
-  vtkIdType loc = this->IsEdge(p1,p2);
+  int loc = this->IsEdge(p1,p2);
 
   if ( loc != -1 )
     {

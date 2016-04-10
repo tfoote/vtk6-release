@@ -6,7 +6,6 @@ VTK_DATA_ROOT = vtkGetDataRoot()
 
 renWin = vtk.vtkRenderWindow()
 renWin.OffScreenRenderingOn()
-renWin.SetMultiSamples(0)
 ren = vtk.vtkRenderer()
 renWin.AddRenderer(ren)
 cone = vtk.vtkConeSource()

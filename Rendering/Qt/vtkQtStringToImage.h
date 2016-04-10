@@ -48,20 +48,20 @@ public:
   // is valid (it may not if GetBoundingBox() failed or if the string
   // was empty).
   virtual vtkVector2i GetBounds(vtkTextProperty *property,
-                                const vtkUnicodeString& string, int dpi);
+                                const vtkUnicodeString& string);
   virtual vtkVector2i GetBounds(vtkTextProperty *property,
-                                const vtkStdString& string, int dpi);
+                                const vtkStdString& string);
 
   // Description:
   // Given a text property and a string, this function initializes the
   // vtkImageData *data and renders it in a vtkImageData. textDims, if provided,
   // will be overwritten by the pixel width and height of the rendered string.
   virtual int RenderString(vtkTextProperty *property,
-                           const vtkUnicodeString& string, int dpi,
+                           const vtkUnicodeString& string,
                            vtkImageData *data,
                            int textDims[2] = NULL);
   virtual int RenderString(vtkTextProperty *property,
-                           const vtkStdString& string, int dpi,
+                           const vtkStdString& string,
                            vtkImageData *data,
                            int textDims[2] = NULL);
 

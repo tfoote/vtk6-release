@@ -39,7 +39,6 @@
 
 class vtkRenderWindow;
 class vtkImageNoiseSource;
-class vtkImageCast;
 class vtkShaderProgram2;
 
 class VTKRENDERINGLIC_EXPORT vtkImageDataLIC2D : public vtkImageAlgorithm
@@ -126,7 +125,6 @@ protected:
   vtkShaderProgram2 *MagShader;
 
   vtkImageNoiseSource* NoiseSource;
-  vtkImageCast *ImageCast;
 
   int Steps;
   double StepSize;

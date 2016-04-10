@@ -29,8 +29,6 @@ vtkStandardNewMacro(vtkPistonAlgorithm);
 //----------------------------------------------------------------------------
 vtkPistonAlgorithm::vtkPistonAlgorithm()
 {
-  VTK_LEGACY_BODY(vtkPistonAlgorithm::vtkPistonAlgorithm, "VTK 6.3");
-
   // by default assume filters have one input and one output
   // subclasses that deviate should modify this setting
   this->SetNumberOfInputPorts(1);

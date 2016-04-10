@@ -283,15 +283,21 @@ void vtkImageReader2::SetFilePattern(const char *pattern)
     {
     return;
     }
-  delete [] this->FilePattern;
-  this->FilePattern = NULL;
+  if (this->FilePattern)
+    {
+    delete [] this->FilePattern;
+    this->FilePattern = NULL;
+    }
   if (pattern)
     {
     this->FilePattern = new char[strlen(pattern) + 1];
     strcpy(this->FilePattern, pattern);
 
-    delete [] this->FileName;
-    this->FileName = NULL;
+    if (this->FileName)
+      {
+      delete [] this->FileName;
+      this->FileName = NULL;
+      }
     if (this->FileNames)
       {
       this->FileNames->Delete();

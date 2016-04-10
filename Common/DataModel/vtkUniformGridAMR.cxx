@@ -153,15 +153,7 @@ void vtkUniformGridAMR::SetDataSet(
     return;
     }
 
-  if(this->AMRInfo->GetGridDescription() < 0)
-    {
-    this->AMRInfo->SetGridDescription(grid->GetGridDescription());
-    }
-  else if (grid->GetGridDescription() != this->AMRInfo->GetGridDescription())
-    {
-    vtkErrorMacro("Inconsistent types of vtkUniformGrid");
-    return;
-    }
+  this->AMRInfo->SetGridDescription(grid->GetGridDescription());
   int index = this->AMRInfo->GetIndex(level,idx);
   this->AMRData->Insert(index, grid);
 

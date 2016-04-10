@@ -20,7 +20,6 @@
 #include "vtkUniformGrid.h"
 #include "vtkInformationIdTypeKey.h"
 #include "vtkCellData.h"
-#include "vtkDataSetAttributes.h"
 #include <vector>
 
 vtkStandardNewMacro(vtkOverlappingAMR);
@@ -172,7 +171,7 @@ void vtkOverlappingAMR::SetOrigin(const double* origin)
 //----------------------------------------------------------------------------
 double* vtkOverlappingAMR::GetOrigin()
 {
-  return this->AMRInfo? this->AMRInfo->GetOrigin() : NULL;
+  return this->AMRInfo->GetOrigin();
 }
 
 //----------------------------------------------------------------------------
@@ -208,7 +207,7 @@ void vtkOverlappingAMR::Audit()
   for(iter->GoToFirstItem(); !iter->IsDoneWithTraversal(); iter->GoToNextItem())
     {
     vtkUniformGrid* grid = vtkUniformGrid::SafeDownCast(iter->GetCurrentDataObject());
-    int hasGhost  = grid->HasAnyGhostCells();
+    bool hasGhost  = grid->GetCellData()->GetArray("vtkGhostLevels")!=NULL;
 
     unsigned int level = iter->GetCurrentLevel();
     unsigned int id = iter->GetCurrentIndex();

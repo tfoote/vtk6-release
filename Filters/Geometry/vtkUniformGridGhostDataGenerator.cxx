@@ -113,8 +113,8 @@ void vtkUniformGridGhostDataGenerator::RegisterGrids(vtkMultiBlockDataSet *in)
 
     this->GridConnectivity->RegisterGrid(
         static_cast<int>(i), info->Get(vtkDataObject::PIECE_EXTENT()),
-        grid->GetPointGhostArray(),
-        grid->GetCellGhostArray(),
+        grid->GetPointVisibilityArray(),
+        grid->GetCellVisibilityArray(),
         grid->GetPointData(),
         grid->GetCellData(),
         NULL);
@@ -167,6 +167,12 @@ void vtkUniformGridGhostDataGenerator::CreateGhostedDataSet(
         this->GridConnectivity->GetGhostedGridPointData(i) );
     ghostedGrid->GetCellData()->DeepCopy(
         this->GridConnectivity->GetGhostedGridCellData(i) );
+
+    // STEP 6: Copy the ghost arrays
+    ghostedGrid->SetPointVisibilityArray(
+        this->GridConnectivity->GetGhostedPointGhostArray( i ) );
+    ghostedGrid->SetCellVisibilityArray(
+        this->GridConnectivity->GetGhostedCellGhostArray( i ) );
 
     out->SetBlock(i,ghostedGrid);
     ghostedGrid->Delete();

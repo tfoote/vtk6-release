@@ -33,7 +33,7 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
 protected:
-  vtkPistonSort() {VTK_LEGACY_BODY(vtkPistonSort::vtkPistonSort, "VTK 6.3");}
+  vtkPistonSort() {}
   ~vtkPistonSort() {}
 
   // Description:

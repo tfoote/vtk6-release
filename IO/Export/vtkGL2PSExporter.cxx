@@ -32,7 +32,6 @@
 #include "vtkIntArray.h"
 #include "vtkLabeledDataMapper.h"
 #include "vtkMapper2D.h"
-#include "vtkMath.h"
 #include "vtkMathTextUtilities.h"
 #include "vtkMatrix4x4.h"
 #include "vtkNew.h"
@@ -357,7 +356,6 @@ int vtkGL2PSExporter::GetGL2PSSort()
     {
     default:
       vtkDebugMacro(<<"Invalid sort settings, using NO_SORT.");
-      VTK_FALLTHROUGH;
     case NO_SORT:
       return GL2PS_NO_SORT;
     case SIMPLE_SORT:
@@ -373,7 +371,6 @@ int vtkGL2PSExporter::GetGL2PSFormat()
     {
     default:
       vtkDebugMacro(<<"Invalid output format. Using postscript.");
-      VTK_FALLTHROUGH;
     case PS_FILE:
       return GL2PS_PS;
     case EPS_FILE:
@@ -393,7 +390,6 @@ const char *vtkGL2PSExporter::GetFileExtension()
     {
     default:
       vtkDebugMacro(<<"Invalid output format. Using postscript.");
-      VTK_FALLTHROUGH;
     case PS_FILE:
       return "ps";
     case EPS_FILE:
@@ -727,26 +723,21 @@ void vtkGL2PSExporter::DrawTextActor(vtkTextActor *textAct, vtkRenderer *ren)
 }
 
 void vtkGL2PSExporter::DrawTextActor3D(vtkTextActor3D *textAct,
-                                       vtkRenderer *ren)
+                                       vtkRenderer *)
 {
   // Get path
   const char *string = textAct->GetInput();
   vtkTextProperty *tprop = textAct->GetTextProperty();
   vtkNew<vtkPath> textPath;
   vtkTextRenderer *tren = vtkTextRenderer::GetInstance();
-
-  if (!tren)
+  if (tren)
     {
-    vtkWarningMacro(<<"Cannot generate path data from 3D text string '"
-                    << string << "': Text renderer unavailable.");
-    return;
+    tren->StringToPath(tprop, vtkStdString(string), textPath.GetPointer());
     }
-
-  if (!tren->StringToPath(tprop, vtkStdString(string), textPath.GetPointer(),
-                          vtkTextActor3D::GetRenderedDPI()))
+  else
     {
-    vtkWarningMacro(<<"Failed to generate path data from 3D text string '"
-                    << string << "': StringToPath failed.");
+    vtkWarningMacro(<<"Cannot generate path data from 3D text string: "
+                    << string);
     return;
     }
 
@@ -774,22 +765,8 @@ void vtkGL2PSExporter::DrawTextActor3D(vtkTextActor3D *textAct,
       static_cast<unsigned char>(bgColord[2] * 255),
       static_cast<unsigned char>(tprop->GetBackgroundOpacity() * 255)};
 
-    // Get the camera so we can calculate an offset to place the background
-    // behind the text.
-    vtkCamera *cam = ren->GetActiveCamera();
-    vtkMatrix4x4 *mat = cam->GetCompositeProjectionTransformMatrix(
-          ren->GetTiledAspectRatio(), 0., 1.);
-    double forward[3] = {mat->GetElement(2, 0),
-                         mat->GetElement(2, 1),
-                         mat->GetElement(2, 2)};
-    vtkMath::Normalize(forward);
-    double bgPos[3] = {textPos[0] + (forward[0] * 0.0001),
-                       textPos[1] + (forward[1] * 0.0001),
-                       textPos[2] + (forward[2] * 0.0001)};
-
     vtkTextRenderer::Metrics metrics;
-    if (tren->GetMetrics(tprop, string, metrics,
-                         vtkTextActor3D::GetRenderedDPI()))
+    if (tren->GetMetrics(tprop, string, metrics))
       {
       vtkNew<vtkPath> bgPath;
       bgPath->InsertNextPoint(static_cast<double>(metrics.TopLeft.GetX()),
@@ -808,7 +785,7 @@ void vtkGL2PSExporter::DrawTextActor3D(vtkTextActor3D *textAct,
                               static_cast<double>(metrics.TopLeft.GetY()),
                               0., vtkPath::LINE_TO);
 
-      vtkGL2PSUtilities::Draw3DPath(bgPath.GetPointer(), actorMatrix, bgPos,
+      vtkGL2PSUtilities::Draw3DPath(bgPath.GetPointer(), actorMatrix, textPos,
                                     bgColor);
       }
     }

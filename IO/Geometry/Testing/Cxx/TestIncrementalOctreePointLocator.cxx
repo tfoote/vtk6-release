@@ -415,7 +415,6 @@ int TestIncrementalOctreePointLocator( int argc, char * argv[] )
     {
     cerr << "IO error " << __FILE__ << ":" << __LINE__ << "\n";
     fclose(pntsFile);
-    free(pDataPts);
     return 1;
     }
   #ifdef VTK_WORDS_BIGENDIAN
@@ -430,10 +429,6 @@ int TestIncrementalOctreePointLocator( int argc, char * argv[] )
     {
     cerr << "IO error " << __FILE__ << ":" << __LINE__ << "\n";
     fclose(pntsFile);
-    free(pLocPnts);
-    free(minDist2);
-    free(maxDist2);
-    free(pDataPts);
     return 1;
     }
   //fread( minDist2, sizeof( double ), nLocPnts,     pntsFile );

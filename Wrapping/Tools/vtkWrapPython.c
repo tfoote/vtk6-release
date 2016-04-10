@@ -473,10 +473,6 @@ int main(int argc, char *argv[])
     {
     for (i = 0; i < contents->NumberOfClasses; i++)
       {
-      vtkWrap_ApplyUsingDeclarations(contents->Classes[i], file_info, hinfo);
-      }
-    for (i = 0; i < contents->NumberOfClasses; i++)
-      {
       vtkWrap_ExpandTypedefs(contents->Classes[i], file_info, hinfo);
       }
     }

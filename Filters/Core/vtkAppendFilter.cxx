@@ -122,7 +122,8 @@ int vtkAppendFilter::RequestData(
     for (int cc = 0; cc < inputVector[0]->GetNumberOfInformationObjects(); cc++)
       {
       vtkDataSet * tempData = vtkDataSet::GetData(inputVector[0], cc);
-      if (tempData->HasAnyGhostCells())
+      if (tempData && tempData->GetCellData() &&
+          tempData->GetCellData()->GetArray("vtkGhostLevels") != NULL)
         {
         vtkDebugMacro(<< "Ghost cells present, so points will not be merged");
         reallyMergePoints = false;
@@ -210,7 +211,7 @@ int vtkAppendFilter::RequestData(
   vtkSmartPointer<vtkIdList> newPtIds = vtkSmartPointer<vtkIdList>::New();
   newPtIds->Allocate(VTK_CELL_SIZE);
 
-  vtkIdType twentieth = (totalNumPts + totalNumCells)/20 + 1;
+  int twentieth = (totalNumPts + totalNumCells)/20 + 1;
 
   // For optionally merging duplicate points
   vtkIdType* globalIndices = new vtkIdType[totalNumPts];

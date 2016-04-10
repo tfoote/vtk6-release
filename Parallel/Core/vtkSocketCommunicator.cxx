@@ -213,8 +213,11 @@ int vtkSocketCommunicator::LogToFile(const char* name)
 int vtkSocketCommunicator::LogToFile(const char* name, int append)
 {
   // Close old logging file.
-  delete this->LogFile;
-  this->LogFile = 0;
+  if(this->LogFile)
+    {
+    delete this->LogFile;
+    this->LogFile = 0;
+    }
   this->LogStream = 0;
 
   // Log to given file, if any.

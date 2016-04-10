@@ -171,17 +171,6 @@ public:
   void SetRequestedRenderModeToDefault();
 
   // Description:
-  // Set the requested render mode to vtkSmartVolumeMapper::GPURenderMode.
-  // This option will use hardware accelerated rendering exclusively. This is a
-  // good option if you know there is hardware acceleration.
-  void SetRequestedRenderModeToGPU();
-
-  // Description:
-  // Set the requested render mode to
-  // vtkSmartVolumeMapper::TextureRenderMode.
-  void SetRequestedRenderModeToTexture();
-
-  // Description:
   // Set the requested render mode to
   // vtkSmartVolumeMapper::RayCastAndTextureRenderMode.
   // This is a good option if you want to avoid using advanced OpenGL

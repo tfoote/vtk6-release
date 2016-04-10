@@ -106,7 +106,10 @@ bool vtkSQLiteQuery::SetQuery(const char *newQuery)
     return true; // we've already got that query
     }
 
-  delete [] this->Query;
+  if (this->Query)
+    {
+    delete [] this->Query;
+    }
 
   if (newQuery)
     {

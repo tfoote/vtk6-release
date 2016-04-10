@@ -16,8 +16,8 @@
 // .SECTION Description
 // .SECTION See Also
 
-#ifndef vtkGDAL_h
-#define vtkGDAL_h
+#ifndef __vtkGDAL_h
+#define __vtkGDAL_h
 
 #include "vtkObject.h"
 #include <vtkIOGDALModule.h> // For export macro
@@ -40,5 +40,5 @@ class VTKIOGDAL_EXPORT vtkGDAL : public vtkObject
   void operator=(const vtkGDAL&); // Not implemented
 };
 
-#endif // vtkGDAL_h
+#endif // __vtkGDAL_h
 // VTK-HeaderTest-Exclude: vtkGDAL.h
