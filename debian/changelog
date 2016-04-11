@@ -10,6 +10,13 @@ vtk6 (6.3.0+dfsg1-1) UNRELEASED; urgency=medium
 
  -- Gert Wollny <gw.fossdev@gmail.com>  Tue, 05 Apr 2016 11:00:55 +0000
 
+vtk6 (6.2.0+dfsg1-11.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Make libvtk6-dev depend on libhdf5-mpi-dev. (Closes: #820113)
+
+ -- Tobias Frost <tobi@debian.org>  Sun, 10 Apr 2016 20:10:50 +0200
+
 vtk6 (6.2.0+dfsg1-11) unstable; urgency=medium
 
   * [efaf1ec] remove dependencies on libxdmf-dev because it is not be used
