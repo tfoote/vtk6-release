@@ -13,7 +13,7 @@ vtk6 (6.3.0+dfsg1-1~exp1) experimental; urgency=medium
   * Refresh patches.
   * Minor fixes in install-files.
 
- -- Gert Wollny <gw.fossdev@gmail.com>  Tue, 05 Apr 2016 11:00:55 +0000
+ -- Anton Gladky <gladk@debian.org>  Thu, 14 Apr 2016 20:17:22 +0200
 
 vtk6 (6.2.0+dfsg1-11.1) unstable; urgency=medium
 
