@@ -3,11 +3,11 @@ Author: Matthew Woehlke <matthew.woehlke@kitware.com>
 Bug: https://bugs.debian.org/750184
 Upstream-Bug: http://www.vtk.org/Bug/view.php?id=14126
 
-Index: vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
+Index: VTK-6.3.0/CMake/FindLIBPROJ4.cmake
 ===================================================================
---- a/CMake/FindLIBPROJ4.cmake
-+++ b/CMake/FindLIBPROJ4.cmake
-@@ -12,7 +12,7 @@
+--- VTK-6.3.0.orig/CMake/FindLIBPROJ4.cmake
++++ VTK-6.3.0/CMake/FindLIBPROJ4.cmake
+@@ -12,7 +12,7 @@ if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIB
    endif ()
  
    find_library( LIBPROJ4_LIBRARIES
@@ -16,7 +16,7 @@ Index: vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
      PATHS
        ${_LIBPROJ4_DIR}/lib64
        ${CMAKE_INSTALL_PREFIX}/lib64
-@@ -24,11 +24,12 @@
+@@ -24,11 +24,12 @@ if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIB
        ${CMAKE_INSTALL_PREFIX}/lib
        /usr/local/lib
        /usr/lib
@@ -31,7 +31,7 @@ Index: vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
      PATHS
        ${_LIBPROJ4_DIR}
        ${_LIBPROJ4_DIR}/include
-@@ -40,6 +41,8 @@
+@@ -40,6 +41,8 @@ if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIB
      NO_DEFAULT_PATH
    )
  
@@ -40,10 +40,10 @@ Index: vtk6-6.2.0+dfsg1/CMake/FindLIBPROJ4.cmake
    if ( NOT LIBPROJ4_INCLUDE_DIR OR NOT LIBPROJ4_LIBRARIES )
      if ( LIBPROJ4_REQUIRED )
        message( FATAL_ERROR "LIBPROJ4 is required. Set LIBPROJ4_DIR" )
-Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.cxx
+Index: VTK-6.3.0/Geovis/Core/vtkGeoProjection.cxx
 ===================================================================
---- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoProjection.cxx
-+++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.cxx
+--- VTK-6.3.0.orig/Geovis/Core/vtkGeoProjection.cxx
++++ VTK-6.3.0/Geovis/Core/vtkGeoProjection.cxx
 @@ -80,7 +80,7 @@ int vtkGeoProjection::GetNumberOfProject
    if ( vtkGeoProjectionNumProj < 0 )
      {
@@ -116,10 +116,10 @@ Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.cxx
    delete[] pjArgs;
    if ( this->Projection )
      {
-Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.h
+Index: VTK-6.3.0/Geovis/Core/vtkGeoProjection.h
 ===================================================================
---- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoProjection.h
-+++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.h
+--- VTK-6.3.0.orig/Geovis/Core/vtkGeoProjection.h
++++ VTK-6.3.0/Geovis/Core/vtkGeoProjection.h
 @@ -29,8 +29,9 @@
  #include "vtkGeovisCoreModule.h" // For export macro
  #include "vtkObject.h"
@@ -150,10 +150,10 @@ Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoProjection.h
    vtkTimeStamp ProjectionMTime;
  
  private:
-Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoTransform.cxx
+Index: VTK-6.3.0/Geovis/Core/vtkGeoTransform.cxx
 ===================================================================
---- vtk6-6.2.0+dfsg1.orig/Geovis/Core/vtkGeoTransform.cxx
-+++ vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoTransform.cxx
+--- VTK-6.3.0.orig/Geovis/Core/vtkGeoTransform.cxx
++++ VTK-6.3.0/Geovis/Core/vtkGeoTransform.cxx
 @@ -73,8 +73,8 @@ void vtkGeoTransform::TransformPoints( v
      }
    dstCoords->DeepCopy( srcCoords );
@@ -206,10 +206,10 @@ Index: vtk6-6.2.0+dfsg1/Geovis/Core/vtkGeoTransform.cxx
        }
      }
    else // ! dst
-Index: vtk6-6.2.0+dfsg1/ThirdParty/libproj4/vtk_libproj4.h.in
+Index: VTK-6.3.0/ThirdParty/libproj4/vtk_libproj4.h.in
 ===================================================================
---- vtk6-6.2.0+dfsg1.orig/ThirdParty/libproj4/vtk_libproj4.h.in
-+++ vtk6-6.2.0+dfsg1/ThirdParty/libproj4/vtk_libproj4.h.in
+--- VTK-6.3.0.orig/ThirdParty/libproj4/vtk_libproj4.h.in
++++ VTK-6.3.0/ThirdParty/libproj4/vtk_libproj4.h.in
 @@ -18,7 +18,8 @@
  /* Use the libproj4 library configured for VTK.  */
  #cmakedefine VTK_USE_SYSTEM_LIBPROJ4

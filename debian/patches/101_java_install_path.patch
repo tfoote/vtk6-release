@@ -6,9 +6,11 @@ Description: Install Java modules in the correct path
 Author: Gert Wollny <gw.fossdev@gmail.com
 Last-Update: 2016-03-26
 
---- a/CMake/vtkJavaWrapping.cmake
-+++ b/CMake/vtkJavaWrapping.cmake
-@@ -79,7 +79,7 @@
+Index: VTK-6.3.0/CMake/vtkJavaWrapping.cmake
+===================================================================
+--- VTK-6.3.0.orig/CMake/vtkJavaWrapping.cmake
++++ VTK-6.3.0/CMake/vtkJavaWrapping.cmake
+@@ -79,7 +79,7 @@ function(vtk_add_java_wrapping module_na
      install(TARGETS ${module_name}Java
        EXPORT ${VTK_INSTALL_EXPORT_NAME}
        RUNTIME DESTINATION ${VTK_INSTALL_RUNTIME_DIR} COMPONENT RuntimeLibraries

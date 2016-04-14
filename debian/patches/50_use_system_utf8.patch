@@ -25,8 +25,10 @@ Forwarded: <no|not-needed|url proving that it has been forwarded>
 Reviewed-By: <name and email of someone who approved the patch>
 Last-Update: <YYYY-MM-DD>
 
---- vtk6-6.2.0.orig/Common/Core/vtkUnicodeString.cxx
-+++ vtk6-6.2.0/Common/Core/vtkUnicodeString.cxx
+Index: VTK-6.3.0/Common/Core/vtkUnicodeString.cxx
+===================================================================
+--- VTK-6.3.0.orig/Common/Core/vtkUnicodeString.cxx
++++ VTK-6.3.0/Common/Core/vtkUnicodeString.cxx
 @@ -41,7 +41,7 @@ vtkUnicodeString::const_iterator::const_
  
  vtkUnicodeString::value_type vtkUnicodeString::const_iterator::operator*() const
@@ -206,8 +208,10 @@ Last-Update: <YYYY-MM-DD>
  
    return vtkUnicodeString(from, to);
  }
---- vtk6-6.2.0.orig/IO/Core/vtkUTF8TextCodec.cxx
-+++ vtk6-6.2.0/IO/Core/vtkUTF8TextCodec.cxx
+Index: VTK-6.3.0/IO/Core/vtkUTF8TextCodec.cxx
+===================================================================
+--- VTK-6.3.0.orig/IO/Core/vtkUTF8TextCodec.cxx
++++ VTK-6.3.0/IO/Core/vtkUTF8TextCodec.cxx
 @@ -124,7 +124,7 @@ vtkUnicodeString::value_type vtkUTF8Text
      throw(std::string("End of Input"));
      }

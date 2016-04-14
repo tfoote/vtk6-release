@@ -5,9 +5,11 @@ Author: Anton Gladky <gladk@debian.org>
 Bug-Debian: https://bugs.debian.org/793304
 Last-Update: 2015-07-29
 
---- a/Examples/Infovis/Cxx/CMakeLists.txt
-+++ b/Examples/Infovis/Cxx/CMakeLists.txt
-@@ -26,11 +26,6 @@
+Index: VTK-6.3.0/Examples/Infovis/Cxx/CMakeLists.txt
+===================================================================
+--- VTK-6.3.0.orig/Examples/Infovis/Cxx/CMakeLists.txt
++++ VTK-6.3.0/Examples/Infovis/Cxx/CMakeLists.txt
+@@ -26,11 +26,6 @@ if(vtkViewsInfovis_LOADED)
  endif()
  
  # If Qt is enabled include the QT based examples

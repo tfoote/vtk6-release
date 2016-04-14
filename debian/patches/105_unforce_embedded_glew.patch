@@ -3,9 +3,11 @@ Description: Remove the FORCE from the use_system_glew=off option
  provided by Debian, so I assume that the fixes have been applied. 
 Author: Gert Wollny <gw.fossdev@gmail.com> 
 
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -207,7 +207,7 @@
+Index: VTK-6.3.0/CMakeLists.txt
+===================================================================
+--- VTK-6.3.0.orig/CMakeLists.txt
++++ VTK-6.3.0/CMakeLists.txt
+@@ -207,7 +207,7 @@ else()
  endif()
  
  # default to not using the system GLEW as ours has fixes in it right now
