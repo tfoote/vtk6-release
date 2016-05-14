@@ -1,3 +1,9 @@
+vtk6 (6.2.0+dfsg1-10build1+debian11.1) xenial; urgency=medium
+
+  * This is a backport of the debian unstable version of vtk6 to xenial while waiting for ubuntu to incorporate the patch.
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 13 May 2016 17:25:50 -0800
+
 vtk6 (6.2.0+dfsg1-11.1) unstable; urgency=medium
 
   * Non-maintainer upload.
