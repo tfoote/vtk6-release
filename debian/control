@@ -1,7 +1,8 @@
 Source: vtk6
 Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
 Uploaders: Anton Gladky <gladk@debian.org>,
-           Gert Wollny <gw.fossdev@gmail.com> 
+           Gert Wollny <gw.fossdev@gmail.com>
+           Tully Foote <tfoote@osrfoundation.org>
 Section: graphics
 Testsuite: autopkgtest
 Priority: optional
